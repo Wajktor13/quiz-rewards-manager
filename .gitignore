@@ -47,3 +47,6 @@ build/
 *.ipr
 *.iws
 .idea/
+
+### generated db ###
+*.db
