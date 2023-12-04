@@ -113,6 +113,7 @@ public class XlsxParser {
         this.parsedData.quiz.setDate(date);
         this.parsedData.quiz.setMaxScore(maxScore);
         this.parsedData.quiz.setResults(parsedData.results); // results must be parsed first!
+        this.parsedData.quiz.setName("Quiz z dnia " + date);
     }
 
     private ArrayList<String[]> convertRewardsWithDescription(String rewardsWithDescription) {
