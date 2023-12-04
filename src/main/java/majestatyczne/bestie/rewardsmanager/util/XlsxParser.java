@@ -105,8 +105,8 @@ public class XlsxParser {
 
         /*
         -11: 11 cells are not related to quiz questions that are evaluated;
-        /3: 3 cells are assigned to each quiz question
-        assumption: for each question max score is 0
+        /3: 3 cells are assigned to each quiz question that is evaluated
+        assumption: for each question max score is 1
          */
         int maxScore = (row.getLastCellNum() - 11) / 3;
 
