@@ -16,7 +16,7 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "quiz_id")
     private int id;
-    @Column()
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private int maxScore;
