@@ -1,20 +1,23 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
+import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Person;
 import majestatyczne.bestie.rewardsmanager.model.Preference;
 import majestatyczne.bestie.rewardsmanager.model.Result;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
+@Component
+@RequiredArgsConstructor
 public class XlsxParser {
 
-    private final ParsedData parsedData = new ParsedData();
+    private final ParsedData parsedData;
 
     public ParsedData parseSheet(Sheet sheet) {
         /*
@@ -23,9 +26,9 @@ public class XlsxParser {
         two last columns are cut because they are empty! Thus row length is 17, not 19 (like the header)
          */
 
-        this.parseRewards(sheet);
-        this.parseEntries(sheet);
-        this.parseQuiz(sheet);
+        parseRewards(sheet);
+        parseEntries(sheet);
+        parseQuiz(sheet);
 
         System.out.println("[XlsxParser] data parsing complete");
 
@@ -33,17 +36,16 @@ public class XlsxParser {
     }
 
     private void parseRewards(Sheet sheet) {
-        Reward reward;
         Row row = sheet.getRow(0);
         String allRewardsWithDescriptions = row.getCell(row.getLastCellNum() - 1).getStringCellValue();
-        ArrayList<String[]> convertedRewardsWithDescriptions =
+        List<String[]> convertedRewardsWithDescriptions =
                 convertRewardsWithDescription(allRewardsWithDescriptions);
 
         for (String[] convertedReward : convertedRewardsWithDescriptions) {
-            reward = new Reward();
+            Reward reward = new Reward();
             reward.setName(convertedReward[0]);
             reward.setDescription(convertedReward[1]);
-            this.parsedData.rewards.add(reward);
+            parsedData.getRewards().add(reward);
         }
     }
 
@@ -51,8 +53,8 @@ public class XlsxParser {
         int rowLength = sheet.getRow(0).getLastCellNum();
 
         for (Row row : sheet) {
-            Date startDate =  row.getCell(1).getDateCellValue();
-            Date endDate =  row.getCell(2).getDateCellValue();
+            Date startDate = row.getCell(1).getDateCellValue();
+            Date endDate = row.getCell(2).getDateCellValue();
             int score = (int) row.getCell(5).getNumericCellValue();
             String personName = row.getCell(rowLength - 4).getStringCellValue();
             String allRewardsWithDescriptions = row.getCell(row.getLastCellNum() - 1).getStringCellValue();
@@ -60,39 +62,35 @@ public class XlsxParser {
             // Person
             Person person = new Person();
             person.setName(personName);
-            parsedData.people.add(person);
+            parsedData.getPeople().add(person);
 
             // Result
             Result result = new Result();
-            result.setQuiz(this.parsedData.quiz);
+            result.setQuiz(parsedData.getQuiz());
             result.setScore(score);
             result.setPerson(person);
             result.setStartDate(startDate);
             result.setEndDate(endDate);
-            this.parsedData.results.add(result);
+            parsedData.getResults().add(result);
 
             // Preference
-            String rewardName;
-            Reward reward = new Reward();
-            ArrayList<String[]> convertedRewardsWithDescriptions =
+            List<String[]> convertedRewardsWithDescriptions =
                     convertRewardsWithDescription(allRewardsWithDescriptions);
 
             for (String[] convertedReward : convertedRewardsWithDescriptions) {
-                rewardName = convertedReward[0];
-
-                for (Reward r : this.parsedData.rewards) { // rewards must be parsed first!
-                    if (Objects.equals(r.getName(), rewardName)) {
-                        reward = r;
-                        break;
-                    }
-                }
+                String rewardName = convertedReward[0];
+                Reward reward = parsedData.getRewards()
+                        .stream()
+                        .filter(r -> r.getName().equals(rewardName))
+                        .findFirst()
+                        .orElse(new Reward());
 
                 Preference preference = new Preference();
-                preference.setQuiz(this.parsedData.quiz);
+                preference.setQuiz(parsedData.getQuiz());
                 preference.setPerson(person);
                 preference.setPriority(convertedRewardsWithDescriptions.indexOf(convertedReward));
                 preference.setReward(reward);
-                this.parsedData.preferences.add(preference);
+                parsedData.getPreferences().add(preference);
             }
 
         }
@@ -110,23 +108,20 @@ public class XlsxParser {
          */
         int maxScore = (row.getLastCellNum() - 11) / 3;
 
-        this.parsedData.quiz.setDate(date);
-        this.parsedData.quiz.setMaxScore(maxScore);
-        this.parsedData.quiz.setResults(parsedData.results); // results must be parsed first!
-        this.parsedData.quiz.setName("Quiz z dnia " + date);
+        parsedData.getQuiz().setDate(date);
+        parsedData.getQuiz().setMaxScore(maxScore);
+        parsedData.getQuiz().setResults(parsedData.getResults()); // results must be parsed first!
+        parsedData.getQuiz().setName("Quiz z dnia " + date);
     }
 
-    private ArrayList<String[]> convertRewardsWithDescription(String rewardsWithDescription) {
-        ArrayList<String[]> convertedRewards = new ArrayList<>();
-        ArrayList<String> split1 =  new ArrayList<>(List.of(rewardsWithDescription.split(";")));
-        ArrayList<String> split2;
-        String reward;
-        String description;
+    private List<String[]> convertRewardsWithDescription(String rewardsWithDescription) {
+        List<String[]> convertedRewards = new ArrayList<>();
+        List<String> split1 = new ArrayList<>(List.of(rewardsWithDescription.split(";")));
 
-        for (String rewardWithDescription: split1) {
-            split2 = new ArrayList<>(List.of(rewardWithDescription.split("[()]")));
-            reward = split2.get(0);
-            description = split2.get(1);
+        for (String rewardWithDescription : split1) {
+            List<String> split2 = new ArrayList<>(List.of(rewardWithDescription.split("[()]")));
+            String reward = split2.get(0);
+            String description = split2.get(1);
 
             convertedRewards.add(new String[]{reward, description});
         }

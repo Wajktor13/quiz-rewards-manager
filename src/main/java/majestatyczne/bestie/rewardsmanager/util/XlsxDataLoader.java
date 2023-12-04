@@ -1,9 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
-import majestatyczne.bestie.rewardsmanager.model.Person;
-import majestatyczne.bestie.rewardsmanager.model.Preference;
-import majestatyczne.bestie.rewardsmanager.model.Result;
-import majestatyczne.bestie.rewardsmanager.model.Reward;
+import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.service.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,24 +9,16 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 
 @Component
-public class XlsxDataLoader implements IFileDataLoader {
+@RequiredArgsConstructor
+public class XlsxDataLoader implements FileDataLoader {
 
-    private String xlsxFilePath = "";
-    private final XlsxParser xlsxParser = new XlsxParser();
+    private String xlsxFilePath;
+    private final XlsxParser xlsxParser;
     private final PersonService personService;
     private final PreferenceService preferenceService;
     private final QuizService quizService;
     private final ResultService resultService;
     private final RewardService rewardService;
-
-    public XlsxDataLoader(PersonService personService, PreferenceService preferenceService, QuizService quizService,
-                          ResultService resultService, RewardService rewardService) {
-        this.personService = personService;
-        this.preferenceService = preferenceService;
-        this.quizService = quizService;
-        this.resultService = resultService;
-        this.rewardService= rewardService;
-    }
 
     @Override
     public void setInputFilePath(String inputFilePath) {
@@ -51,11 +40,11 @@ public class XlsxDataLoader implements IFileDataLoader {
 
             ParsedData parsedData = this.xlsxParser.parseSheet(sheet);
 
-            this.loadQuiz(parsedData);
-            this.loadPeople(parsedData);
-            this.loadRewards(parsedData);
-            this.loadPreferences(parsedData);
-            this.loadResults(parsedData);
+            loadQuiz(parsedData);
+            loadPeople(parsedData);
+            loadRewards(parsedData);
+            loadPreferences(parsedData);
+            loadResults(parsedData);
 
             System.out.println("[XlsxDataLoader] data loading complete");
 
@@ -65,30 +54,22 @@ public class XlsxDataLoader implements IFileDataLoader {
     }
 
     private void loadQuiz(ParsedData parsedData) {
-        this.quizService.addQuiz(parsedData.quiz);
+        quizService.addQuiz(parsedData.getQuiz());
     }
 
     private void loadPeople(ParsedData parsedData) {
-        for (Person person : parsedData.people) {
-            this.personService.addPerson(person);
-        }
+        parsedData.getPeople().forEach(personService::addPerson);
     }
 
     private void loadRewards(ParsedData parsedData) {
-        for (Reward reward : parsedData.rewards) {
-            this.rewardService.addReward(reward);
-        }
+        parsedData.getRewards().forEach(rewardService::addReward);
     }
 
     private void loadPreferences(ParsedData parsedData) {
-        for (Preference preference : parsedData.preferences) {
-            this.preferenceService.addPreference(preference);
-        }
+        parsedData.getPreferences().forEach(preferenceService::addPreference);
     }
 
     private void loadResults(ParsedData parsedData) {
-        for (Result result : parsedData.results) {
-            this.resultService.addResult(result);
-        }
+        parsedData.getResults().forEach(resultService::addResult);
     }
 }

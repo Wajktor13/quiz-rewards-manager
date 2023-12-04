@@ -1,14 +1,19 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
+import lombok.Getter;
 import majestatyczne.bestie.rewardsmanager.model.*;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
+@Component
+@Getter
 public class ParsedData {
 
-    public Quiz quiz = new Quiz();
-    public ArrayList<Person> people = new ArrayList<>();
-    public ArrayList<Preference> preferences = new ArrayList<>();
-    public ArrayList<Result> results = new ArrayList<>();
-    public ArrayList<Reward> rewards = new ArrayList<>();
+    private final Quiz quiz = new Quiz();
+    private final List<Person> people = new ArrayList<>();
+    private final List<Preference> preferences = new ArrayList<>();
+    private final List<Result> results = new ArrayList<>();
+    private final List<Reward> rewards = new ArrayList<>();
 }

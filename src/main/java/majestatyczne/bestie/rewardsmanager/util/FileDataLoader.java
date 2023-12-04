@@ -1,6 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
-public interface IFileDataLoader {
+public interface FileDataLoader {
 
     void setInputFilePath(String inputFilePath);
 
