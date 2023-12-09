@@ -17,24 +17,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class XlsxParser {
 
+    private final XlsxParserProperties properties;
     private final ParsedData parsedData;
 
     public ParsedData parseSheet(Sheet sheet) {
-        /*
-        todo: assumptions (if hardcoded columns indices stay)
+        // two last columns are cut because they are empty! Thus row length is 17, not 19 (like the header)
 
-        two last columns are cut because they are empty! Thus row length is 17, not 19 (like the header)
-         */
+        int rowLength = sheet.getRow(0).getLastCellNum();
 
         parseRewards(sheet);
 
         // parse rows
         for (Row row : sheet) {
-            Date startDate = row.getCell(1).getDateCellValue();
-            Date endDate = row.getCell(2).getDateCellValue();
-            int score = (int) row.getCell(5).getNumericCellValue();
-            String personName = row.getCell(sheet.getRow(0).getLastCellNum() - 4).getStringCellValue();
-            String allRewardsWithDescriptions = row.getCell(row.getLastCellNum() - 1).getStringCellValue();
+            Date startDate = row.getCell(properties.getStartDateIndex()).getDateCellValue();
+            Date endDate = row.getCell(properties.getEndDateIndex()).getDateCellValue();
+            int score = (int) row.getCell(properties.getScoreIndex()).getNumericCellValue();
+            String personName = row.getCell(rowLength + properties.getPersonNameIndex()).getStringCellValue();
+            String allRewardsWithDescriptions = row.getCell(rowLength + properties.getRewardsIndex())
+                                                   .getStringCellValue();
 
             Person person = parseAndGetPerson(personName);
             parseResult(person, score, startDate, endDate);
@@ -50,7 +50,9 @@ public class XlsxParser {
 
     private void parseRewards(Sheet sheet) {
         Row firstRow = sheet.getRow(0);
-        String allRewardsWithDescriptions = firstRow.getCell(firstRow.getLastCellNum() - 1).getStringCellValue();
+        int rowLength = firstRow.getLastCellNum();
+        String allRewardsWithDescriptions = firstRow.getCell(rowLength + properties.getRewardsIndex())
+                                                    .getStringCellValue();
         List<String[]> convertedRewardsWithDescriptions =
                 convertRewardsWithDescription(allRewardsWithDescriptions);
 
@@ -103,15 +105,9 @@ public class XlsxParser {
 
     private void parseQuiz(Sheet sheet) {
         Row row = sheet.getRow(0);
-
-        Date date = row.getCell(1).getDateCellValue();
-
-        /*
-        -11: 11 cells are not related to quiz questions that are evaluated;
-        /3: 3 cells are assigned to each quiz question that is evaluated
-        assumption: for each question max score is 1
-         */
-        int maxScore = (row.getLastCellNum() - 11) / 3;
+        Date date = row.getCell(properties.getStartDateIndex()).getDateCellValue();
+        int maxScore = (row.getLastCellNum() - properties.getNotEvaluatedQuestions())
+                / properties.getColumnsPerEvaluatedQuestion();
 
         parsedData.getQuiz().setDate(date);
         parsedData.getQuiz().setMaxScore(maxScore);
