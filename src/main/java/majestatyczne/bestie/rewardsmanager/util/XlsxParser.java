@@ -27,7 +27,20 @@ public class XlsxParser {
          */
 
         parseRewards(sheet);
-        parseEntries(sheet);
+
+        // parse rows
+        for (Row row : sheet) {
+            Date startDate = row.getCell(1).getDateCellValue();
+            Date endDate = row.getCell(2).getDateCellValue();
+            int score = (int) row.getCell(5).getNumericCellValue();
+            String personName = row.getCell(sheet.getRow(0).getLastCellNum() - 4).getStringCellValue();
+            String allRewardsWithDescriptions = row.getCell(row.getLastCellNum() - 1).getStringCellValue();
+
+            Person person = parseAndGetPerson(personName);
+            parseResult(person, score, startDate, endDate);
+            parsePreference(person, allRewardsWithDescriptions);
+        }
+
         parseQuiz(sheet);
 
         System.out.println("[XlsxParser] data parsing complete");
@@ -36,8 +49,8 @@ public class XlsxParser {
     }
 
     private void parseRewards(Sheet sheet) {
-        Row row = sheet.getRow(0);
-        String allRewardsWithDescriptions = row.getCell(row.getLastCellNum() - 1).getStringCellValue();
+        Row firstRow = sheet.getRow(0);
+        String allRewardsWithDescriptions = firstRow.getCell(firstRow.getLastCellNum() - 1).getStringCellValue();
         List<String[]> convertedRewardsWithDescriptions =
                 convertRewardsWithDescription(allRewardsWithDescriptions);
 
@@ -49,50 +62,42 @@ public class XlsxParser {
         }
     }
 
-    private void parseEntries(Sheet sheet) {
-        int rowLength = sheet.getRow(0).getLastCellNum();
+    private Person parseAndGetPerson(String personName) {
+        Person person = new Person();
+        person.setName(personName);
+        parsedData.getPeople().add(person);
 
-        for (Row row : sheet) {
-            Date startDate = row.getCell(1).getDateCellValue();
-            Date endDate = row.getCell(2).getDateCellValue();
-            int score = (int) row.getCell(5).getNumericCellValue();
-            String personName = row.getCell(rowLength - 4).getStringCellValue();
-            String allRewardsWithDescriptions = row.getCell(row.getLastCellNum() - 1).getStringCellValue();
+        return person;
+    }
 
-            // Person
-            Person person = new Person();
-            person.setName(personName);
-            parsedData.getPeople().add(person);
+    private void parseResult(Person person, int score, Date startDate, Date endDate) {
+        Result result = new Result();
+        result.setQuiz(parsedData.getQuiz());
+        result.setScore(score);
+        result.setPerson(person);
+        result.setStartDate(startDate);
+        result.setEndDate(endDate);
+        parsedData.getResults().add(result);
+    }
 
-            // Result
-            Result result = new Result();
-            result.setQuiz(parsedData.getQuiz());
-            result.setScore(score);
-            result.setPerson(person);
-            result.setStartDate(startDate);
-            result.setEndDate(endDate);
-            parsedData.getResults().add(result);
+    private void parsePreference(Person person, String allRewardsWithDescriptions) {
+        List<String[]> convertedRewardsWithDescriptions =
+                convertRewardsWithDescription(allRewardsWithDescriptions);
 
-            // Preference
-            List<String[]> convertedRewardsWithDescriptions =
-                    convertRewardsWithDescription(allRewardsWithDescriptions);
+        for (String[] convertedReward : convertedRewardsWithDescriptions) {
+            String rewardName = convertedReward[0];
+            Reward reward = parsedData.getRewards()
+                    .stream()
+                    .filter(r -> r.getName().equals(rewardName))
+                    .findFirst()
+                    .orElse(new Reward());
 
-            for (String[] convertedReward : convertedRewardsWithDescriptions) {
-                String rewardName = convertedReward[0];
-                Reward reward = parsedData.getRewards()
-                        .stream()
-                        .filter(r -> r.getName().equals(rewardName))
-                        .findFirst()
-                        .orElse(new Reward());
-
-                Preference preference = new Preference();
-                preference.setQuiz(parsedData.getQuiz());
-                preference.setPerson(person);
-                preference.setPriority(convertedRewardsWithDescriptions.indexOf(convertedReward));
-                preference.setReward(reward);
-                parsedData.getPreferences().add(preference);
-            }
-
+            Preference preference = new Preference();
+            preference.setQuiz(parsedData.getQuiz());
+            preference.setPerson(person);
+            preference.setPriority(convertedRewardsWithDescriptions.indexOf(convertedReward));
+            preference.setReward(reward);
+            parsedData.getPreferences().add(preference);
         }
     }
 
