@@ -11,6 +11,6 @@ public class PreferenceService {
     private final PreferenceRepository preferenceRepository;
 
     public void addPreference(Preference preference) {
-        this.preferenceRepository.save(preference);
+        preferenceRepository.save(preference);
     }
 }

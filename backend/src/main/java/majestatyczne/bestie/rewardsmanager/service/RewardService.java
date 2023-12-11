@@ -11,6 +11,6 @@ public class RewardService {
     private final RewardRepository rewardRepository;
 
     public void addReward(Reward reward) {
-        this.rewardRepository.save(reward);
+        rewardRepository.save(reward);
     }
 }

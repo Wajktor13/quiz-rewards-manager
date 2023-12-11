@@ -12,6 +12,6 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public void addPerson(Person person) {
-        this.personRepository.save(person);
+        personRepository.save(person);
     }
 }
