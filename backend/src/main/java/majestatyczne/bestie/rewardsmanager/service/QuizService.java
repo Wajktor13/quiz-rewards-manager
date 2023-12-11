@@ -16,7 +16,7 @@ public class QuizService {
         quizRepository.save(quiz);
     }
 
-    public List<Quiz> getAllQuizzes() {
+    public List<Quiz> findAllQuizzes() {
         return quizRepository.findAll();
     }
 }

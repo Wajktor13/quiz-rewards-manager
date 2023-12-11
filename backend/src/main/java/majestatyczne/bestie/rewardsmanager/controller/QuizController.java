@@ -18,6 +18,6 @@ public class QuizController {
 
     @GetMapping("/all")
     public List<Quiz> getAllQuizzes() {
-        return quizService.getAllQuizzes();
+        return quizService.findAllQuizzes();
     }
 }
