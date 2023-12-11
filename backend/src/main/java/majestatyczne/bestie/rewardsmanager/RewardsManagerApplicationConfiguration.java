@@ -11,7 +11,7 @@ public class RewardsManagerApplicationConfiguration {
     CommandLineRunner commandLineRunner(FileDataLoader dataLoader) {
         return args -> {
             dataLoader.setInputFilePath("resources/example.xlsx");
-            dataLoader.loadData();
+//            dataLoader.loadData();
         };
     }
 }
