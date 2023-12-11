@@ -5,6 +5,8 @@ import majestatyczne.bestie.rewardsmanager.dao.ResultRepository;
 import majestatyczne.bestie.rewardsmanager.model.Result;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ResultService {
@@ -12,5 +14,9 @@ public class ResultService {
 
     public void addResult(Result result) {
         resultRepository.save(result);
+    }
+
+    public List<Result> findResultsByQuizId(int quizId) {
+        return resultRepository.findResultsByQuizId(quizId);
     }
 }
