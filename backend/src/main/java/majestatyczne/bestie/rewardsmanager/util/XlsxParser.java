@@ -23,6 +23,8 @@ public class XlsxParser {
     public ParsedData parseSheet(Sheet sheet) {
         // two last columns are cut because they are empty! Thus row length is 17, not 19 (like the header)
 
+        System.out.println("[XlsxParser] parsing data...");
+
         int rowLength = sheet.getRow(0).getLastCellNum();
 
         parseRewards(sheet);

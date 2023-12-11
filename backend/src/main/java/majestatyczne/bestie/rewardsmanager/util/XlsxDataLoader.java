@@ -1,12 +1,15 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
 import lombok.RequiredArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.service.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +30,9 @@ public class XlsxDataLoader implements FileDataLoader {
 
     @Override
     public void loadData() {
+
+        System.out.println("[XlsxDataLoader] loading data...");
+
         try (FileInputStream file = new FileInputStream(this.xlsxFilePath)) {
             Workbook workbook = new XSSFWorkbook(file);
             Sheet sheet = workbook.getSheetAt(0);
@@ -62,11 +68,25 @@ public class XlsxDataLoader implements FileDataLoader {
     }
 
     private void loadRewards(ParsedData parsedData) {
-        parsedData.getRewards().forEach(rewardService::addReward);
+        List<Reward> rewardsReplaced = parsedData.getRewards()
+                .stream()
+                .map((reward -> rewardService.findRewardByName(reward.getName()).orElse(reward)))
+                .toList();
+
+        parsedData.setRewards(rewardsReplaced);
+
+        rewardsReplaced.forEach(rewardService::addReward);
     }
 
     private void loadPreferences(ParsedData parsedData) {
-        parsedData.getPreferences().forEach(preferenceService::addPreference);
+        parsedData.getPreferences().forEach((preference -> {
+            Optional<Reward> reward = rewardService.findRewardByName(preference.getReward().getName());
+
+            if (reward.isPresent()) {
+                preference.setReward(reward.get());
+                preferenceService.addPreference(preference);
+            }
+        }));
     }
 
     private void loadResults(ParsedData parsedData) {
