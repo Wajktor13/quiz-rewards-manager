@@ -23,6 +23,7 @@ public class XlsxDataLoader implements FileDataLoader {
     private final QuizService quizService;
     private final ResultService resultService;
     private final RewardService rewardService;
+    private ParsedData parsedData;
 
     @Override
     public void loadData(MultipartFile multipartFile) {
@@ -40,13 +41,13 @@ public class XlsxDataLoader implements FileDataLoader {
 
             sheet.shiftRows(1, sheet.getLastRowNum(), -1); // remove the header row
 
-            ParsedData parsedData = this.xlsxParser.parseSheet(sheet);
+            parsedData = this.xlsxParser.parseSheet(sheet);
 
-            loadQuiz(parsedData);
-            loadPeople(parsedData);
-            loadRewards(parsedData);
-            loadPreferences(parsedData);
-            loadResults(parsedData);
+            loadQuiz();
+            loadPeople();
+            loadRewards();
+            loadPreferences();
+            loadResults();
 
             System.out.println("[XlsxDataLoader] data loading complete");
 
@@ -55,33 +56,49 @@ public class XlsxDataLoader implements FileDataLoader {
         }
     }
 
-    private void loadQuiz(ParsedData parsedData) {
+    private void loadQuiz() {
         quizService.addQuiz(parsedData.getQuiz());
     }
 
-    private void loadPeople(ParsedData parsedData) {
+    private void loadPeople() {
+        updatePeople();
+        parsedData.getPeople().forEach(personService::addPerson);
+    }
+
+    private void loadRewards() {
+        updateRewards();
+        parsedData.getRewards().forEach(rewardService::addReward);
+    }
+
+    private void loadPreferences() {
+        updatePreferences();
+        parsedData.getPreferences().forEach(preferenceService::addPreference);
+    }
+
+    private void loadResults() {
+        updateResults();
+        parsedData.getResults().forEach(resultService::addResult);
+    }
+
+    private void updatePeople() {
         List<Person> peopleReplaced = parsedData.getPeople()
                 .stream()
                 .map((person -> personService.findPersonByName(person.getName()).orElse(person)))
                 .toList();
 
         parsedData.setPeople(peopleReplaced);
-
-        peopleReplaced.forEach(personService::addPerson);
     }
 
-    private void loadRewards(ParsedData parsedData) {
+    private void updateRewards() {
         List<Reward> rewardsReplaced = parsedData.getRewards()
                 .stream()
                 .map((reward -> rewardService.findRewardByName(reward.getName()).orElse(reward)))
                 .toList();
 
         parsedData.setRewards(rewardsReplaced);
-
-        rewardsReplaced.forEach(rewardService::addReward);
     }
 
-    private void loadPreferences(ParsedData parsedData) {
+    private void updatePreferences() {
         parsedData.getPreferences().forEach((preference -> {
             Optional<Reward> reward = rewardService.findRewardByName(preference.getReward().getName());
             Optional<Person> person = personService.findPersonByName(preference.getPerson().getName());
@@ -89,21 +106,14 @@ public class XlsxDataLoader implements FileDataLoader {
             if (reward.isPresent() && person.isPresent()) {
                 preference.setReward(reward.get());
                 preference.setPerson(person.get());
-                preferenceService.addPreference(preference);
             }
         }));
     }
 
-    private void loadResults(ParsedData parsedData) {
+    private void updateResults() {
         parsedData.getResults().forEach((result -> {
             Optional<Person> person = personService.findPersonByName(result.getPerson().getName());
-
-            if (person.isPresent()) {
-                result.setPerson(person.get());
-                resultService.addResult(result);
-            }
+            person.ifPresent(result::setPerson);
         }));
-
-        parsedData.getResults().forEach(resultService::addResult);
     }
 }
