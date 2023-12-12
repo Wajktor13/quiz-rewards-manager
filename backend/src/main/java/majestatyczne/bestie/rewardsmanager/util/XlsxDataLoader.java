@@ -6,6 +6,7 @@ import majestatyczne.bestie.rewardsmanager.service.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class XlsxDataLoader implements FileDataLoader {
 
-    private String xlsxFilePath;
     private final XlsxParser xlsxParser;
     private final PersonService personService;
     private final PreferenceService preferenceService;
@@ -24,17 +24,12 @@ public class XlsxDataLoader implements FileDataLoader {
     private final RewardService rewardService;
 
     @Override
-    public void setInputFilePath(String inputFilePath) {
-        this.xlsxFilePath = inputFilePath;
-    }
-
-    @Override
-    public void loadData() {
+    public void loadData(MultipartFile multipartFile) {
 
         System.out.println("[XlsxDataLoader] loading data...");
 
-        try (FileInputStream file = new FileInputStream(this.xlsxFilePath)) {
-            Workbook workbook = new XSSFWorkbook(file);
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(multipartFile.getInputStream())) {
+            Workbook workbook = new XSSFWorkbook(bufferedInputStream);
             Sheet sheet = workbook.getSheetAt(0);
 
             if (sheet.getLastRowNum() < 1) {

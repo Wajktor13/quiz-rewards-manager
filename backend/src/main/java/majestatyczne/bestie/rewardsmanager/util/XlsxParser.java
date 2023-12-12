@@ -18,10 +18,12 @@ import java.util.List;
 public class XlsxParser {
 
     private final XlsxParserProperties properties;
-    private final ParsedData parsedData;
+    private ParsedData parsedData;
 
     public ParsedData parseSheet(Sheet sheet) {
         // two last columns are cut because they are empty! Thus row length is 17, not 19 (like the header)
+
+        parsedData = new ParsedData();
 
         System.out.println("[XlsxParser] parsing data...");
 
