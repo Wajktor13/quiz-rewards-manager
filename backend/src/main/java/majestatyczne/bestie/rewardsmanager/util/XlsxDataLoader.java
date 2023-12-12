@@ -1,6 +1,7 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
 import lombok.RequiredArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.model.Person;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.service.*;
 import org.apache.poi.ss.usermodel.*;
@@ -59,7 +60,14 @@ public class XlsxDataLoader implements FileDataLoader {
     }
 
     private void loadPeople(ParsedData parsedData) {
-        parsedData.getPeople().forEach(personService::addPerson);
+        List<Person> peopleReplaced = parsedData.getPeople()
+                .stream()
+                .map((person -> personService.findPersonByName(person.getName()).orElse(person)))
+                .toList();
+
+        parsedData.setPeople(peopleReplaced);
+
+        peopleReplaced.forEach(personService::addPerson);
     }
 
     private void loadRewards(ParsedData parsedData) {
@@ -76,15 +84,26 @@ public class XlsxDataLoader implements FileDataLoader {
     private void loadPreferences(ParsedData parsedData) {
         parsedData.getPreferences().forEach((preference -> {
             Optional<Reward> reward = rewardService.findRewardByName(preference.getReward().getName());
+            Optional<Person> person = personService.findPersonByName(preference.getPerson().getName());
 
-            if (reward.isPresent()) {
+            if (reward.isPresent() && person.isPresent()) {
                 preference.setReward(reward.get());
+                preference.setPerson(person.get());
                 preferenceService.addPreference(preference);
             }
         }));
     }
 
     private void loadResults(ParsedData parsedData) {
+        parsedData.getResults().forEach((result -> {
+            Optional<Person> person = personService.findPersonByName(result.getPerson().getName());
+
+            if (person.isPresent()) {
+                result.setPerson(person.get());
+                resultService.addResult(result);
+            }
+        }));
+
         parsedData.getResults().forEach(resultService::addResult);
     }
 }
