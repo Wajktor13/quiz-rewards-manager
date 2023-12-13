@@ -5,6 +5,7 @@ import majestatyczne.bestie.rewardsmanager.dao.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,5 +21,13 @@ public class RewardService {
 
     public Optional<Reward> findRewardByName(String name) {
         return Optional.ofNullable(rewardRepository.findRewardByName(name));
+    }
+
+    public void addRewards(List<Reward> rewards) {
+        List<Reward> newRewards = rewards
+                .stream()
+                .filter(reward -> findRewardByName(reward.getName()).isEmpty())
+                .toList();
+        rewardRepository.saveAll(newRewards);
     }
 }

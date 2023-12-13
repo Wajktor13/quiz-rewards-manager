@@ -1,8 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
 import lombok.RequiredArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.model.Person;
-import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.service.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,8 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +29,7 @@ public class XlsxDataLoader implements FileDataLoader {
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(multipartFile.getInputStream())) {
             Workbook workbook = new XSSFWorkbook(bufferedInputStream);
             Sheet sheet = workbook.getSheetAt(0);
+            workbook.setSheetName(0, multipartFile.getOriginalFilename());
 
             if (sheet.getLastRowNum() < 1) {
                 // sheet is empty
@@ -41,7 +38,7 @@ public class XlsxDataLoader implements FileDataLoader {
 
             sheet.shiftRows(1, sheet.getLastRowNum(), -1); // remove the header row
 
-            parsedData = this.xlsxParser.parseSheet(sheet);
+            parsedData = xlsxParser.parseSheet(sheet);
 
             loadQuiz();
             loadPeople();
@@ -61,59 +58,19 @@ public class XlsxDataLoader implements FileDataLoader {
     }
 
     private void loadPeople() {
-        updatePeople();
-        parsedData.getPeople().forEach(personService::addPerson);
+        personService.addPeople(parsedData.getPeople());
     }
 
     private void loadRewards() {
-        updateRewards();
-        parsedData.getRewards().forEach(rewardService::addReward);
+        rewardService.addRewards(parsedData.getRewards());
     }
 
     private void loadPreferences() {
-        updatePreferences();
-        parsedData.getPreferences().forEach(preferenceService::addPreference);
+        preferenceService.addPreferences(parsedData.getPreferences());
     }
 
     private void loadResults() {
-        updateResults();
-        parsedData.getResults().forEach(resultService::addResult);
+        resultService.addResults(parsedData.getResults());
     }
 
-    private void updatePeople() {
-        List<Person> peopleReplaced = parsedData.getPeople()
-                .stream()
-                .map((person -> personService.findPersonByName(person.getName()).orElse(person)))
-                .toList();
-
-        parsedData.setPeople(peopleReplaced);
-    }
-
-    private void updateRewards() {
-        List<Reward> rewardsReplaced = parsedData.getRewards()
-                .stream()
-                .map((reward -> rewardService.findRewardByName(reward.getName()).orElse(reward)))
-                .toList();
-
-        parsedData.setRewards(rewardsReplaced);
-    }
-
-    private void updatePreferences() {
-        parsedData.getPreferences().forEach((preference -> {
-            Optional<Reward> reward = rewardService.findRewardByName(preference.getReward().getName());
-            Optional<Person> person = personService.findPersonByName(preference.getPerson().getName());
-
-            if (reward.isPresent() && person.isPresent()) {
-                preference.setReward(reward.get());
-                preference.setPerson(person.get());
-            }
-        }));
-    }
-
-    private void updateResults() {
-        parsedData.getResults().forEach((result -> {
-            Optional<Person> person = personService.findPersonByName(result.getPerson().getName());
-            person.ifPresent(result::setPerson);
-        }));
-    }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ResultService {
     private final ResultRepository resultRepository;
+    private final PersonService personService;
 
     public void addResult(Result result) {
         resultRepository.save(result);
@@ -18,5 +19,10 @@ public class ResultService {
 
     public List<Result> findResultsByQuizId(int quizId) {
         return resultRepository.findResultsByQuizId(quizId);
+    }
+
+    public void addResults(List<Result> results) {
+        results.forEach(personService::updatePersonInResults);
+        resultRepository.saveAll(results);
     }
 }

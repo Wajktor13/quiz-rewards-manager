@@ -38,7 +38,7 @@ public class XlsxParser {
             int score = (int) row.getCell(properties.getScoreIndex()).getNumericCellValue();
             String personName = row.getCell(rowLength + properties.getPersonNameIndex()).getStringCellValue();
             String allRewardsWithDescriptions = row.getCell(rowLength + properties.getRewardsIndex())
-                                                   .getStringCellValue();
+                    .getStringCellValue();
 
             Person person = parseAndGetPerson(personName);
             parseResult(person, score, startDate, endDate);
@@ -56,7 +56,7 @@ public class XlsxParser {
         Row firstRow = sheet.getRow(0);
         int rowLength = firstRow.getLastCellNum();
         String allRewardsWithDescriptions = firstRow.getCell(rowLength + properties.getRewardsIndex())
-                                                    .getStringCellValue();
+                .getStringCellValue();
         List<String[]> convertedRewardsWithDescriptions =
                 convertRewardsWithDescription(allRewardsWithDescriptions);
 
@@ -116,7 +116,7 @@ public class XlsxParser {
         parsedData.getQuiz().setDate(date);
         parsedData.getQuiz().setMaxScore(maxScore);
         parsedData.getQuiz().setResults(parsedData.getResults()); // results must be parsed first!
-        parsedData.getQuiz().setName("Quiz z dnia " + date);
+        parsedData.getQuiz().setName(sheet.getSheetName());
     }
 
     private List<String[]> convertRewardsWithDescription(String rewardsWithDescription) {
