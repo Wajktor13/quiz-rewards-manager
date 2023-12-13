@@ -1,4 +1,4 @@
-package majestatyczne.bestie.frontend;
+package majestatyczne.bestie.frontend.service;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,7 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.File;
 import java.io.IOException;
 
-public class FileUploadClient {
+public class FileUploadService {
 
     public void makeRequest(File file) {
         HttpClient httpClient = HttpClients.createDefault();
