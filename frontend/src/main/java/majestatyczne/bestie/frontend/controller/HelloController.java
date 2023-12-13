@@ -1,4 +1,4 @@
-package majestatyczne.bestie.frontend;
+package majestatyczne.bestie.frontend.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
