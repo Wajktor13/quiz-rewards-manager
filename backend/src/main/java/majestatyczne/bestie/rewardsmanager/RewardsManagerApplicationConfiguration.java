@@ -1,6 +1,5 @@
 package majestatyczne.bestie.rewardsmanager;
 
-import majestatyczne.bestie.rewardsmanager.util.FileDataLoader;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,10 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RewardsManagerApplicationConfiguration {
     @Bean
-    CommandLineRunner commandLineRunner(FileDataLoader dataLoader) {
+    CommandLineRunner commandLineRunner() {
         return args -> {
-            dataLoader.setInputFilePath("resources/example.xlsx");
-//            dataLoader.loadData();
         };
     }
 }

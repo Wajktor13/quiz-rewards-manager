@@ -5,12 +5,18 @@ import majestatyczne.bestie.rewardsmanager.dao.QuizRepository;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class QuizService {
     private final QuizRepository quizRepository;
 
     public void addQuiz(Quiz quiz) {
-        this.quizRepository.save(quiz);
+        quizRepository.save(quiz);
+    }
+
+    public List<Quiz> findAllQuizzes() {
+        return quizRepository.findAll();
     }
 }

@@ -13,7 +13,7 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "person_id")
     private int id;
-    @Column(/*unique = true,*/ nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
 }

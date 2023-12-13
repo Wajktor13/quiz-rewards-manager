@@ -11,6 +11,6 @@ public class RewardCategoryService {
     private final RewardCategoryRepository rewardCategoryRepository;
 
     private void addRewardCategory(RewardCategory rewardCategory) {
-        this.rewardCategoryRepository.save(rewardCategory);
+        rewardCategoryRepository.save(rewardCategory);
     }
 }

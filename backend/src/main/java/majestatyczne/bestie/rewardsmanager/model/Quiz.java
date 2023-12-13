@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,6 @@ public class Quiz {
     @Column(nullable = false)
     private Date date;
     @OneToMany(mappedBy = "quiz")
+    @JsonIgnoreProperties(value = {"quiz"}) // workaround for circular dependency
     private List<Result> results;
 }
