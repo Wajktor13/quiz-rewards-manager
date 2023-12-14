@@ -6,12 +6,13 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="majestatyczne.bestie.frontend.controller.QuizPageController">
     <children>
-        <HBox prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+        <HBox prefHeight="50.0" prefWidth="200.0" spacing="20.0" alignment="BASELINE_CENTER">
             <children>
+                <Button mnemonicParsing="false" text="Back" onAction="#onGoBackClicked"/>
                 <Label fx:id="quizNameLabel" />
                 <Label fx:id="quizDateLabel" />
-                <Button mnemonicParsing="false" text="export" />
-                <Button mnemonicParsing="false" text="settings" />
+                <Button mnemonicParsing="false" text="Export" />
+                <Button mnemonicParsing="false" text="Settings" />
             </children>
             <padding>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -23,7 +24,7 @@
                     <TableColumn fx:id="nameColumn" text="Imię zwierzaka" />
                     <TableColumn fx:id="scoreColumn" text="Wynik quizu" />
                     <TableColumn fx:id="endDateColumn" text="Zakonczenie quizu" />
-                    <TableColumn fx:id="rewardColumn" text="nagrody" />
+                    <TableColumn fx:id="rewardColumn" text="Przyznane nagrody" />
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -3,21 +3,25 @@ package majestatyczne.bestie.frontend.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.QuizView;
 import majestatyczne.bestie.frontend.model.ResultView;
 import majestatyczne.bestie.frontend.service.QuizResultsService;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class QuizPageController implements Initializable {
     private QuizView quizView;
@@ -65,5 +69,17 @@ public class QuizPageController implements Initializable {
         scoreColumn.setCellValueFactory(scoreValue -> scoreValue.getValue().getScoreProperty());
         endDateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getEndDateProperty());
         rewardColumn.setCellValueFactory(rewardValue -> rewardValue.getValue().getRewardProperty());
+    }
+
+    public void onGoBackClicked() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource("FXML/home-page.fxml"));
+        Stage stage = (Stage) resultTable.getScene().getWindow();
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -8,13 +8,13 @@
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: #CCCCCC;">
          <children>
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#onGetFile" text="Import FIle" textAlignment="CENTER" />
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#onGetFile" text="Import file" textAlignment="CENTER" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding></VBox>
       <VBox HBox.hgrow="ALWAYS">
-              <TableView fx:id="quizTable" onMouseClicked="#onQuizSelected">
+              <TableView fx:id="quizTable" onMouseClicked="#onQuizSelected" prefHeight="720.0">
                  <columns>
                     <TableColumn fx:id="nameColumn"/>
                     <TableColumn fx:id="dateColumn" />
