@@ -1,8 +1,7 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
+import majestatyczne.bestie.rewardsmanager.RewardsManagerTestsConfiguration;
 import majestatyczne.bestie.rewardsmanager.service.FileUploadService;
-import org.apache.poi.EmptyFileException;
-import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,11 +19,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FileUploadServiceTests {
 
     @Autowired
+    private RewardsManagerTestsConfiguration rewardsManagerTestsConfiguration;
+    @Autowired
     private FileUploadService fileUploadService;
 
     @Test
     public void testLoadValidNotEmptyFile() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("resources/example.xlsx");
+        FileInputStream fileInputStream = new FileInputStream(rewardsManagerTestsConfiguration.getValidFilePath());
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "xlsx file",
                 "test_file.xlsx",

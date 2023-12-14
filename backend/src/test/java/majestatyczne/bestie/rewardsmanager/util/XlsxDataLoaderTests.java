@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
+import majestatyczne.bestie.rewardsmanager.RewardsManagerTestsConfiguration;
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.junit.jupiter.api.Test;
@@ -17,11 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class XlsxDataLoaderTests {
 
     @Autowired
+    private RewardsManagerTestsConfiguration rewardsManagerTestsConfiguration;
+    @Autowired
     private XlsxDataLoader xlsxDataLoader;
 
     @Test
     public void testOpenValidNotEmptyFile() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("resources/example.xlsx");
+        FileInputStream fileInputStream = new FileInputStream("src/test/resources/valid_file.xlsx");
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "xlsx file",
                 "test_file.xlsx",
