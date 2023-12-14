@@ -12,8 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class FileUploadServiceTests {
@@ -25,7 +24,7 @@ public class FileUploadServiceTests {
 
     @Test
     public void testLoadValidNotEmptyFile() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(rewardsManagerTestsConfiguration.getValidFilePath());
+        FileInputStream fileInputStream = new FileInputStream(rewardsManagerTestsConfiguration.getFullValidFilePath());
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "xlsx file",
                 "test_file.xlsx",

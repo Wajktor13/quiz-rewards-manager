@@ -24,7 +24,7 @@ public class XlsxDataLoaderTests {
 
     @Test
     public void testOpenValidNotEmptyFile() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(rewardsManagerTestsConfiguration.getValidFilePath());
+        FileInputStream fileInputStream = new FileInputStream(rewardsManagerTestsConfiguration.getFullValidFilePath());
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "xlsx file",
                 "test_file.xlsx",
