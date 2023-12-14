@@ -3,7 +3,6 @@ package majestatyczne.bestie.rewardsmanager.util;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.service.*;
 import org.apache.poi.EmptyFileException;
-import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -24,8 +23,7 @@ public class XlsxDataLoader implements FileDataLoader {
     private ParsedData parsedData;
 
     @Override
-    public void loadData(MultipartFile multipartFile) throws IOException, NotOfficeXmlFileException,
-            EmptyFileException {
+    public void loadData(MultipartFile multipartFile) throws IOException {
 
         System.out.println("[XlsxDataLoader] loading data...");
 
