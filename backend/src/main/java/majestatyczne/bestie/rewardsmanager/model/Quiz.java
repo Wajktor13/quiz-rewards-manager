@@ -24,6 +24,5 @@ public class Quiz {
     @Column(nullable = false)
     private Date date;
     @OneToMany(mappedBy = "quiz")
-    @JsonIgnoreProperties(value = {"quiz"}) // workaround for circular dependency
     private List<Result> results;
 }

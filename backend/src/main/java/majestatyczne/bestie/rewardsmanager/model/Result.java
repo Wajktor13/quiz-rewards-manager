@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class Result {
     private int id;
     @ManyToOne
     @JoinColumn(name = "quiz_id")
+    @JsonIgnore
     private Quiz quiz;
     @ManyToOne
     @JoinColumn(name = "person_id")
