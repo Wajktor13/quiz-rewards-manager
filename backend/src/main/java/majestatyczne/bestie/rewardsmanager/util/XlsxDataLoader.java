@@ -2,6 +2,8 @@ package majestatyczne.bestie.rewardsmanager.util;
 
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.service.*;
+import org.apache.poi.EmptyFileException;
+import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
@@ -22,35 +24,38 @@ public class XlsxDataLoader implements FileDataLoader {
     private ParsedData parsedData;
 
     @Override
-    public void loadData(MultipartFile multipartFile) {
+    public void loadData(MultipartFile multipartFile) throws IOException, NotOfficeXmlFileException,
+            EmptyFileException {
 
         System.out.println("[XlsxDataLoader] loading data...");
 
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(multipartFile.getInputStream())) {
-            Workbook workbook = new XSSFWorkbook(bufferedInputStream);
-            Sheet sheet = workbook.getSheetAt(0);
-            workbook.setSheetName(0, multipartFile.getOriginalFilename());
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(multipartFile.getInputStream());
+        Workbook workbook = new XSSFWorkbook(bufferedInputStream);
 
-            if (sheet.getLastRowNum() < 1) {
-                // sheet is empty
-                return;
-            }
-
-            sheet.shiftRows(1, sheet.getLastRowNum(), -1); // remove the header row
-
-            parsedData = xlsxParser.parseSheet(sheet);
-
-            loadQuiz();
-            loadPeople();
-            loadRewards();
-            loadPreferences();
-            loadResults();
-
-            System.out.println("[XlsxDataLoader] data loading complete");
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (workbook.getNumberOfSheets() < 1) {
+            // workbook has no sheets
+            throw new EmptyFileException();
         }
+
+        Sheet sheet = workbook.getSheetAt(0);
+        workbook.setSheetName(0, multipartFile.getOriginalFilename());
+
+        if (sheet.getLastRowNum() < 1) {
+            // sheet is empty
+            throw new EmptyFileException();
+        }
+
+        sheet.shiftRows(1, sheet.getLastRowNum(), -1); // remove the header row
+
+        parsedData = xlsxParser.parseSheet(sheet);
+
+        loadQuiz();
+        loadPeople();
+        loadRewards();
+        loadPreferences();
+        loadResults();
+
+        System.out.println("[XlsxDataLoader] data loading complete");
     }
 
     private void loadQuiz() {
