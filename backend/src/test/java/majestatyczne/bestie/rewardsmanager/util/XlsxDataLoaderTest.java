@@ -1,4 +1,4 @@
-package majestatyczne.bestie.rewardsmanager.controller;
+package majestatyczne.bestie.rewardsmanager.util;
 
 import majestatyczne.bestie.rewardsmanager.service.*;
 import majestatyczne.bestie.rewardsmanager.util.ParsedData;
