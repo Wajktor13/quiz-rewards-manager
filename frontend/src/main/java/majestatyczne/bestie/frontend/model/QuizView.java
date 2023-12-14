@@ -5,14 +5,14 @@ import javafx.beans.property.*;
 import javax.xml.transform.Result;
 import java.util.Date;
 import java.util.List;
-
 public class QuizView {
+    private int id;
     private StringProperty name;
     private IntegerProperty maxScore;
     private ObjectProperty<Date> date;
-    private List<Result> results;
 
-    public QuizView(String name, int maxScore, Date date) {
+    public QuizView(int id, String name, int maxScore, Date date) {
+        this.id = id;
         this.name = new SimpleStringProperty(name);
         this.maxScore = new SimpleIntegerProperty(maxScore);
         this.date = new SimpleObjectProperty<>(date);
@@ -54,11 +54,6 @@ public class QuizView {
         this.date.set(date);
     }
 
-    public List<Result> getResults() {
-        return results;
-    }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
-    }
+
 }

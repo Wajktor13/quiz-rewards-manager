@@ -12,6 +12,5 @@ public class Quiz {
     private String name;
     private int maxScore;
     private Date date;
-    private List<Result> results;
 }
 
