@@ -7,13 +7,13 @@ import java.util.Date;
 public class ResultView {
     private StringProperty personName;
     private ObjectProperty<Date> endDate;
-    private IntegerProperty score;
+    private ObjectProperty<Integer> score;
     private StringProperty reward;
 
     public ResultView(String personName, Date endDate, int score) {
         this.personName = new SimpleStringProperty(personName);
         this.endDate = new SimpleObjectProperty<>(endDate);
-        this.score = new SimpleIntegerProperty(score);
+        this.score = new SimpleObjectProperty<>(score);
         this.reward = new SimpleStringProperty("placeholder");
     }
 
@@ -45,7 +45,7 @@ public class ResultView {
         return score.get();
     }
 
-    public IntegerProperty getScoreProperty() {
+    public ObjectProperty<Integer> getScoreProperty() {
         return score;
     }
 
