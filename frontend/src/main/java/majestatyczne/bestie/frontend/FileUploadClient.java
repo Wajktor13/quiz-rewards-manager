@@ -18,7 +18,7 @@ public class FileUploadClient {
 
         HttpPost httpPost = new HttpPost("http://localhost:8080/upload-file");
 
-        File file = new File("resources/5g5");
+        File file = new File("resources/example.xlsx");
         FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
 
         HttpEntity entity = MultipartEntityBuilder.create()
