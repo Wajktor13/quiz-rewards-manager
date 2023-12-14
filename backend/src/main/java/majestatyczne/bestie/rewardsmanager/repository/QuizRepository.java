@@ -1,4 +1,4 @@
-package majestatyczne.bestie.rewardsmanager.dao;
+package majestatyczne.bestie.rewardsmanager.repository;
 
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;

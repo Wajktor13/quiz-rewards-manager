@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,5 +25,6 @@ public class Quiz {
     @Column(nullable = false)
     private Date date;
     @OneToMany(mappedBy = "quiz")
+    @JsonIgnore
     private List<Result> results;
 }
