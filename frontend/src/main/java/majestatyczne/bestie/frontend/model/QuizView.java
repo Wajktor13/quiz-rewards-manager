@@ -1,11 +1,12 @@
 package majestatyczne.bestie.frontend.model;
 
 import javafx.beans.property.*;
+import lombok.Getter;
 
-import javax.xml.transform.Result;
 import java.util.Date;
-import java.util.List;
+
 public class QuizView {
+    @Getter
     private int id;
     private StringProperty name;
     private IntegerProperty maxScore;
@@ -53,7 +54,6 @@ public class QuizView {
     public void setDate(Date date) {
         this.date.set(date);
     }
-
 
 
 }

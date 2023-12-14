@@ -21,6 +21,7 @@ public class HomePageApplication extends Application {
         stage.show();
     }
 
+
     private void setStageProperties(Stage stage) {
         stage.setTitle("Rewards Manager");
         stage.getIcons().add(new Image(String.valueOf(getClass().getResource("icons/owlbear.png"))));
