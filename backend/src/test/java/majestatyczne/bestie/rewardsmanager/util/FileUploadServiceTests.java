@@ -1,28 +1,29 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
+import majestatyczne.bestie.rewardsmanager.service.FileUploadService;
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-public class XlsxDataLoaderTest {
+public class FileUploadServiceTests {
 
-    @InjectMocks
     @Autowired
-    private XlsxDataLoader xlsxDataLoader;
+    private FileUploadService fileUploadService;
 
     @Test
-    public void testOpenValidNotEmptyFile() throws IOException {
+    public void testLoadValidNotEmptyFile() throws IOException {
         FileInputStream fileInputStream = new FileInputStream("resources/example.xlsx");
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "xlsx file",
@@ -31,11 +32,11 @@ public class XlsxDataLoaderTest {
                 fileInputStream
         );
 
-        assertDoesNotThrow(() -> xlsxDataLoader.loadData(mockMultipartFile));
+        assertDoesNotThrow(() -> fileUploadService.loadFile(mockMultipartFile));
     }
 
     @Test
-    public void testOpenNotValidNotEmptyFile() {
+    public void testLoadNotValidNotEmptyFile() {
         MultipartFile mockMultipartFile1 = new MockMultipartFile(
                 "data",
                 "test_file1.txt",
@@ -43,7 +44,7 @@ public class XlsxDataLoaderTest {
                 "some data".getBytes()
         );
 
-        assertThrows(NotOfficeXmlFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
+        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
 
         MultipartFile mockMultipartFile2 = new MockMultipartFile(
                 "data",
@@ -52,11 +53,11 @@ public class XlsxDataLoaderTest {
                 "dwedwedwefweifjwofhwrhgwehgurwehguiehrgurhguiwerihwruegherwuhig".getBytes()
         );
 
-        assertThrows(NotOfficeXmlFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile2));
+        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile2));
     }
 
     @Test
-    public void testOpenValidEmptyFile() {
+    public void testLoadValidEmptyFile() {
         byte[] emptyByteArray = {};
 
         MultipartFile mockMultipartFile1 = new MockMultipartFile(
@@ -66,11 +67,11 @@ public class XlsxDataLoaderTest {
                 emptyByteArray
         );
 
-        assertThrows(EmptyFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
+        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
     }
 
     @Test
-    public void testOpenNotValidEmptyFile() {
+    public void testLoadNotValidEmptyFile() {
         byte[] emptyByteArray = {};
 
         MultipartFile mockMultipartFile1 = new MockMultipartFile(
@@ -80,6 +81,6 @@ public class XlsxDataLoaderTest {
                 emptyByteArray
         );
 
-        assertThrows(EmptyFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
+        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
     }
 }
