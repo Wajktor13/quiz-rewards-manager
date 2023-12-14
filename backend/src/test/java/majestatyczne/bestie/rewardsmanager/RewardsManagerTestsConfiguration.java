@@ -12,7 +12,11 @@ public class RewardsManagerTestsConfiguration {
         return fullValidFilePath;
     }
 
-    public String getShortValidFile1Path() {return shortValidFile1Path;}
+    public String getShortValidFile1Path() {
+        return shortValidFile1Path;
+    }
 
-    public String getShortValidFile2Path() {return shortValidFile2Path;}
+    public String getShortValidFile2Path() {
+        return shortValidFile2Path;
+    }
 }
