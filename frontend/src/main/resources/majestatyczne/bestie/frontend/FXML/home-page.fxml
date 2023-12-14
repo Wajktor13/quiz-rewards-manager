@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="majestatyczne.bestie.frontend.controller.HomePageController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="200.0" style="-fx-background-color: black;">
+         <children>
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#onGetFile" text="Import FIle" textAlignment="CENTER" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding></VBox>
+      <VBox prefHeight="400.0" prefWidth="505.0">
+              <TableView fx:id="quizTable">
+                 <columns>
+                    <TableColumn fx:id="nameColumn"/>
+                    <TableColumn fx:id="dateColumn" />
+                 </columns>
+              </TableView>
+      </VBox>
+      <ListView prefHeight="200.0" prefWidth="200.0" />
+      
+   </children>
+</HBox>

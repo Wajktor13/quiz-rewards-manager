@@ -1,4 +1,4 @@
-package majestatyczne.bestie.frontend;
+package majestatyczne.bestie.frontend.service;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,15 +10,16 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
+import java.io.IOException;
 
-public class FileUploadClient {
+public class FileUploadService {
 
-    public static void main(String[] args) throws Exception {
+    public void makeRequest(File file) {
         HttpClient httpClient = HttpClients.createDefault();
 
-        HttpPost httpPost = new HttpPost("http://localhost:8080/upload-file");
+        String url = "http://localhost:8080/upload-file";
+        HttpPost httpPost = new HttpPost(url);
 
-        File file = new File("resources/example.xlsx");
         FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
 
         HttpEntity entity = MultipartEntityBuilder.create()
@@ -26,9 +27,13 @@ public class FileUploadClient {
                 .build();
 
         httpPost.setEntity(entity);
-
-        HttpResponse response = httpClient.execute(httpPost);
-
-        System.out.println("[FileUploadClient] Server response after file upload: " + response.getStatusLine());
+        try {
+            HttpResponse response;
+            response = httpClient.execute(httpPost);
+            System.out.println("[FileUploadClient] Server response after file upload: " + response.getStatusLine());
+        } catch (IOException e) {
+            System.out.println("[503] Couldn't get server response");
+            System.out.println(e.getMessage());
+        }
     }
 }
