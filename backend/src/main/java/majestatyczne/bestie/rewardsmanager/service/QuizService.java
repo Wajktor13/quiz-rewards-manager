@@ -6,6 +6,7 @@ import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -18,5 +19,8 @@ public class QuizService {
 
     public List<Quiz> findAllQuizzes() {
         return quizRepository.findAll();
+    }
+    public Optional<Quiz> findById(int id) {
+        return quizRepository.findById(id);
     }
 }
