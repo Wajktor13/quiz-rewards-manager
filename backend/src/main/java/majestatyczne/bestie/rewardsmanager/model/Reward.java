@@ -1,6 +1,7 @@
 package majestatyczne.bestie.rewardsmanager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "reward")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Reward {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)

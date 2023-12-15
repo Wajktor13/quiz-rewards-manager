@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.util;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Person;
 import majestatyczne.bestie.rewardsmanager.model.Preference;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Getter
 public class XlsxParser {
 
     private final XlsxParserProperties properties;
@@ -125,7 +127,7 @@ public class XlsxParser {
 
         for (String rewardWithDescription : split1) {
             List<String> split2 = new ArrayList<>(List.of(rewardWithDescription.split("[()]")));
-            String reward = split2.get(0);
+            String reward = split2.get(0).substring(0, split2.get(0).length() - 1); // cut last char - whitespace
             String description = split2.get(1);
 
             convertedRewards.add(new String[]{reward, description});
