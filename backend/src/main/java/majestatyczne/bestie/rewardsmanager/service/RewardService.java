@@ -1,7 +1,7 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
 import lombok.AllArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.dao.RewardRepository;
+import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
 

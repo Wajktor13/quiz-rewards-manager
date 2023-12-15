@@ -3,17 +3,21 @@ package majestatyczne.bestie.frontend.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.service.FileUploadService;
 import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
 import majestatyczne.bestie.frontend.model.QuizView;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -37,13 +41,31 @@ public class HomePageController implements Initializable {
             return;
         }
         fileUploadService.makeRequest(file);
+        setData();
+    }
 
+    @FXML
+    public void onQuizSelected(){
+        QuizView selectedQuiz = quizTable.getSelectionModel().getSelectedItem();
+        moveToQuizPage(selectedQuiz);
+    }
+
+    public void moveToQuizPage(QuizView quizView) {
+        Stage stage = (Stage) quizTable.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource("FXML/quiz-page.fxml"));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+            QuizPageController quizPageController = fxmlLoader.getController();
+            quizPageController.setQuizView(quizView);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeDefaultUploadDirectory();
-        initializeQuizzes();
 
         nameColumn.setCellValueFactory(nameValue -> nameValue.getValue().getNameProperty());
         dateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getDateProperty());
@@ -51,10 +73,11 @@ public class HomePageController implements Initializable {
     }
 
     private void initializeQuizzes() {
-        quizzes = FXCollections.observableArrayList();
         QuizService quizService = new QuizService();
+        quizzes = FXCollections.observableArrayList();
         List<Quiz> quizList = quizService.getQuizzes();
-        quizList.forEach(quiz -> quizzes.add(new QuizView(quiz.getName(), quiz.getMaxScore(), quiz.getDate())));
+        quizList.forEach(quiz -> quizzes.add(new QuizView(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate())));
+
     }
 
     private void initializeDefaultUploadDirectory() {
@@ -63,6 +86,7 @@ public class HomePageController implements Initializable {
     }
 
     public void setData() {
+        initializeQuizzes();
         quizTable.setItems(quizzes);
     }
 }
