@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("upload-file")
+@RequestMapping("files")
 @RequiredArgsConstructor
 public class FileUploadController {
 
