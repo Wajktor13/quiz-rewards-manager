@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.HomePageApplication;
@@ -28,7 +30,8 @@ public class HomePageController implements Initializable {
     private TableColumn<QuizView, String> nameColumn;
     @FXML
     private TableColumn<QuizView, Date> dateColumn;
-
+    @FXML
+    private ImageView settingsIcon;
     private ObservableList<QuizView> quizzes;
 
     FileUploadService fileUploadService = new FileUploadService();
@@ -70,6 +73,7 @@ public class HomePageController implements Initializable {
         nameColumn.setCellValueFactory(nameValue -> nameValue.getValue().getNameProperty());
         dateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getDateProperty());
         setData();
+        settingsIcon.setImage(new Image(String.valueOf(getClass().getResource("/majestatyczne/bestie/frontend/icons/settings.png"))));
     }
 
     private void initializeQuizzes() {
