@@ -14,7 +14,9 @@ import java.util.List;
 @RequestMapping("results")
 @RequiredArgsConstructor
 public class ResultController {
+
     private final ResultService resultService;
+
     @GetMapping("/by_quiz_id/{quizId}")
     public List<Result> getResultsByQuizId(@PathVariable int quizId) {
         return resultService.findResultsByQuizId(quizId);
