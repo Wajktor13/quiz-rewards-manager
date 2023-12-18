@@ -14,16 +14,17 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("quiz")
+@RequestMapping("quizzes")
 @RequiredArgsConstructor
 public class QuizController {
 
     private final QuizService quizService;
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<Quiz> getAllQuizzes() {
         return quizService.findAllQuizzes();
     }
+
     @GetMapping("/{quizId}")
     public ResponseEntity<?> getQuizById(@PathVariable int quizId) {
         Optional<Quiz> quiz = quizService.findById(quizId);
