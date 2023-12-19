@@ -46,10 +46,10 @@ public class XlsxParserTests {
     @Test
     public void testParsingOnShortValidFile1() throws ParseException {
         Sheet sheet = prepareSheet(rewardsManagerTestsConfiguration.getShortValidFile1Path());
-        xlsxParser.parseSheet(sheet);
+        ParsedData parsedData = xlsxParser.parseSheet(sheet);
 
         // Person
-        List<Person> people = xlsxParser.getParsedData().getPeople();
+        List<Person> people = parsedData.getPeople();
 
         assertEquals(3, people.size());
 
@@ -64,7 +64,7 @@ public class XlsxParserTests {
         );
 
         // Reward
-        List<Reward> rewards = xlsxParser.getParsedData().getRewards();
+        List<Reward> rewards = parsedData.getRewards();
 
         assertEquals(4, rewards.size());
 
@@ -79,12 +79,12 @@ public class XlsxParserTests {
                     r.getDescription().equals(expectedReward.getDescription()))));
 
         // Quiz
-        Quiz quiz = xlsxParser.getParsedData().getQuiz();
+        Quiz quiz = parsedData.getQuiz();
 
         assertEquals(2, quiz.getMaxScore());
 
         // Preference
-        List<Preference> preferences = xlsxParser.getParsedData().getPreferences();
+        List<Preference> preferences = parsedData.getPreferences();
 
         assertEquals(people.size() * rewards.size(), preferences.size());
 
@@ -171,7 +171,7 @@ public class XlsxParserTests {
         );
 
         // Result
-        List<Result> results = xlsxParser.getParsedData().getResults();
+        List<Result> results = parsedData.getResults();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
         assertEquals(3, results.size());
@@ -209,10 +209,10 @@ public class XlsxParserTests {
     @Test
     public void testParsingOnShortValidFile2() throws ParseException {
         Sheet sheet = prepareSheet(rewardsManagerTestsConfiguration.getShortValidFile2Path());
-        xlsxParser.parseSheet(sheet);
+        ParsedData parsedData = xlsxParser.parseSheet(sheet);
 
         // Person
-        List<Person> people = xlsxParser.getParsedData().getPeople();
+        List<Person> people = parsedData.getPeople();
 
         assertEquals(3, people.size());
 
@@ -227,7 +227,7 @@ public class XlsxParserTests {
         );
 
         // Reward
-        List<Reward> rewards = xlsxParser.getParsedData().getRewards();
+        List<Reward> rewards = parsedData.getRewards();
 
         assertEquals(4, rewards.size());
 
@@ -242,12 +242,12 @@ public class XlsxParserTests {
                         r.getDescription().equals(expectedReward.getDescription()))));
 
         // Quiz
-        Quiz quiz = xlsxParser.getParsedData().getQuiz();
+        Quiz quiz = parsedData.getQuiz();
 
         assertEquals(2, quiz.getMaxScore());
 
         // Preference
-        List<Preference> preferences = xlsxParser.getParsedData().getPreferences();
+        List<Preference> preferences = parsedData.getPreferences();
 
         assertEquals(people.size() * rewards.size(), preferences.size());
 
@@ -334,7 +334,7 @@ public class XlsxParserTests {
         );
 
         // Result
-        List<Result> results = xlsxParser.getParsedData().getResults();
+        List<Result> results = parsedData.getResults();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
         assertEquals(3, results.size());
