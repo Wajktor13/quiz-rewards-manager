@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.repository.PersonRepository;
 import majestatyczne.bestie.rewardsmanager.model.Person;
@@ -16,6 +17,7 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
+    @Transactional
     public void addPerson(Person person) {
         if (findPersonByName(person.getName()).isEmpty()) {
             personRepository.save(person);
@@ -26,6 +28,7 @@ public class PersonService {
         return Optional.ofNullable(personRepository.findPersonByName(name));
     }
 
+    @Transactional
     public void addPeople(List<Person> people) {
         List<Person> newPeople = people
                 .stream()

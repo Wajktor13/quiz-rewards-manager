@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
@@ -14,6 +15,7 @@ public class RewardService {
 
     private final RewardRepository rewardRepository;
 
+    @Transactional
     public void addReward(Reward reward) {
         if (findRewardByName(reward.getName()).isEmpty()) {
             rewardRepository.save(reward);
@@ -24,6 +26,7 @@ public class RewardService {
         return Optional.ofNullable(rewardRepository.findRewardByName(name));
     }
 
+    @Transactional
     public void addRewards(List<Reward> rewards) {
         List<Reward> newRewards = rewards
                 .stream()

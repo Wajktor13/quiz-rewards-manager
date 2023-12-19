@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.repository.QuizRepository;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
@@ -14,6 +15,7 @@ public class QuizService {
 
     private final QuizRepository quizRepository;
 
+    @Transactional
     public void addQuiz(Quiz quiz) {
         quizRepository.save(quiz);
     }
