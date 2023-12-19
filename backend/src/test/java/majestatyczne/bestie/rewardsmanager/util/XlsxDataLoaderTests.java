@@ -47,7 +47,7 @@ public class XlsxDataLoaderTests {
                 "some data".getBytes()
         );
 
-        assertThrows(NotOfficeXmlFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
+        assertThrows(IOException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
 
         MultipartFile mockMultipartFile2 = new MockMultipartFile(
                 "data",
@@ -56,7 +56,7 @@ public class XlsxDataLoaderTests {
                 "dwedwedwefweifjwofhwrhgwehgurwehguiehrgurhguiwerihwruegherwuhig".getBytes()
         );
 
-        assertThrows(NotOfficeXmlFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile2));
+        assertThrows(IOException.class, () -> xlsxDataLoader.loadData(mockMultipartFile2));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class XlsxDataLoaderTests {
                 emptyByteArray
         );
 
-        assertThrows(EmptyFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
+        assertThrows(IOException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
     }
 
     @Test
@@ -84,6 +84,6 @@ public class XlsxDataLoaderTests {
                 emptyByteArray
         );
 
-        assertThrows(EmptyFileException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
+        assertThrows(IOException.class, () -> xlsxDataLoader.loadData(mockMultipartFile1));
     }
 }
