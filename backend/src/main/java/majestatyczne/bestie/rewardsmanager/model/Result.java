@@ -22,7 +22,6 @@ public class Result {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
-    @JsonIgnore
     private Quiz quiz;
 
     @ManyToOne
