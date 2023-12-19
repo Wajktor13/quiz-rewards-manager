@@ -8,6 +8,8 @@ import majestatyczne.bestie.rewardsmanager.model.Result;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,12 +23,14 @@ public class XlsxParser {
 
     private final XlsxParserProperties properties;
 
+    private final Logger logger = LoggerFactory.getLogger(XlsxParserProperties.class);
+
     public ParsedData parseSheet(Sheet sheet) {
         // two last columns are cut because they are empty! Thus row length is 17, not 19 (like the header)
 
         ParsedData parsedData = new ParsedData();
 
-        System.out.println("[XlsxParser] parsing data...");
+        logger.info("parsing data...");
 
         int rowLength = sheet.getRow(0).getLastCellNum();
 
@@ -48,7 +52,7 @@ public class XlsxParser {
 
         parseQuiz(parsedData, sheet);
 
-        System.out.println("[XlsxParser] data parsing complete");
+        logger.info("data parsing complete");
 
         return parsedData;
     }

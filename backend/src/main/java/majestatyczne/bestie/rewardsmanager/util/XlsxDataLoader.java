@@ -6,6 +6,8 @@ import org.apache.poi.EmptyFileException;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,10 +31,12 @@ public class XlsxDataLoader implements FileDataLoader {
 
     private ParsedData parsedData;
 
+    private final Logger logger = LoggerFactory.getLogger(XlsxDataLoader.class);
+
     @Override
     public void loadData(MultipartFile multipartFile) throws IOException {
 
-        System.out.println("[XlsxDataLoader] loading data...");
+        logger.info("loading data...");
 
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(multipartFile.getInputStream());
              Workbook workbook = new XSSFWorkbook(bufferedInputStream)) {
@@ -60,7 +64,7 @@ public class XlsxDataLoader implements FileDataLoader {
             loadPreferences();
             loadResults();
 
-            System.out.println("[XlsxDataLoader] data loading complete");
+            logger.info("data loading complete");
 
         } catch (NotOfficeXmlFileException | EmptyFileException | IOException e) {
             throw new IOException(e.getMessage());
