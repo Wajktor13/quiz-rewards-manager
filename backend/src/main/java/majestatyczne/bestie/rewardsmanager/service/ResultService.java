@@ -10,7 +10,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ResultService {
+
     private final ResultRepository resultRepository;
+
     private final PersonService personService;
 
     public void addResult(Result result) {

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class RewardCategoryService {
+
     private final RewardCategoryRepository rewardCategoryRepository;
 
     private void addRewardCategory(RewardCategory rewardCategory) {

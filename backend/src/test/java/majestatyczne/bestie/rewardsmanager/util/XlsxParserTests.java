@@ -24,6 +24,7 @@ public class XlsxParserTests {
 
     @Autowired
     private RewardsManagerTestsConfiguration rewardsManagerTestsConfiguration;
+
     @Autowired
     private XlsxParser xlsxParser;
 

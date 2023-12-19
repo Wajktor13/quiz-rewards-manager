@@ -14,21 +14,27 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "result_id")
     private int id;
+
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     @JsonIgnore
     private Quiz quiz;
+
     @ManyToOne
     @JoinColumn(name = "person_id")
     private Person person;
+
     @Column(nullable = false)
     private Date startDate;
+
     @Column(nullable = false)
     private Date endDate;
+
     @Column(nullable = false)
     private int score;
 }

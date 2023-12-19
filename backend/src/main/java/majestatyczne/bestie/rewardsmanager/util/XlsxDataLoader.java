@@ -15,11 +15,17 @@ import java.io.*;
 public class XlsxDataLoader implements FileDataLoader {
 
     private final XlsxParser xlsxParser;
+
     private final PersonService personService;
+
     private final PreferenceService preferenceService;
+
     private final QuizService quizService;
+
     private final ResultService resultService;
+
     private final RewardService rewardService;
+
     private ParsedData parsedData;
 
     @Override
@@ -75,5 +81,4 @@ public class XlsxDataLoader implements FileDataLoader {
     private void loadResults() {
         resultService.addResults(parsedData.getResults());
     }
-
 }

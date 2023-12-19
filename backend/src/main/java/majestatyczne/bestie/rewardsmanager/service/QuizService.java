@@ -11,6 +11,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class QuizService {
+
     private final QuizRepository quizRepository;
 
     public void addQuiz(Quiz quiz) {
@@ -20,6 +21,7 @@ public class QuizService {
     public List<Quiz> findAllQuizzes() {
         return quizRepository.findAll();
     }
+
     public Optional<Quiz> findById(int id) {
         return quizRepository.findById(id);
     }

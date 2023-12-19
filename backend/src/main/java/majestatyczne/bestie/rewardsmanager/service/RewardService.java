@@ -11,6 +11,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class RewardService {
+
     private final RewardRepository rewardRepository;
 
     public void addReward(Reward reward) {

@@ -21,6 +21,7 @@ public class FileUploadServiceTests {
 
     @Autowired
     private RewardsManagerTestsConfiguration rewardsManagerTestsConfiguration;
+
     @Autowired
     private FileUploadService fileUploadService;
 

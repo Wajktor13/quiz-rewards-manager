@@ -21,6 +21,7 @@ public class XlsxDataLoaderTests {
 
     @Autowired
     private RewardsManagerTestsConfiguration rewardsManagerTestsConfiguration;
+
     @Autowired
     private XlsxDataLoader xlsxDataLoader;
 

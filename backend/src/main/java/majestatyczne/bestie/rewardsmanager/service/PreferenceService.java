@@ -12,8 +12,11 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class PreferenceService {
+
     private final PreferenceRepository preferenceRepository;
+
     private final RewardService rewardService;
+
     private final PersonService personService;
 
     public void addPreference(Preference preference) {

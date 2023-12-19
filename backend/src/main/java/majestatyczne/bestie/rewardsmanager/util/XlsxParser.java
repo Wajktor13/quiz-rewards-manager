@@ -20,6 +20,7 @@ import java.util.List;
 public class XlsxParser {
 
     private final XlsxParserProperties properties;
+
     private ParsedData parsedData;
 
     public ParsedData parseSheet(Sheet sheet) {
