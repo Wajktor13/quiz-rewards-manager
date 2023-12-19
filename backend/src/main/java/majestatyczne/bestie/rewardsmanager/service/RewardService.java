@@ -26,12 +26,26 @@ public class RewardService {
         return Optional.ofNullable(rewardRepository.findRewardByName(name));
     }
 
+    public List<Reward> findAllRewardsByName(List<String> names) {
+        return rewardRepository.findAllRewardsByNames(names);
+    }
+
     @Transactional
     public void addRewards(List<Reward> rewards) {
+        List<String> names = rewards
+                .stream()
+                .map(Reward::getName)
+                .toList();
+
+        List<Reward> alreadyAddedRewards = findAllRewardsByName(names);
+
         List<Reward> newRewards = rewards
                 .stream()
-                .filter(reward -> findRewardByName(reward.getName()).isEmpty())
+                .filter(reward -> alreadyAddedRewards
+                        .stream()
+                        .noneMatch(alreadyAddedReward -> alreadyAddedReward.getName().equals(reward.getName())))
                 .toList();
+
         rewardRepository.saveAll(newRewards);
     }
 }

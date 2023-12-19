@@ -28,12 +28,26 @@ public class PersonService {
         return Optional.ofNullable(personRepository.findPersonByName(name));
     }
 
+    public List<Person> findAllPeopleByName(List<String> names) {
+        return personRepository.findAllPeopleByNames(names);
+    }
+
     @Transactional
     public void addPeople(List<Person> people) {
+        List<String> names = people
+                .stream()
+                .map(Person::getName)
+                .toList();
+
+        List<Person> alreadyAddedPeople = findAllPeopleByName(names);
+
         List<Person> newPeople = people
                 .stream()
-                .filter(person -> findPersonByName(person.getName()).isEmpty())
+                .filter(person -> alreadyAddedPeople
+                        .stream()
+                        .noneMatch(alreadyAddedPerson -> alreadyAddedPerson.getName().equals(person.getName())))
                 .toList();
+
         personRepository.saveAll(newPeople);
     }
 
