@@ -24,6 +24,7 @@ public class HomePageApplication extends Application {
 
     private void setStageProperties(Stage stage) {
         stage.setTitle(Constants.STAGE_TITLE);
+        stage.setResizable(false);
         stage.getIcons().add(new Image(String.valueOf(getClass().getResource(Constants.APPLICATION_ICON_RESOURCE))));
         if (Taskbar.isTaskbarSupported()) {
             setIconOnTaskbar();

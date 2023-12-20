@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
@@ -73,6 +74,8 @@ public class QuizPageController implements Initializable {
         scoreColumn.setCellValueFactory(scoreValue -> scoreValue.getValue().getScoreProperty());
         endDateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getEndDateProperty());
         rewardColumn.setCellValueFactory(rewardValue -> rewardValue.getValue().getRewardProperty());
+        settingsIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.SETTINGS_ICON_RESOURCE))));
+        backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
     }
 
     public void onGoBackClicked() {
