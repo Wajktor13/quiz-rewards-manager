@@ -14,8 +14,8 @@ import java.io.IOException;
 public class HomePageApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXML/home-page.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Constants.FXML_HOME_PAGE_RESOURCE));
+        Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
         setStageProperties(stage);
         stage.setScene(scene);
         stage.show();
@@ -23,8 +23,8 @@ public class HomePageApplication extends Application {
 
 
     private void setStageProperties(Stage stage) {
-        stage.setTitle("Rewards Manager");
-        stage.getIcons().add(new Image(String.valueOf(getClass().getResource("icons/owlbear.png"))));
+        stage.setTitle(Constants.STAGE_TITLE);
+        stage.getIcons().add(new Image(String.valueOf(getClass().getResource(Constants.APPLICATION_ICON_RESOURCE))));
         if (Taskbar.isTaskbarSupported()) {
             setIconOnTaskbar();
         }
@@ -34,7 +34,7 @@ public class HomePageApplication extends Application {
         var taskbar = Taskbar.getTaskbar();
         if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
             final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-            var dockIcon = defaultToolkit.getImage(getClass().getResource("icons/owlbear.png"));
+            var dockIcon = defaultToolkit.getImage(getClass().getResource(Constants.APPLICATION_ICON_RESOURCE));
             taskbar.setIconImage(dockIcon);
         }
     }

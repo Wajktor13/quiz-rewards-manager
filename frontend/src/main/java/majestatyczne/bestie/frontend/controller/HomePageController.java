@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.service.FileUploadService;
 import majestatyczne.bestie.frontend.service.QuizService;
@@ -33,7 +34,6 @@ public class HomePageController implements Initializable {
     @FXML
     private ImageView settingsIcon;
     private ObservableList<QuizView> quizzes;
-
     FileUploadService fileUploadService = new FileUploadService();
     FileChooser fileChooser = new FileChooser();
 
@@ -48,16 +48,16 @@ public class HomePageController implements Initializable {
     }
 
     @FXML
-    public void onQuizSelected(){
+    public void onQuizSelected() {
         QuizView selectedQuiz = quizTable.getSelectionModel().getSelectedItem();
         moveToQuizPage(selectedQuiz);
     }
 
     public void moveToQuizPage(QuizView quizView) {
         Stage stage = (Stage) quizTable.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource("FXML/quiz-page.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_QUIZ_PAGE_RESOURCE));
         try {
-            Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
             QuizPageController quizPageController = fxmlLoader.getController();
             quizPageController.setQuizView(quizView);
             stage.setScene(scene);
@@ -69,11 +69,10 @@ public class HomePageController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeDefaultUploadDirectory();
-
         nameColumn.setCellValueFactory(nameValue -> nameValue.getValue().getNameProperty());
         dateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getDateProperty());
         setData();
-        settingsIcon.setImage(new Image(String.valueOf(getClass().getResource("/majestatyczne/bestie/frontend/icons/settings.png"))));
+        settingsIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.SETTINGS_ICON_RESOURCE))));
     }
 
     private void initializeQuizzes() {
@@ -81,12 +80,11 @@ public class HomePageController implements Initializable {
         quizzes = FXCollections.observableArrayList();
         List<Quiz> quizList = quizService.getQuizzes();
         quizList.forEach(quiz -> quizzes.add(new QuizView(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate())));
-
     }
 
     private void initializeDefaultUploadDirectory() {
         String home = System.getProperty("user.home");
-        fileChooser.setInitialDirectory(new File(home + "/Downloads"));
+        fileChooser.setInitialDirectory(new File(home + Constants.DEFAULT_UPLOAD_DIRECTORY));
     }
 
     public void setData() {

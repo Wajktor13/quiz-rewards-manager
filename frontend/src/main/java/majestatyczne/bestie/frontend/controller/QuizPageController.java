@@ -9,9 +9,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.QuizView;
 import majestatyczne.bestie.frontend.model.ResultView;
@@ -40,6 +40,10 @@ public class QuizPageController implements Initializable {
     private Label quizNameLabel;
     @FXML
     private Label quizDateLabel;
+    @FXML
+    private ImageView settingsIcon;
+    @FXML
+    private ImageView backIcon;
 
     public void setQuizView(QuizView quizView) {
         this.quizView = quizView;
@@ -72,10 +76,10 @@ public class QuizPageController implements Initializable {
     }
 
     public void onGoBackClicked() {
-        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource("FXML/home-page.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_HOME_PAGE_RESOURCE));
         Stage stage = (Stage) resultTable.getScene().getWindow();
         try {
-            Scene scene = new Scene(fxmlLoader.load(), 1080, 720);
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
