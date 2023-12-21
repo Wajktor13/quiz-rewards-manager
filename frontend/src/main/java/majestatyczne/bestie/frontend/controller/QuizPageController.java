@@ -25,24 +25,35 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 public class QuizPageController implements Initializable {
+
     private QuizView quizView;
+
     private ObservableList<ResultView> results;
+
     @FXML
     private TableView<ResultView> resultTable;
+
     @FXML
-    private TableColumn<ResultView,String> nameColumn;
+    private TableColumn<ResultView, String> nameColumn;
+
     @FXML
-    private TableColumn<ResultView,Integer> scoreColumn;
+    private TableColumn<ResultView, Integer> scoreColumn;
+
     @FXML
     private TableColumn<ResultView, Date> endDateColumn;
+
     @FXML
-    private TableColumn<ResultView,String> rewardColumn;
+    private TableColumn<ResultView, String> rewardColumn;
+
     @FXML
     private Label quizNameLabel;
+
     @FXML
     private Label quizDateLabel;
+
     @FXML
     private ImageView settingsIcon;
+
     @FXML
     private ImageView backIcon;
 

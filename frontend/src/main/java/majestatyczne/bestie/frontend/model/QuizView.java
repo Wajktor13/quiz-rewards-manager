@@ -4,12 +4,15 @@ import javafx.beans.property.*;
 import lombok.Getter;
 
 import java.util.Date;
-
 public class QuizView {
+
     @Getter
     private int id;
+
     private StringProperty name;
+
     private IntegerProperty maxScore;
+
     private ObjectProperty<Date> date;
 
     public QuizView(int id, String name, int maxScore, Date date) {
@@ -54,6 +57,5 @@ public class QuizView {
     public void setDate(Date date) {
         this.date.set(date);
     }
-
 
 }

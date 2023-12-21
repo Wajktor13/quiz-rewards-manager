@@ -25,17 +25,24 @@ import java.net.URL;
 import java.util.*;
 
 public class HomePageController implements Initializable {
+
     @FXML
     private TableView<QuizView> quizTable;
+
     @FXML
     private TableColumn<QuizView, String> nameColumn;
+
     @FXML
     private TableColumn<QuizView, Date> dateColumn;
+
     @FXML
     private ImageView settingsIcon;
+
     private ObservableList<QuizView> quizzes;
-    FileUploadService fileUploadService = new FileUploadService();
-    FileChooser fileChooser = new FileChooser();
+
+    private final FileUploadService fileUploadService = new FileUploadService();
+
+    private final FileChooser fileChooser = new FileChooser();
 
     @FXML
     public void onGetFile() {

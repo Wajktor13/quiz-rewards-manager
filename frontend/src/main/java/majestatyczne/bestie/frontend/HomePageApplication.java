@@ -12,6 +12,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class HomePageApplication extends Application {
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Constants.FXML_HOME_PAGE_RESOURCE));
