@@ -11,14 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reward {
+
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "reward_id")
     private int id;
+
     @ManyToOne
     @JoinColumn(name = "rewardCategory_id")
     private RewardCategory rewardCategory;
+
     @Column(unique = true, nullable = false)
     private String name;
+
     private String description;
 }

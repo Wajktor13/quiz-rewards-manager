@@ -21,6 +21,7 @@ public class FileUploadServiceTests {
 
     @Autowired
     private RewardsManagerTestsConfiguration rewardsManagerTestsConfiguration;
+
     @Autowired
     private FileUploadService fileUploadService;
 
@@ -46,7 +47,7 @@ public class FileUploadServiceTests {
                 "some data".getBytes()
         );
 
-        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
+        assertThrows(IOException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
 
         MultipartFile mockMultipartFile2 = new MockMultipartFile(
                 "data",
@@ -55,7 +56,7 @@ public class FileUploadServiceTests {
                 "dwedwedwefweifjwofhwrhgwehgurwehguiehrgurhguiwerihwruegherwuhig".getBytes()
         );
 
-        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile2));
+        assertThrows(IOException.class, () -> fileUploadService.loadFile(mockMultipartFile2));
     }
 
     @Test
@@ -69,7 +70,7 @@ public class FileUploadServiceTests {
                 emptyByteArray
         );
 
-        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
+        assertThrows(IOException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
     }
 
     @Test
@@ -83,6 +84,6 @@ public class FileUploadServiceTests {
                 emptyByteArray
         );
 
-        assertThrows(ResponseStatusException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
+        assertThrows(IOException.class, () -> fileUploadService.loadFile(mockMultipartFile1));
     }
 }

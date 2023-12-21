@@ -9,5 +9,4 @@ public class RewardsManagerApplication{
 	public static void main(String[] args) {
 		SpringApplication.run(RewardsManagerApplication.class, args);
 	}
-
 }

@@ -1,6 +1,7 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
 import lombok.RequiredArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.QuizDTO;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import majestatyczne.bestie.rewardsmanager.service.QuizService;
 import org.springframework.http.HttpStatus;
@@ -14,21 +15,25 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("quiz")
+@RequestMapping("quizzes")
 @RequiredArgsConstructor
 public class QuizController {
 
     private final QuizService quizService;
 
-    @GetMapping("/all")
-    public List<Quiz> getAllQuizzes() {
-        return quizService.findAllQuizzes();
+    @GetMapping()
+    public List<QuizDTO> getAllQuizzes() {
+        return quizService.findAllQuizzes()
+                .stream()
+                .map(quiz -> new QuizDTO(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate()))
+                .toList();
     }
+
     @GetMapping("/{quizId}")
     public ResponseEntity<?> getQuizById(@PathVariable int quizId) {
         Optional<Quiz> quiz = quizService.findById(quizId);
-        return quiz.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .build());
+
+        return quiz.map(q -> ResponseEntity.ok(new QuizDTO(q.getId(), q.getName(), q.getMaxScore(), q.getDate())))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

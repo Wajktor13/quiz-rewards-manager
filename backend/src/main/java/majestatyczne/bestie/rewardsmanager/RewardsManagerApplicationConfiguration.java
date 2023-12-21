@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RewardsManagerApplicationConfiguration {
+
     @Bean
     CommandLineRunner commandLineRunner() {
         return args -> {

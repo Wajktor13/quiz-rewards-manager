@@ -11,5 +11,4 @@ class RewardsManagerApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

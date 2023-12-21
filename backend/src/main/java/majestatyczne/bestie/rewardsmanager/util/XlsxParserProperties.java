@@ -10,10 +10,16 @@ import org.springframework.context.annotation.Configuration;
 public class XlsxParserProperties {
 
     private int startDateIndex;
+
     private int endDateIndex;
+
     private int scoreIndex;
+
     private int personNameIndex;
+
     private int rewardsIndex;
+
     private int notEvaluatedQuestions;
+
     private int columnsPerEvaluatedQuestion;
 }
