@@ -44,7 +44,7 @@ public class XlsxParserTests {
     }
 
     @Test
-    public void testParsingOnShortValidFile1() throws ParseException {
+    public void parsingShortValidFile1() throws ParseException {
         // given
         Sheet sheet = prepareSheet(rewardsManagerTestsConfiguration.getShortValidFile1Path());
 
@@ -60,7 +60,7 @@ public class XlsxParserTests {
     }
 
     @Test
-    public void testParsingOnShortValidFile2() throws ParseException {
+    public void parsingShortValidFile2() throws ParseException {
         // given
         Sheet sheet = prepareSheet(rewardsManagerTestsConfiguration.getShortValidFile2Path());
 
