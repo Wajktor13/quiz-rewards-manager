@@ -2,6 +2,7 @@ package majestatyczne.bestie.frontend.service;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -14,7 +15,7 @@ import java.io.IOException;
 
 public class FileUploadService {
 
-    public void makeRequest(File file) {
+    public int makeRequest(File file) {
         HttpClient httpClient = HttpClients.createDefault();
 
         String url = "http://localhost:8080/upload-file";
@@ -31,9 +32,12 @@ public class FileUploadService {
             HttpResponse response;
             response = httpClient.execute(httpPost);
             System.out.println("[FileUploadClient] Server response after file upload: " + response.getStatusLine());
+            return response.getStatusLine().getStatusCode();
         } catch (IOException e) {
             System.out.println("[503] Couldn't get server response");
             System.out.println(e.getMessage());
+            return HttpStatus.SC_BAD_REQUEST;
         }
+
     }
 }

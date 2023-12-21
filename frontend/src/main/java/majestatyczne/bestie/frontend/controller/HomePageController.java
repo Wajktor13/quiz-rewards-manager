@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
@@ -18,6 +19,7 @@ import majestatyczne.bestie.frontend.service.FileUploadService;
 import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
 import majestatyczne.bestie.frontend.model.QuizView;
+import org.apache.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +52,27 @@ public class HomePageController implements Initializable {
         if (file == null) {
             return;
         }
-        fileUploadService.makeRequest(file);
+        int statusCode = fileUploadService.makeRequest(file);
+        switch (statusCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted();
+            default -> onRequestFailed(statusCode);
+        }
         setData();
+    }
+
+    @FXML
+    private void onRequestFailed(int statusCode){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(Constants.FILE_UPLOAD_ERROR_TITLE);
+        alert.setContentText(Constants.FILE_UPLOAD_ERROR_INFO + statusCode);
+        alert.showAndWait();
+    }
+    @FXML
+    private void onRequestAccepted() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
+        alert.setHeaderText(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
+        alert.showAndWait();
     }
 
     @FXML

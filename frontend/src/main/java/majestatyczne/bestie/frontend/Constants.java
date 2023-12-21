@@ -20,4 +20,10 @@ public class Constants {
 
     public static final String DEFAULT_UPLOAD_DIRECTORY = "/Downloads";
 
+    public static final String FILE_UPLOAD_ACCEPTED_TITLE = "Przesłanie pliku powiodło się!";
+
+    public static final String FILE_UPLOAD_ERROR_TITLE = "Przesłanie pliku nie powiodło się!";
+    
+    public static final String FILE_UPLOAD_ERROR_INFO = "Kod błędu: ";
+
 }
