@@ -12,6 +12,7 @@ public interface APIService {
 
     @GET("quiz/all")
     Call<List<Quiz>> getQuizzes();
+
     @GET("results/by_quiz_id/{quizId}")
     Call<List<Result>> getResults(@Path("quizId") int quizId);
 }

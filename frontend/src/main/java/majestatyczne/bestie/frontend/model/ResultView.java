@@ -5,9 +5,13 @@ import javafx.beans.property.*;
 import java.util.Date;
 
 public class ResultView {
+
     private StringProperty personName;
+
     private ObjectProperty<Date> endDate;
+
     private ObjectProperty<Integer> score;
+    
     private StringProperty reward;
 
     public ResultView(String personName, Date endDate, int score) {

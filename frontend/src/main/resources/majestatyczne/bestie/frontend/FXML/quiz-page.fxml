@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="majestatyczne.bestie.frontend.controller.QuizPageController">
     <children>
-        <HBox prefHeight="50.0" prefWidth="200.0" spacing="20.0" alignment="BASELINE_CENTER">
+        <HBox prefHeight="50.0" prefWidth="200.0" alignment="BASELINE_CENTER" styleClass="quiz-page-header">
             <children>
-                <Button mnemonicParsing="false" text="Back" onAction="#onGoBackClicked"/>
-                <Label fx:id="quizNameLabel" />
-                <Label fx:id="quizDateLabel" />
-                <Button mnemonicParsing="false" text="Export" />
-                <Button mnemonicParsing="false" text="Settings" />
+                <HBox styleClass="quiz-page-header-left">
+                    <ImageView fx:id="backIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" onMouseClicked="#onGoBackClicked">
+                        <Image url="@left-arrow.png"/>
+                    </ImageView>
+                </HBox>
+                <VBox styleClass="quiz-page-header-middle" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label fx:id="quizNameLabel" styleClass="quiz-name"/>
+                        <Label fx:id="quizDateLabel" styleClass="quiz-date"/>
+                    </children>
+                </VBox>
+                <HBox styleClass="quiz-page-header-right">
+                    <children>
+                        <Button mnemonicParsing="false" text="Export" />
+                        <ImageView fx:id="settingsIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@settings.png"/>
+                        </ImageView>
+                    </children>
+                </HBox>
             </children>
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-            </padding>
         </HBox>
         <VBox HBox.hgrow="ALWAYS">
-            <TableView fx:id="resultTable" prefHeight="654.0" prefWidth="600.0">
+            <TableView fx:id="resultTable" prefHeight="654.0" prefWidth="600.0" styleClass="quiz-page-table-view">
                 <columns>
                     <TableColumn fx:id="nameColumn" text="Imię zwierzaka" />
                     <TableColumn fx:id="scoreColumn" text="Wynik quizu" />
@@ -33,4 +46,7 @@
         </VBox>
 
     </children>
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
 </VBox>
