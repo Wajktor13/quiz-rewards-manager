@@ -1,6 +1,5 @@
 package majestatyczne.bestie.frontend.model;
 
-
 import lombok.Data;
 
 import java.util.Date;

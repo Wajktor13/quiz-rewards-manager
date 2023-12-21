@@ -18,7 +18,7 @@ public class FileUploadService {
     public int makeRequest(File file) {
         HttpClient httpClient = HttpClients.createDefault();
 
-        String url = "http://localhost:8080/upload-file";
+        String url = "http://localhost:8080/files";
         HttpPost httpPost = new HttpPost(url);
 
         FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);

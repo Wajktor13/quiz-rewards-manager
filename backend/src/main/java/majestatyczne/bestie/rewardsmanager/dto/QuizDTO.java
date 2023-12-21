@@ -12,16 +12,12 @@ import java.util.Date;
 @Data
 public class QuizDTO {
 
-    @JsonProperty("quiz_id")
     private int id;
 
-    @JsonProperty("name")
     private String name;
 
-    @JsonProperty("maxScore")
     private int maxScore;
 
-    @JsonProperty("date")
     private Date date;
 }
 

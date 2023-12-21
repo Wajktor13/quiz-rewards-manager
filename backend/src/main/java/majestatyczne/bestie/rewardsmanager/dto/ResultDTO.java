@@ -13,19 +13,14 @@ import java.util.Date;
 @Data
 public class ResultDTO {
 
-    @JsonProperty("result_id")
     private int id;
 
-    @JsonProperty("person_id")
     private Person person;
 
-    @JsonProperty("startDate")
     private Date startDate;
 
-    @JsonProperty("endDate")
     private Date endDate;
 
-    @JsonProperty("score")
     private int score;
 }
 
