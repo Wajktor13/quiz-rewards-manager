@@ -77,8 +77,13 @@ public class HomePageController implements Initializable {
 
     @FXML
     public void onQuizSelected() {
-        QuizView selectedQuiz = quizTable.getSelectionModel().getSelectedItem();
-        moveToQuizPage(selectedQuiz);
+        try {
+            QuizView selectedQuiz = quizTable.getSelectionModel().getSelectedItem();
+            moveToQuizPage(selectedQuiz);
+        } catch (NullPointerException e) {
+            System.out.println("Couldn't get selected quiz");
+            System.out.println(e.getMessage());
+        }
     }
 
     public void moveToQuizPage(QuizView quizView) {
