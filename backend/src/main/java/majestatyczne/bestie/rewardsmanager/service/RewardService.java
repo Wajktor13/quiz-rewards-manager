@@ -31,7 +31,7 @@ public class RewardService {
     }
 
     @Transactional
-    public void addRewards(List<Reward> rewards) {
+    public void addRewardsWithoutDuplicates(List<Reward> rewards) {
         List<String> names = rewards
                 .stream()
                 .map(Reward::getName)
@@ -47,5 +47,9 @@ public class RewardService {
                 .toList();
 
         rewardRepository.saveAll(newRewards);
+    }
+
+    public List<Reward> findAllRewards() {
+        return rewardRepository.findAll();
     }
 }
