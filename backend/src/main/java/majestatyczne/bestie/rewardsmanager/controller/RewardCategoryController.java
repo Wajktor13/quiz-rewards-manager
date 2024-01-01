@@ -17,7 +17,7 @@ public class RewardCategoryController {
     private final RewardCategoryService rewardCategoryService;
 
     @GetMapping
-    public List<RewardCategory> getAllRewardsCategories() {
+    public List<RewardCategory> getAllRewardCategories() {
         return rewardCategoryService.findAllRewardCategories();
     }
 
