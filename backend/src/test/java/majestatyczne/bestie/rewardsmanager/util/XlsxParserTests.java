@@ -224,19 +224,22 @@ public class XlsxParserTests {
                         new Person(0, "Baweł"),
                         dateFormat.parse("09.11.2023  19:34:55"),
                         dateFormat.parse("09.11.2023  19:40:15"),
-                        2),
+                        2,
+                        new Reward()),
                 new Result(1,
                         quiz,
                         new Person(1, "Daredevilq"),
                         dateFormat.parse("09.11.2023  19:35:03"),
                         dateFormat.parse("09.11.2023  19:41:21"),
-                        2),
+                        2,
+                        new Reward()),
                 new Result(2,
                         quiz,
                         new Person(2, "Schmetterling"),
                         dateFormat.parse("09.11.2023  19:34:58"),
                         dateFormat.parse("09.11.2023  19:38:41"),
-                        2)
+                        2,
+                        new Reward())
         );
 
         // then
@@ -400,19 +403,22 @@ public class XlsxParserTests {
                         new Person(0, "white hawk"),
                         dateFormat.parse("09.11.2023  19:34:54"),
                         dateFormat.parse("09.11.2023  19:39:38"),
-                        1),
+                        1,
+                        new Reward()),
                 new Result(1,
                         quiz,
                         new Person(1, "Wściekły Kiwis"),
                         dateFormat.parse("09.11.2023  19:35:08"),
                         dateFormat.parse("09.11.2023  19:39:42"),
-                        1),
+                        1,
+                        new Reward()),
                 new Result(2,
                         quiz,
                         new Person(2, "Aligator z Szafy"),
                         dateFormat.parse("09.11.2023  19:34:58"),
                         dateFormat.parse("09.11.2023  19:37:47"),
-                        0)
+                        0,
+                        new Reward())
         );
 
         // then
