@@ -1,6 +1,5 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
