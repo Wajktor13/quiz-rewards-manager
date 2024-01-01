@@ -27,7 +27,7 @@ public class RewardController {
                 .toList();
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<?> updateReward(@RequestBody RewardDTO rewardDTO) {
         Optional<Reward> reward = rewardService.findRewardById(rewardDTO.getId());
 

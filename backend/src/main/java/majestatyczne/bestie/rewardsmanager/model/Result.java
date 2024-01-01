@@ -35,4 +35,8 @@ public class Result {
 
     @Column(nullable = false)
     private int score;
+
+    @ManyToOne
+    @JoinColumn(name = "reward_id")
+    private Reward reward;
 }

@@ -19,8 +19,7 @@ public class ResultController {
         return resultService.findResultsByQuizId(quizId)
                 .stream()
                 .map(result -> new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(),
-                        result.getEndDate(), result.getScore()))
+                        result.getEndDate(), result.getScore(), result.getReward()))
                 .toList();
     }
-
 }
