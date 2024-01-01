@@ -7,6 +7,7 @@ import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("reward-categories")
@@ -14,6 +15,11 @@ import java.util.ArrayList;
 public class RewardCategoryController {
 
     private final RewardCategoryService rewardCategoryService;
+
+    @GetMapping
+    public List<RewardCategory> getAllRewardsCategories() {
+        return rewardCategoryService.findAllRewardCategories();
+    }
 
     @PostMapping
     public void addRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
