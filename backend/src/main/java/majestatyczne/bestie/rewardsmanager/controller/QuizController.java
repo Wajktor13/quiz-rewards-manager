@@ -21,7 +21,7 @@ public class QuizController {
 
     private final QuizService quizService;
 
-    @GetMapping()
+    @GetMapping
     public List<QuizDTO> getAllQuizzes() {
         return quizService.findAllQuizzes()
                 .stream()
