@@ -40,6 +40,7 @@ public class ResultService {
         return resultRepository.findById(resultId);
     }
 
+    @Transactional
     public void updateResult(Result result, Quiz quiz, Person person, Date startDate, Date endDate, int score,
                              Reward reward) {
         result.setQuiz(quiz);
