@@ -1,6 +1,7 @@
 package majestatyczne.bestie.rewardsmanager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Table(name = "rewardCategory")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class RewardCategory {
 
     @Id
