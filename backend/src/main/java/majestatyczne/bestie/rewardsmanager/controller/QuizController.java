@@ -31,7 +31,7 @@ public class QuizController {
 
     @GetMapping("/{quizId}")
     public ResponseEntity<?> getQuizById(@PathVariable int quizId) {
-        Optional<Quiz> quiz = quizService.findById(quizId);
+        Optional<Quiz> quiz = quizService.findQuizById(quizId);
 
         return quiz.map(q -> ResponseEntity.ok(new QuizDTO(q.getId(), q.getName(), q.getMaxScore(), q.getDate())))
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());

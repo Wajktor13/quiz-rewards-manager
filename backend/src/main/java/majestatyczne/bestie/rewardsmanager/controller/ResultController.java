@@ -14,7 +14,7 @@ public class ResultController {
 
     private final ResultService resultService;
 
-    @GetMapping("")
+    @GetMapping()
     public List<ResultDTO> getResultsByQuizId(@RequestParam int quizId) {
         return resultService.findResultsByQuizId(quizId)
                 .stream()

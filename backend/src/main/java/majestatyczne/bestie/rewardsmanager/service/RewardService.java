@@ -2,6 +2,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,17 @@ public class RewardService {
 
     public List<Reward> findAllRewards() {
         return rewardRepository.findAll();
+    }
+
+    public Optional<Reward> findRewardById(int rewardId) {
+        return rewardRepository.findById(rewardId);
+    }
+
+    public void updateReward(Reward reward, RewardCategory rewardCategory, String name, String description) {
+        reward.setRewardCategory(rewardCategory);
+        reward.setName(name);
+        reward.setName(description);
+
+        rewardRepository.save(reward);
     }
 }
