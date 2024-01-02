@@ -76,11 +76,11 @@ public class XlsxDataLoader implements FileDataLoader {
     }
 
     private void loadPeople() {
-        personService.addPeople(parsedData.getPeople());
+        personService.addPeopleWithoutDuplicates(parsedData.getPeople());
     }
 
     private void loadRewards() {
-        rewardService.addRewards(parsedData.getRewards());
+        rewardService.addRewardsWithoutDuplicates(parsedData.getRewards());
     }
 
     private void loadPreferences() {

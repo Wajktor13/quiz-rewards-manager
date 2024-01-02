@@ -2,6 +2,8 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
+import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class RewardService {
     }
 
     @Transactional
-    public void addRewards(List<Reward> rewards) {
+    public void addRewardsWithoutDuplicates(List<Reward> rewards) {
         List<String> names = rewards
                 .stream()
                 .map(Reward::getName)
@@ -47,5 +49,31 @@ public class RewardService {
                 .toList();
 
         rewardRepository.saveAll(newRewards);
+    }
+
+    public List<Reward> findAllRewards() {
+        return rewardRepository.findAll();
+    }
+
+    public Optional<Reward> findRewardById(int rewardId) {
+        return rewardRepository.findById(rewardId);
+    }
+
+    @Transactional
+    public void updateReward(Reward reward, RewardCategory rewardCategory, String name, String description) {
+        reward.setRewardCategory(rewardCategory);
+        reward.setName(name);
+        reward.setName(description);
+
+        rewardRepository.save(reward);
+    }
+    @Transactional
+    public boolean updateReward(RewardDTO rewardDTO) {
+        return findRewardById(rewardDTO.getId())
+                .map(reward -> {
+                    updateReward(reward, rewardDTO.getRewardCategory(), rewardDTO.getName(), rewardDTO.getDescription());
+                    return true;
+                })
+                .orElse(false);
     }
 }
