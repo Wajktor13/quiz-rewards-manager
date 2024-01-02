@@ -28,6 +28,6 @@ public class RewardSelectionStrategy {
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
-    @OneToMany(mappedBy = "reward_selection_strategy")
+    @OneToMany(mappedBy = "rewardSelectionStrategy")
     private List<RewardSelectionStrategyParameters> parameters;
 }
