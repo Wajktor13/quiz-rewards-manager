@@ -21,7 +21,7 @@ public class RewardSelectionStrategyParameters {
     private String name;
 
     @Column(nullable = false)
-    private Float value;
+    private Float parameter_value;
 
     @ManyToOne
     @JoinColumn(name = "reward_selection_strategy_id")
