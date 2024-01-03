@@ -29,16 +29,8 @@ public class RewardController {
 
     @PutMapping
     public ResponseEntity<?> updateReward(@RequestBody RewardDTO rewardDTO) {
-        Optional<Reward> reward = rewardService.findRewardById(rewardDTO.getId());
+        return rewardService.updateReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        if (reward.isPresent()) {
-            rewardService.updateReward(reward.get(), rewardDTO.getRewardCategory(), rewardDTO.getName(),
-                    rewardDTO.getDescription());
-
-            return ResponseEntity.status(HttpStatus.OK).build();
-
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 }

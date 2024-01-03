@@ -2,6 +2,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
 import majestatyczne.bestie.rewardsmanager.model.Person;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
@@ -36,7 +37,7 @@ public class ResultService {
         resultRepository.saveAll(results);
     }
 
-    public Optional<Result> findResultById(int resultId){
+    public Optional<Result> findResultById(int resultId) {
         return resultRepository.findById(resultId);
     }
 
@@ -51,5 +52,16 @@ public class ResultService {
         result.setReward(reward);
 
         resultRepository.save(result);
+    }
+
+    @Transactional
+    public boolean updateResult(ResultDTO resultDTO) {
+        return findResultById(resultDTO.getId())
+                .map(result -> {
+                    updateResult(result, result.getQuiz(), resultDTO.getPerson(),
+                            resultDTO.getStartDate(), resultDTO.getEndDate(), resultDTO.getScore(), resultDTO.getReward());
+                    return true;
+                })
+                .orElse(false);
     }
 }

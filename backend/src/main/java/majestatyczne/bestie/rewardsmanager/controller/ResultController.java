@@ -29,17 +29,8 @@ public class ResultController {
 
     @PutMapping
     public ResponseEntity<?> updateResult(@RequestBody ResultDTO resultDTO) {
-        Optional<Result> result = resultService.findResultById(resultDTO.getId());
+        return resultService.updateResult(resultDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        if (result.isPresent()) {
-            // Quiz does not change
-            resultService.updateResult(result.get(), result.get().getQuiz(), resultDTO.getPerson(),
-                    resultDTO.getStartDate(), resultDTO.getEndDate(), resultDTO.getScore(), resultDTO.getReward());
-
-            return ResponseEntity.status(HttpStatus.OK).build();
-
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 }

@@ -2,6 +2,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
@@ -65,5 +66,14 @@ public class RewardService {
         reward.setName(description);
 
         rewardRepository.save(reward);
+    }
+    @Transactional
+    public boolean updateReward(RewardDTO rewardDTO) {
+        return findRewardById(rewardDTO.getId())
+                .map(reward -> {
+                    updateReward(reward, rewardDTO.getRewardCategory(), rewardDTO.getName(), rewardDTO.getDescription());
+                    return true;
+                })
+                .orElse(false);
     }
 }
