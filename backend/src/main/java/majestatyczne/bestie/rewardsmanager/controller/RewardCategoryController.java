@@ -25,7 +25,7 @@ public class RewardCategoryController {
     @PostMapping
     public ResponseEntity<?> addRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
         return rewardCategoryService.addRewardCategory(rewardCategoryDTO) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PutMapping

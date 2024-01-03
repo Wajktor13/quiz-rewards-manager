@@ -30,6 +30,6 @@ public class RewardController {
     @PostMapping
     public ResponseEntity<?> addReward(@RequestBody RewardDTO rewardDTO) {
         return rewardService.addReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
