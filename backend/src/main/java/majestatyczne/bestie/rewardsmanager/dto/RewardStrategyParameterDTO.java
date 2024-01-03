@@ -7,9 +7,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class RewardCategoryDTO {
+public class RewardStrategyParameterDTO {
 
     private int id;
 
-    private String name;
+    private int priority;
+
+    private int parameterValue;
+
+    private RewardCategoryDTO rewardCategory;
 }

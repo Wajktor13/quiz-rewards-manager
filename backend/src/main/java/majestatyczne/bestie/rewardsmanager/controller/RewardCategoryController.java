@@ -26,7 +26,6 @@ public class RewardCategoryController {
         RewardCategory rewardCategory = new RewardCategory(
                 rewardCategoryDTO.getId(),
                 rewardCategoryDTO.getName(),
-                rewardCategoryDTO.getPriority(),
                 new ArrayList<>()
         );
 
