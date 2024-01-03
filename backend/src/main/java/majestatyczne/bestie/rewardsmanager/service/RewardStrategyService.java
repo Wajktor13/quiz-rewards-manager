@@ -58,4 +58,12 @@ public class RewardStrategyService {
             return false;
         }
     }
+
+    public Optional<RewardStrategy> findRewardStrategyByQuizId(int quizId) {
+        return Optional.ofNullable(rewardStrategyRepository.findRewardStrategyByQuizId(quizId));
+    }
+
+    public void deleteAllRewardStrategiesByIds(List<Integer> rewardStrategiesIds) {
+        rewardStrategyRepository.deleteAllById(rewardStrategiesIds);
+    }
 }
