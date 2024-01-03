@@ -27,8 +27,13 @@ public class ResultService {
         resultRepository.save(result);
     }
 
-    public List<Result> findResultsByQuizId(int quizId) {
-        return resultRepository.findResultsByQuizId(quizId);
+    public List<ResultDTO> findResultsByQuizId(int quizId) {
+        return resultRepository
+                .findResultsByQuizId(quizId)
+                .stream()
+                .map(result -> new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(),
+                        result.getEndDate(), result.getScore(), result.getReward()))
+                .toList();
     }
 
     @Transactional

@@ -51,8 +51,13 @@ public class RewardService {
         rewardRepository.saveAll(newRewards);
     }
 
-    public List<Reward> findAllRewards() {
-        return rewardRepository.findAll();
+    public List<RewardDTO> findAllRewards() {
+        return rewardRepository
+                .findAll()
+                .stream()
+                .map(reward -> new RewardDTO(reward.getId(), reward.getRewardCategory(), reward.getName(),
+                        reward.getDescription()))
+                .toList();
     }
 
     public Optional<Reward> findRewardById(int rewardId) {

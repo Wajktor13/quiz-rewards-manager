@@ -2,14 +2,12 @@ package majestatyczne.bestie.rewardsmanager.controller;
 
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
-import majestatyczne.bestie.rewardsmanager.model.Result;
 import majestatyczne.bestie.rewardsmanager.service.ResultService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("results")
@@ -20,11 +18,7 @@ public class ResultController {
 
     @GetMapping
     public List<ResultDTO> getResultsByQuizId(@RequestParam int quizId) {
-        return resultService.findResultsByQuizId(quizId)
-                .stream()
-                .map(result -> new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(),
-                        result.getEndDate(), result.getScore(), result.getReward()))
-                .toList();
+        return resultService.findResultsByQuizId(quizId);
     }
 
     @PutMapping

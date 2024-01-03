@@ -2,10 +2,12 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.RewardCategoryDTO;
 import majestatyczne.bestie.rewardsmanager.repository.RewardCategoryRepository;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,13 @@ public class RewardCategoryService {
     private final RewardCategoryRepository rewardCategoryRepository;
 
     @Transactional
-    public void addRewardCategory(RewardCategory rewardCategory) {
+    public void addRewardCategory(RewardCategoryDTO rewardCategoryDTO) {
+        RewardCategory rewardCategory = new RewardCategory(
+                rewardCategoryDTO.getId(),
+                rewardCategoryDTO.getName(),
+                new ArrayList<>()
+        );
+
         rewardCategoryRepository.save(rewardCategory);
     }
 
