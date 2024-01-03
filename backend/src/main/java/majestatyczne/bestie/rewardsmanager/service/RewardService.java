@@ -68,7 +68,7 @@ public class RewardService {
     public void updateReward(Reward reward, RewardCategory rewardCategory, String name, String description) {
         reward.setRewardCategory(rewardCategory);
         reward.setName(name);
-        reward.setName(description);
+        reward.setDescription(description);
 
         rewardRepository.save(reward);
     }
