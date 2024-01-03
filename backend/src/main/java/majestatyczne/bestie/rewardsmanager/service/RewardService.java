@@ -20,10 +20,19 @@ public class RewardService {
     private final RewardCategoryService rewardCategoryService;
 
     @Transactional
-    public void addReward(Reward reward) {
-        if (findRewardByName(reward.getName()).isEmpty()) {
+    public boolean addReward(RewardDTO rewardDTO) {
+        if (findRewardByName(rewardDTO.getName()).isEmpty()) {
+            Reward reward = new Reward();
+            reward.setRewardCategory(rewardDTO.getRewardCategory());
+            reward.setName(reward.getName());
+            reward.setDescription(reward.getDescription());
+
             rewardRepository.save(reward);
+
+            return true;
         }
+
+        return false;
     }
 
     public Optional<Reward> findRewardByName(String name) {

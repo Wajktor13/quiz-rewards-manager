@@ -26,4 +26,10 @@ public class RewardController {
         return rewardService.updateReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PostMapping
+    public ResponseEntity<?> addReward(@RequestBody RewardDTO rewardDTO) {
+        return rewardService.addReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 }
