@@ -6,6 +6,10 @@ public class Constants {
 
     public static final String FXML_QUIZ_PAGE_RESOURCE = "FXML/quiz-page.fxml";
 
+    public static final String FXML_GLOBAL_SETTINGS_RESOURCE = "FXML/global-settings-page.fxml";
+
+    public static final String FXML_QUIZ_SETTINGS_RESOURCE = "FXML/quiz-settings-page.fxml";
+
     public static final String APPLICATION_ICON_RESOURCE = "icons/owl-bear.png";
 
     public static final String SETTINGS_ICON_RESOURCE = "icons/settings.png";
@@ -25,5 +29,4 @@ public class Constants {
     public static final String FILE_UPLOAD_ERROR_TITLE = "Przesłanie pliku nie powiodło się!";
     
     public static final String FILE_UPLOAD_ERROR_INFO = "Kod błędu: ";
-
 }

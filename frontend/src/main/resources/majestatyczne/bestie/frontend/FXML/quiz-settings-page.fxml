@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="majestatyczne.bestie.frontend.controller.QuizSettingsPageController"
+      prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <HBox prefHeight="50.0" prefWidth="200.0" alignment="BASELINE_CENTER" >
+            <HBox>
+                <ImageView fx:id="backIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true"
+                           onMouseClicked="#onGoBackClicked">
+                    <Image url="@left-arrow.png"/>
+                </ImageView>
+            </HBox>
+        </HBox>
+    </children>
+
+</VBox>

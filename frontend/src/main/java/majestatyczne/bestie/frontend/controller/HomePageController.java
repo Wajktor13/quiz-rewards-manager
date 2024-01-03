@@ -61,12 +61,13 @@ public class HomePageController implements Initializable {
     }
 
     @FXML
-    private void onRequestFailed(int statusCode){
+    private void onRequestFailed(int statusCode) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(Constants.FILE_UPLOAD_ERROR_TITLE);
         alert.setContentText(Constants.FILE_UPLOAD_ERROR_INFO + statusCode);
         alert.showAndWait();
     }
+
     @FXML
     private void onRequestAccepted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -93,6 +94,18 @@ public class HomePageController implements Initializable {
             Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
             QuizPageController quizPageController = fxmlLoader.getController();
             quizPageController.setQuizView(quizView);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void onSettingsClicked() {
+        Stage stage = (Stage) quizTable.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_GLOBAL_SETTINGS_RESOURCE));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
             stage.setScene(scene);
         } catch (IOException e) {
             System.out.println(e.getMessage());

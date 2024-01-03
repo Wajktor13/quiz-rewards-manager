@@ -24,7 +24,7 @@
                 <HBox styleClass="quiz-page-header-right">
                     <children>
                         <Button mnemonicParsing="false" text="Export" />
-                        <ImageView fx:id="settingsIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="settingsIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" onMouseClicked="#onSettingsClicked">
                             <Image url="@settings.png"/>
                         </ImageView>
                     </children>
