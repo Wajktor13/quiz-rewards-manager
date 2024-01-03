@@ -19,14 +19,20 @@ public class RewardCategoryService {
     private final RewardCategoryRepository rewardCategoryRepository;
 
     @Transactional
-    public void addRewardCategory(RewardCategoryDTO rewardCategoryDTO) {
-        RewardCategory rewardCategory = new RewardCategory(
-                rewardCategoryDTO.getId(),
-                rewardCategoryDTO.getName(),
-                new ArrayList<>()
-        );
+    public boolean addRewardCategory(RewardCategoryDTO rewardCategoryDTO) {
+        if (findRewardCategoryByName(rewardCategoryDTO.getName()).isEmpty()) {
+            RewardCategory rewardCategory = new RewardCategory(
+                    rewardCategoryDTO.getId(),
+                    rewardCategoryDTO.getName(),
+                    new ArrayList<>()
+            );
 
-        rewardCategoryRepository.save(rewardCategory);
+            rewardCategoryRepository.save(rewardCategory);
+
+            return true;
+        }
+
+        return false;
     }
 
     public List<RewardCategory> findAllRewardCategories() {
@@ -63,5 +69,10 @@ public class RewardCategoryService {
         rewardCategory.getRewards().add(reward);
 
         rewardCategoryRepository.save(rewardCategory);
+    }
+
+    @Transactional
+    public Optional<RewardCategory> findRewardCategoryByName(String name) {
+        return Optional.ofNullable(rewardCategoryRepository.findRewardCategoryByName(name));
     }
 }
