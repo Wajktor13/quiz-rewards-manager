@@ -1,5 +1,6 @@
 package majestatyczne.bestie.frontend.controller;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +12,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
+import majestatyczne.bestie.frontend.model.QuizView;
+import majestatyczne.bestie.frontend.model.RewardCategory;
+import majestatyczne.bestie.frontend.model.RewardCategoryView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,9 +25,19 @@ public class GlobalSettingsPageController implements Initializable {
     @FXML
     private ImageView backIcon;
 
+    private ObservableList<RewardCategoryView> rewardCategories;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setData();
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
+    }
+
+    private void setData() {
+        initializeRewardCategories();
+    }
+
+    private void initializeRewardCategories() {
     }
 
     @FXML

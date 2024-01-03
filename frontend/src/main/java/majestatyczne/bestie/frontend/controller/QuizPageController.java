@@ -106,6 +106,8 @@ public class QuizPageController implements Initializable {
         Stage stage = (Stage) resultTable.getScene().getWindow();
         try {
             Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            QuizSettingsPageController quizSettingsPageController = fxmlLoader.getController();
+            quizSettingsPageController.setQuizView(quizView);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

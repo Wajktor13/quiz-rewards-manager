@@ -29,4 +29,6 @@ public class Constants {
     public static final String FILE_UPLOAD_ERROR_TITLE = "Przesłanie pliku nie powiodło się!";
     
     public static final String FILE_UPLOAD_ERROR_INFO = "Kod błędu: ";
+
+    public static final String QUIZ_MAX_SCORE_INFO = "Punkty do uzyskania: ";
 }
