@@ -6,24 +6,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reward_selection_parameters")
+@Table(name = "reward_strategy_parameter")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RewardSelectionParameters {
+public class RewardStrategyParameter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reward_selection_parameters_id")
+    @Column(name = "reward_strategy_parameter_id")
     private int id;
 
     @Column(nullable = false)
-    private String name;
+    private int priority;
 
     @Column(nullable = false)
-    private Float parameter_value;
+    private int parameterValue;
 
     @ManyToOne
-    @JoinColumn(name = "reward_selection_id")
-    private RewardSelection rewardSelection;
+    @JoinColumn(name = "reward_category_id")
+    private RewardCategory rewardCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "reward_strategy_id")
+    private RewardStrategy rewardStrategy;
 }

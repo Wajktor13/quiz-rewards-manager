@@ -18,7 +18,7 @@ public class Reward {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "rewardCategory_id")
+    @JoinColumn(name = "reward_category_id")
     private RewardCategory rewardCategory;
 
     @Column(unique = true, nullable = false)
