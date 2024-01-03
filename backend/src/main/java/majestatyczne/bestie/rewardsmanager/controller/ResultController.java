@@ -25,6 +25,5 @@ public class ResultController {
     public ResponseEntity<?> updateResult(@RequestBody ResultDTO resultDTO) {
         return resultService.updateResult(resultDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
     }
 }
