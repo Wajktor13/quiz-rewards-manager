@@ -22,21 +22,28 @@ public class RewardStrategyService {
     private final RewardStrategyParameterService rewardStrategyParameterService;
 
     @Transactional
-    public void addRewardStrategy(RewardStrategyDTO rewardStrategyDTO) {
-        RewardStrategy rewardStrategy = new RewardStrategy();
-        rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
-        rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
-        rewardStrategy.setParameters(new ArrayList<>());
+    public boolean addRewardStrategy(RewardStrategyDTO rewardStrategyDTO) {
+        if (findRewardStrategyByQuizId(rewardStrategyDTO.getQuiz().getId()).isEmpty())
+        {
+            RewardStrategy rewardStrategy = new RewardStrategy();
+            rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
+            rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
+            rewardStrategy.setParameters(new ArrayList<>());
 
-        rewardStrategyRepository.save(rewardStrategy);
+            rewardStrategyRepository.save(rewardStrategy);
 
-        List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
-        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
-                .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
+            List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
+            List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
+                    .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
 
-        rewardStrategy.setParameters(rewardStrategyParameters);
+            rewardStrategy.setParameters(rewardStrategyParameters);
 
-        rewardStrategyRepository.save(rewardStrategy);
+            rewardStrategyRepository.save(rewardStrategy);
+
+            return true;
+        }
+
+        return false;
     }
 
     @Transactional

@@ -15,8 +15,9 @@ public class RewardStrategyController {
     private final RewardStrategyService rewardStrategyService;
 
     @PostMapping
-    public void addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
-        rewardStrategyService.addRewardStrategy(rewardStrategyDTO);
+    public ResponseEntity<?> addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+        return rewardStrategyService.addRewardStrategy(rewardStrategyDTO) ?
+                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PutMapping
