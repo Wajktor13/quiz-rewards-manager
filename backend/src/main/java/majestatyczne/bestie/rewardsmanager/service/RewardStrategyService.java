@@ -64,6 +64,7 @@ public class RewardStrategyService {
     }
 
     public void deleteAllRewardStrategiesByIds(List<Integer> rewardStrategiesIds) {
+        rewardStrategyParameterService.deleteAllRewardStrategyParametersByRewardStrategyIds(rewardStrategiesIds);
         rewardStrategyRepository.deleteAllById(rewardStrategiesIds);
     }
 }
