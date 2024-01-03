@@ -4,20 +4,20 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.enums.RewardSelectionStrategyType;
+import majestatyczne.bestie.rewardsmanager.reward_selection_strategy.RewardSelectionStrategyType;
 
 import java.util.List;
 
 @Entity
-@Table(name = "reward_selection_strategy")
+@Table(name = "reward_selection")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RewardSelectionStrategy {
+public class RewardSelection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reward_selection_strategy_id")
+    @Column(name = "reward_selection_id")
     private int id;
 
     @Enumerated(EnumType.STRING)
@@ -28,6 +28,6 @@ public class RewardSelectionStrategy {
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
-    @OneToMany(mappedBy = "rewardSelectionStrategy")
-    private List<RewardSelectionStrategyParameters> parameters;
+    @OneToMany(mappedBy = "rewardSelection")
+    private List<RewardSelectionParameters> parameters;
 }

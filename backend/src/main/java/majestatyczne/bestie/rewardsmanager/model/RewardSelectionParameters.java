@@ -6,15 +6,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reward_selection_strategy_parameters")
+@Table(name = "reward_selection_parameters")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RewardSelectionStrategyParameters {
+public class RewardSelectionParameters {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reward_selection_strategy_parameters_id")
+    @Column(name = "reward_selection_parameters_id")
     private int id;
 
     @Column(nullable = false)
@@ -24,6 +24,6 @@ public class RewardSelectionStrategyParameters {
     private Float parameter_value;
 
     @ManyToOne
-    @JoinColumn(name = "reward_selection_strategy_id")
-    private RewardSelectionStrategy rewardSelectionStrategy;
+    @JoinColumn(name = "reward_selection_id")
+    private RewardSelection rewardSelection;
 }

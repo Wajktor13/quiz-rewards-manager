@@ -31,6 +31,6 @@ public class Quiz {
     private List<Result> results;
 
     @OneToOne
-    @JoinColumn(name = "reward_selection_strategy_id")
-    private RewardSelectionStrategy rewardSelectionStrategy;
+    @JoinColumn(name = "reward_selection_id")
+    private RewardSelection rewardSelection;
 }
