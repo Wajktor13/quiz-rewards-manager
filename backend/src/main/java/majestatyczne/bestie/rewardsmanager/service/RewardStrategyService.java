@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,5 +37,25 @@ public class RewardStrategyService {
         rewardStrategy.setParameters(rewardStrategyParameters);
 
         rewardStrategyRepository.save(rewardStrategy);
+    }
+
+    @Transactional
+    public boolean updateRewardStrategy(RewardStrategyDTO rewardStrategyDTO) {
+        Optional<RewardStrategy> rewardStrategyOptional = rewardStrategyRepository.findById(rewardStrategyDTO.getId());
+
+        if (rewardStrategyOptional.isPresent()) {
+            RewardStrategy rewardStrategy = rewardStrategyOptional.get();
+            rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
+            rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
+
+            rewardStrategyParameterService.updateAllRewardStrategyParameters(rewardStrategyDTO.getParameters(),
+                    rewardStrategy);
+
+            rewardStrategyRepository.save(rewardStrategy);
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }

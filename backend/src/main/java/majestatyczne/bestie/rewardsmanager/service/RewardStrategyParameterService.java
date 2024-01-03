@@ -49,4 +49,15 @@ public class RewardStrategyParameterService {
 
         return rewardStrategyParameters;
     }
+
+    @Transactional
+    public void updateAllRewardStrategyParameters(List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs,
+                                                  RewardStrategy rewardStrategy) {
+
+        rewardStrategyParameterRepository.deleteAllById(rewardStrategyParameterDTOs
+                .stream().map(RewardStrategyParameterDTO::getId)
+                .toList());
+
+        addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
+    }
 }
