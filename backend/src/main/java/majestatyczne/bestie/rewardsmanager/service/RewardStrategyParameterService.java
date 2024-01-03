@@ -55,7 +55,8 @@ public class RewardStrategyParameterService {
                                                   RewardStrategy rewardStrategy) {
 
         rewardStrategyParameterRepository.deleteAllById(rewardStrategyParameterDTOs
-                .stream().map(RewardStrategyParameterDTO::getId)
+                .stream()
+                .map(RewardStrategyParameterDTO::getId)
                 .toList());
 
         addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);

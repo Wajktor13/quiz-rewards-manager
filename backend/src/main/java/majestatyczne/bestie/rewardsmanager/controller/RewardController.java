@@ -25,6 +25,5 @@ public class RewardController {
     public ResponseEntity<?> updateReward(@RequestBody RewardDTO rewardDTO) {
         return rewardService.updateReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
     }
 }
