@@ -17,6 +17,8 @@ public class RewardService {
 
     private final RewardRepository rewardRepository;
 
+    private final RewardCategoryService rewardCategoryService;
+
     @Transactional
     public void addReward(Reward reward) {
         if (findRewardByName(reward.getName()).isEmpty()) {
@@ -70,8 +72,11 @@ public class RewardService {
         reward.setName(name);
         reward.setDescription(description);
 
+        rewardCategoryService.addReward(rewardCategory, reward);
+
         rewardRepository.save(reward);
     }
+
     @Transactional
     public boolean updateReward(RewardDTO rewardDTO) {
         return findRewardById(rewardDTO.getId())
