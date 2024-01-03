@@ -24,7 +24,7 @@ public class QuizService {
         return quizRepository.findAll();
     }
 
-    public Optional<Quiz> findById(int id) {
+    public Optional<Quiz> findQuizById(int id) {
         return quizRepository.findById(id);
     }
 }

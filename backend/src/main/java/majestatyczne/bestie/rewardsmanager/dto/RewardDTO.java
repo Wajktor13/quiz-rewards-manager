@@ -3,20 +3,18 @@ package majestatyczne.bestie.rewardsmanager.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class QuizDTO {
+public class RewardDTO {
 
     private int id;
 
+    private RewardCategory rewardCategory;
+
     private String name;
 
-    private int maxScore;
-
-    private Date date;
+    private String description;
 }
-

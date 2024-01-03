@@ -33,7 +33,7 @@ public class PersonService {
     }
 
     @Transactional
-    public void addPeople(List<Person> people) {
+    public void addPeopleWithoutDuplicates(List<Person> people) {
         List<String> names = people
                 .stream()
                 .map(Person::getName)

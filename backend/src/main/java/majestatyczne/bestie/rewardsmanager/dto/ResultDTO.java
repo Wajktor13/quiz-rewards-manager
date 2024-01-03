@@ -1,10 +1,10 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Person;
+import majestatyczne.bestie.rewardsmanager.model.Reward;
 
 import java.util.Date;
 
@@ -22,5 +22,6 @@ public class ResultDTO {
     private Date endDate;
 
     private int score;
-}
 
+    private Reward reward;
+}

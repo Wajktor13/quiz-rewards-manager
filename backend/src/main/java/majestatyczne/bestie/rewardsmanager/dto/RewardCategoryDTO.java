@@ -4,19 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class QuizDTO {
+public class RewardCategoryDTO {
 
     private int id;
 
     private String name;
 
-    private int maxScore;
-
-    private Date date;
+    private int priority;
 }
-
