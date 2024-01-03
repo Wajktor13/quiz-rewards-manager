@@ -10,6 +10,7 @@ import majestatyczne.bestie.rewardsmanager.model.RewardStrategyParameter;
 import majestatyczne.bestie.rewardsmanager.repository.RewardStrategyParameterRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,23 +22,31 @@ public class RewardStrategyParameterService {
     private final RewardCategoryService rewardCategoryService;
 
     @Transactional
-    public RewardStrategyParameter addRewardStrategyParameterFromDTO(RewardStrategyParameterDTO rewardStrategyParameterDTO,
-                                                                     RewardStrategy rewardStrategy) {
-        RewardStrategyParameter rewardStrategyParameter = new RewardStrategyParameter();
-        rewardStrategyParameter.setPriority(rewardStrategyParameterDTO.getPriority());
-        rewardStrategyParameter.setParameterValue(rewardStrategyParameterDTO.getParameterValue());
-        rewardStrategyParameter.setRewardStrategy(rewardStrategy);
+    public List<RewardStrategyParameter> addAllRewardStrategyParameters(List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs,
+                                                                  RewardStrategy rewardStrategy) {
 
-        Optional<RewardCategory> rewardCategory =  rewardCategoryService
-                .findRewardCategoryById(rewardStrategyParameterDTO.getId());
-        if (rewardCategory.isPresent()) {
-            rewardStrategyParameter.setRewardCategory(rewardCategory.get());
-        } else {
-            throw new EntityNotFoundException();
-        }
+        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterDTOs
+                .stream()
+                .map(rewardStrategyParameterDTO -> {
+                        RewardStrategyParameter rewardStrategyParameter = new RewardStrategyParameter();
+                        rewardStrategyParameter.setPriority(rewardStrategyParameterDTO.getPriority());
+                        rewardStrategyParameter.setParameterValue(rewardStrategyParameterDTO.getParameterValue());
+                        rewardStrategyParameter.setRewardStrategy(rewardStrategy);
 
-        rewardStrategyParameterRepository.save(rewardStrategyParameter);
+                        Optional<RewardCategory> rewardCategory =  rewardCategoryService
+                                .findRewardCategoryById(rewardStrategyParameterDTO.getId());
+                        if (rewardCategory.isPresent()) {
+                            rewardStrategyParameter.setRewardCategory(rewardCategory.get());
+                        } else {
+                            throw new EntityNotFoundException();
+                        }
 
-        return rewardStrategyParameter;
+                        return rewardStrategyParameter;
+                    })
+                .toList();
+
+        rewardStrategyParameterRepository.saveAll(rewardStrategyParameters);
+
+        return rewardStrategyParameters;
     }
 }

@@ -21,7 +21,7 @@ public class RewardStrategyService {
     private final RewardStrategyParameterService rewardStrategyParameterService;
 
     @Transactional
-    public void addRewardStrategyFromDTO(RewardStrategyDTO rewardStrategyDTO) {
+    public void addRewardStrategy(RewardStrategyDTO rewardStrategyDTO) {
         RewardStrategy rewardStrategy = new RewardStrategy();
         rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
         rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
@@ -30,11 +30,8 @@ public class RewardStrategyService {
         rewardStrategyRepository.save(rewardStrategy);
 
         List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
-        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterDTOs
-                .stream()
-                .map(r -> rewardStrategyParameterService
-                            .addRewardStrategyParameterFromDTO(r, rewardStrategy))
-                .toList();
+        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
+                .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
 
         rewardStrategy.setParameters(rewardStrategyParameters);
 

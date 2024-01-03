@@ -17,6 +17,6 @@ public class RewardStrategyController {
 
     @PostMapping
     public void addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
-        rewardStrategyService.addRewardStrategyFromDTO(rewardStrategyDTO);
+        rewardStrategyService.addRewardStrategy(rewardStrategyDTO);
     }
 }
