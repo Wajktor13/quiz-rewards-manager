@@ -12,6 +12,4 @@ public class RewardCategoryDTO {
     private int id;
 
     private String name;
-
-    private int priority;
 }

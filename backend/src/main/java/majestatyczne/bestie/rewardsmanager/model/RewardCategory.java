@@ -22,8 +22,6 @@ public class RewardCategory {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
-    private int priority;
 
     @OneToMany(mappedBy = "rewardCategory")
     private List<Reward> rewards;
