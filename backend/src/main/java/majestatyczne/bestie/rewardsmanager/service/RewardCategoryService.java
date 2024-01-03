@@ -7,6 +7,7 @@ import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,5 +22,9 @@ public class RewardCategoryService {
 
     public List<RewardCategory> findAllRewardCategories() {
         return rewardCategoryRepository.findAll();
+    }
+
+    public Optional<RewardCategory> findRewardCategoryById(int rewardCategoryId) {
+        return rewardCategoryRepository.findById(rewardCategoryId);
     }
 }
