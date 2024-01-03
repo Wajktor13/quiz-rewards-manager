@@ -1,7 +1,9 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardStrategyDTO;
+import majestatyczne.bestie.rewardsmanager.dto.RewardStrategyParameterDTO;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategyParameter;
 import majestatyczne.bestie.rewardsmanager.repository.RewardStrategyRepository;
@@ -16,11 +18,25 @@ public class RewardStrategyService {
 
     private final RewardStrategyRepository rewardStrategyRepository;
 
+    private final RewardStrategyParameterService rewardStrategyParameterService;
+
+    @Transactional
     public void addRewardStrategyFromDTO(RewardStrategyDTO rewardStrategyDTO) {
         RewardStrategy rewardStrategy = new RewardStrategy();
         rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
         rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
-        rewardStrategy.setParameters(new ArrayList<>()); // needs to be fetched from RewardStrategyParameterService
+        rewardStrategy.setParameters(new ArrayList<>());
+
+        rewardStrategyRepository.save(rewardStrategy);
+
+        List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
+        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterDTOs
+                .stream()
+                .map(r -> rewardStrategyParameterService
+                            .addRewardStrategyParameterFromDTO(r, rewardStrategy))
+                .toList();
+
+        rewardStrategy.setParameters(rewardStrategyParameters);
 
         rewardStrategyRepository.save(rewardStrategy);
     }
