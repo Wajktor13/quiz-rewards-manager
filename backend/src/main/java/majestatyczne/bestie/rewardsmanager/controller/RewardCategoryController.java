@@ -44,8 +44,11 @@ public class RewardCategoryController {
 
     @DeleteMapping("/{rewardCategoryId}")
     public ResponseEntity<?> deleteRewardCategoryById(@PathVariable int rewardCategoryId) {
-        rewardCategoryService.deleteRewardCategoryById(rewardCategoryId);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return rewardCategoryService.findRewardCategoryById(rewardCategoryId)
+                .map(category -> {
+                    rewardCategoryService.deleteRewardCategoryById(rewardCategoryId);
+                    return ResponseEntity.status(HttpStatus.OK).build();
+                })
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
