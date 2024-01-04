@@ -81,7 +81,9 @@ public class RewardService {
         reward.setName(name);
         reward.setDescription(description);
 
-        rewardCategoryService.addReward(rewardCategory, reward);
+        if (reward.getRewardCategory() != null) {
+            rewardCategoryService.addReward(rewardCategory, reward);
+        }
 
         rewardRepository.save(reward);
     }
