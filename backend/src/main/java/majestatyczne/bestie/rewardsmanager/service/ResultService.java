@@ -69,4 +69,9 @@ public class ResultService {
                 })
                 .orElse(false);
     }
+
+    @Transactional
+    public void deleteAllResultsByIds(List<Integer> resultIds) {
+        resultRepository.deleteAllById(resultIds);
+    }
 }

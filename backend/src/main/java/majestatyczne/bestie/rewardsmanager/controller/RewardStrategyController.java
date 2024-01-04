@@ -8,15 +8,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("reward-strategy")
+@RequestMapping("reward-strategies")
 @RequiredArgsConstructor
 public class RewardStrategyController {
 
     private final RewardStrategyService rewardStrategyService;
 
     @PostMapping
-    public void addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
-        rewardStrategyService.addRewardStrategy(rewardStrategyDTO);
+    public ResponseEntity<String> addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+        return rewardStrategyService.addRewardStrategy(rewardStrategyDTO) ?
+                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        "Strategy for the given quiz already exists");
     }
 
     @PutMapping

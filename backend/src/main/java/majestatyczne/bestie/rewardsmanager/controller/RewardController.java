@@ -26,4 +26,21 @@ public class RewardController {
         return rewardService.updateReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @PostMapping
+    public ResponseEntity<String> addReward(@RequestBody RewardDTO rewardDTO) {
+        return rewardService.addReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        String.format("Reward with the given name already exists: '%s'", rewardDTO.getName()));
+    }
+
+    @DeleteMapping("/{rewardId}")
+    public ResponseEntity<?> deleteRewardById(@PathVariable int rewardId) {
+        return rewardService.findRewardById(rewardId)
+                .map(reward -> {
+                    rewardService.deleteRewardById(rewardId);
+                    return ResponseEntity.status(HttpStatus.OK).build();
+                })
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }

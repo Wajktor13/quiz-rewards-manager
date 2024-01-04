@@ -61,4 +61,9 @@ public class RewardStrategyParameterService {
 
         addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
     }
+
+    @Transactional
+    public void deleteAllRewardStrategyParametersByRewardStrategyIds(List<Integer> rewardStrategyIds) {
+        rewardStrategyParameterRepository.deleteAllByRewardStrategyIds(rewardStrategyIds);
+    }
 }

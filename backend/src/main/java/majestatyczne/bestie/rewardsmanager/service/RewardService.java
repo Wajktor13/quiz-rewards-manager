@@ -17,11 +17,22 @@ public class RewardService {
 
     private final RewardRepository rewardRepository;
 
+    private final RewardCategoryService rewardCategoryService;
+
     @Transactional
-    public void addReward(Reward reward) {
-        if (findRewardByName(reward.getName()).isEmpty()) {
+    public boolean addReward(RewardDTO rewardDTO) {
+        if (findRewardByName(rewardDTO.getName()).isEmpty()) {
+            Reward reward = new Reward();
+            reward.setRewardCategory(rewardDTO.getRewardCategory());
+            reward.setName(rewardDTO.getName());
+            reward.setDescription(rewardDTO.getDescription());
+
             rewardRepository.save(reward);
+
+            return true;
         }
+
+        return false;
     }
 
     public Optional<Reward> findRewardByName(String name) {
@@ -70,8 +81,13 @@ public class RewardService {
         reward.setName(name);
         reward.setDescription(description);
 
+        if (reward.getRewardCategory() != null) {
+            rewardCategoryService.addReward(rewardCategory, reward);
+        }
+
         rewardRepository.save(reward);
     }
+
     @Transactional
     public boolean updateReward(RewardDTO rewardDTO) {
         return findRewardById(rewardDTO.getId())
@@ -80,5 +96,9 @@ public class RewardService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public void deleteRewardById(int rewardId) {
+        rewardRepository.deleteById(rewardId);
     }
 }
