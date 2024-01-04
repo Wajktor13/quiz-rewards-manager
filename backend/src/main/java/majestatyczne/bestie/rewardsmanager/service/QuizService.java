@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.QuizDTO;
 import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
+import majestatyczne.bestie.rewardsmanager.model.Preference;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.repository.QuizRepository;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
@@ -21,6 +22,8 @@ public class QuizService {
     private final ResultService resultService;
 
     private final RewardStrategyService rewardStrategyService;
+
+    private final PreferenceService preferenceService;
 
     @Transactional
     public void addQuiz(Quiz quiz) {
@@ -43,17 +46,27 @@ public class QuizService {
 
     @Transactional
     public void deleteQuiz(QuizDTO quizDTO) {
-        quizRepository.deleteById(quizDTO.getId());
+        preferenceService.deleteAllPreferencesByIds(
+                preferenceService
+                .findAllPreferencesByQuizId(quizDTO.getId())
+                .stream()
+                .map(Preference::getId)
+                .toList());
 
-        resultService.deleteAllResultsByIds(resultService.findResultsByQuizId(quizDTO.getId())
+        resultService.deleteAllResultsByIds(
+                resultService
+                .findResultsByQuizId(quizDTO.getId())
                 .stream()
                 .map(ResultDTO::getId)
                 .toList());
 
         rewardStrategyService.deleteAllRewardStrategiesByIds(
-                rewardStrategyService.findRewardStrategyByQuizId(quizDTO.getId())
-                        .stream()
-                        .map(RewardStrategy::getId)
-                        .toList());
+                rewardStrategyService
+                .findRewardStrategyByQuizId(quizDTO.getId())
+                .stream()
+                .map(RewardStrategy::getId)
+                .toList());
+
+        quizRepository.deleteById(quizDTO.getId());
     }
 }
