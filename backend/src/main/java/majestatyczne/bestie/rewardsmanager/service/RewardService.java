@@ -2,6 +2,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.RewardCategoryDTO;
 import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
@@ -23,7 +24,10 @@ public class RewardService {
     public boolean addReward(RewardDTO rewardDTO) {
         if (findRewardByName(rewardDTO.getName()).isEmpty()) {
             Reward reward = new Reward();
-            reward.setRewardCategory(rewardDTO.getRewardCategory());
+            if (rewardDTO.getRewardCategory() == null) {
+                reward.setRewardCategory(null);
+            }
+            reward.setRewardCategory(rewardCategoryService.findRewardCategoryById(rewardDTO.getRewardCategory().getId()).orElse(null));
             reward.setName(rewardDTO.getName());
             reward.setDescription(rewardDTO.getDescription());
 
@@ -66,7 +70,7 @@ public class RewardService {
         return rewardRepository
                 .findAll()
                 .stream()
-                .map(reward -> new RewardDTO(reward.getId(), reward.getRewardCategory(), reward.getName(),
+                .map(reward -> new RewardDTO(reward.getId(), RewardCategoryDTO.toDTO(reward.getRewardCategory()), reward.getName(),
                         reward.getDescription()))
                 .toList();
     }
@@ -92,7 +96,7 @@ public class RewardService {
     public boolean updateReward(RewardDTO rewardDTO) {
         return findRewardById(rewardDTO.getId())
                 .map(reward -> {
-                    updateReward(reward, rewardDTO.getRewardCategory(), rewardDTO.getName(), rewardDTO.getDescription());
+                    updateReward(reward, rewardCategoryService.findRewardCategoryById(rewardDTO.getRewardCategory().getId()).orElse(null), rewardDTO.getName(), rewardDTO.getDescription());
                     return true;
                 })
                 .orElse(false);
