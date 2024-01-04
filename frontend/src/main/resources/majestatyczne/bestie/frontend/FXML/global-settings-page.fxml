@@ -32,11 +32,12 @@
 
         </HBox>
         <VBox>
-            <TableView fx:id="rewardTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view">
+            <TableView fx:id="rewardTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
                 <columns>
-                    <TableColumn fx:id="rewardNameColumn" text="Nazwa"/>
+                    <TableColumn fx:id="rewardNameColumn" text="Nazwa" editable="true"/>
                     <TableColumn fx:id="rewardCategoryColumn" text="Kategoria"/>
-                    <TableColumn fx:id="rewardDescriptionColumn" text="Opis"/>
+                    <TableColumn fx:id="rewardDescriptionColumn" text="Opis" editable="true"/>
+                    <TableColumn fx:id="rewardCategoryChoiceColumn"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

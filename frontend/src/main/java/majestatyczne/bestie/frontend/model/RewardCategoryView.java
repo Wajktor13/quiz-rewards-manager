@@ -31,4 +31,9 @@ public class RewardCategoryView {
     public void setName(String name) {
         this.name.set(name);
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

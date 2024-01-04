@@ -7,9 +7,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +18,7 @@ import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.RewardCategoryService;
 import majestatyczne.bestie.frontend.service.RewardService;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,10 +45,13 @@ public class GlobalSettingsPageController implements Initializable {
     private TableColumn<RewardView, String> rewardNameColumn;
 
     @FXML
-    private TableColumn<RewardView, String> rewardCategoryColumn;
+    private TableColumn<RewardView, RewardCategory> rewardCategoryColumn;
 
     @FXML
     private TableColumn<RewardView, String> rewardDescriptionColumn;
+
+    @FXML
+    private TableColumn<RewardView, RewardCategoryView> rewardCategoryChoiceColumn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,6 +64,59 @@ public class GlobalSettingsPageController implements Initializable {
         rewardNameColumn.setCellValueFactory(value -> value.getValue().getNameProperty());
         rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryProperty());
         rewardDescriptionColumn.setCellValueFactory(value -> value.getValue().getDescriptionProperty());
+
+        rewardNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        rewardDescriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
+
+        rewardNameColumn.setOnEditCommit(this::onRewardNameEdit);
+        rewardDescriptionColumn.setOnEditCommit(this::onRewardDescriptionEdit);
+        rewardCategoryChoiceColumn = new TableColumn<>("Zmien kategorie");
+        Callback<TableColumn<RewardView, RewardCategoryView>, TableCell<RewardView, RewardCategoryView>> cellFactory = new Callback<TableColumn<RewardView, RewardCategoryView>, TableCell<RewardView, RewardCategoryView>>() {
+            @Override
+            public TableCell<RewardView, RewardCategoryView> call(TableColumn<RewardView, RewardCategoryView> rewardViewRewardCategoryViewTableColumn) {
+                return new TableCell<>() {
+                    private final ComboBox<RewardCategoryView> comboBoxTableCell = new ComboBox<>(rewardCategories);
+                    {
+                        comboBoxTableCell.setOnAction(event -> {
+                            if (getTableRow() != null && getTableRow().getItem() != null) {
+                                RewardView selectedReward = getTableRow().getItem();
+                                RewardCategoryView selectedCategory = comboBoxTableCell.getValue();
+                                if (selectedReward != null && selectedCategory != null) {
+                                    RewardCategory category = rewardCategoryList.stream()
+                                                    .filter(x -> x.getId() == selectedCategory.getId())
+                                                            .findFirst()
+                                                                    .orElse(null);
+                                    selectedReward.setRewardCategory(category);
+                                }
+                            }
+                        });
+                    }
+
+
+                    @Override
+                    public void updateItem(RewardCategoryView item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(comboBoxTableCell);
+                            comboBoxTableCell.setValue(item);
+                        }
+                    }
+                };
+            }
+        };
+        rewardCategoryChoiceColumn.setCellFactory(cellFactory);
+        rewardTable.getColumns().add(rewardCategoryChoiceColumn);
+    }
+
+    private void onRewardDescriptionEdit(TableColumn.CellEditEvent<RewardView, String> event) {
+        event.getRowValue().setDescription(event.getNewValue());
+    }
+
+    private void onRewardNameEdit(TableColumn.CellEditEvent<RewardView, String> event) {
+        event.getRowValue().setName(event.getNewValue());
     }
 
     private void setData() {
@@ -80,7 +136,10 @@ public class GlobalSettingsPageController implements Initializable {
         RewardService rewardService = new RewardService();
         rewards = FXCollections.observableArrayList();
         rewardList = rewardService.getRewards();
-        rewardList.forEach(reward -> rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription())));
+
+        rewardList.forEach(reward -> {
+            rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription()));
+        });
     }
 
     @FXML
@@ -94,5 +153,9 @@ public class GlobalSettingsPageController implements Initializable {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public void onSaveChangesClicked() {
+
     }
 }

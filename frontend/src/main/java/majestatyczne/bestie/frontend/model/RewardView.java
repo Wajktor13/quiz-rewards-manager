@@ -1,5 +1,7 @@
 package majestatyczne.bestie.frontend.model;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import lombok.Getter;
@@ -9,7 +11,7 @@ public class RewardView {
     @Getter
     private int id;
 
-    private StringProperty rewardCategory;
+    private ObjectProperty<RewardCategory> rewardCategory;
 
     private StringProperty name;
 
@@ -17,24 +19,20 @@ public class RewardView {
 
     public RewardView(int id, RewardCategory rewardCategory, String name, String description) {
         this.id = id;
-        if (rewardCategory == null) {
-            this.rewardCategory = new SimpleStringProperty("brak kategorii");
-        } else {
-            this.rewardCategory = new SimpleStringProperty(rewardCategory.getName());
-        }
+        this.rewardCategory = new SimpleObjectProperty<>(rewardCategory);
         this.name = new SimpleStringProperty(name);
         this.description = new SimpleStringProperty(description);
     }
 
-    public String getRewardCategory() {
+    public RewardCategory getRewardCategory() {
         return rewardCategory.get();
     }
 
-    public StringProperty getRewardCategoryProperty() {
+    public ObjectProperty<RewardCategory> getRewardCategoryProperty() {
         return rewardCategory;
     }
 
-    public void setRewardCategory(String rewardCategory) {
+    public void setRewardCategory(RewardCategory rewardCategory) {
         this.rewardCategory.set(rewardCategory);
     }
 
