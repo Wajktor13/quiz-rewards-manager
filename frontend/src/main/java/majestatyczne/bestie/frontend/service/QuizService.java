@@ -19,6 +19,15 @@ public class QuizService {
         }
     }
 
+    public void deleteQuizById(int quizId) {
+        APIService service = getAPIService();
+        try {
+            service.deleteQuizById(quizId).execute();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private APIService getAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
