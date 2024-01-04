@@ -28,8 +28,9 @@ public class RewardController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addReward(@RequestBody RewardDTO rewardDTO) {
+    public ResponseEntity<String> addReward(@RequestBody RewardDTO rewardDTO) {
         return rewardService.addReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        String.format("Reward with the given name already exists: '%s'", rewardDTO.getName()));
     }
 }

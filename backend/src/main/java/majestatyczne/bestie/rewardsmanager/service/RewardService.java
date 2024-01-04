@@ -24,8 +24,8 @@ public class RewardService {
         if (findRewardByName(rewardDTO.getName()).isEmpty()) {
             Reward reward = new Reward();
             reward.setRewardCategory(rewardDTO.getRewardCategory());
-            reward.setName(reward.getName());
-            reward.setDescription(reward.getDescription());
+            reward.setName(rewardDTO.getName());
+            reward.setDescription(rewardDTO.getDescription());
 
             rewardRepository.save(reward);
 
