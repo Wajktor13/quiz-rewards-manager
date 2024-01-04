@@ -15,9 +15,10 @@ public class RewardStrategyController {
     private final RewardStrategyService rewardStrategyService;
 
     @PostMapping
-    public ResponseEntity<?> addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+    public ResponseEntity<String> addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         return rewardStrategyService.addRewardStrategy(rewardStrategyDTO) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.CONFLICT).body(
+                        "Strategy for the given quiz already exists");
     }
 
     @PutMapping
