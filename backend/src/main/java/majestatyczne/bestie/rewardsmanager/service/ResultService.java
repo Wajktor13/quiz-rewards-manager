@@ -2,7 +2,6 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
 import majestatyczne.bestie.rewardsmanager.model.Person;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
@@ -22,11 +21,6 @@ public class ResultService {
 
     private final PersonService personService;
 
-    @Transactional
-    public void addResult(Result result) {
-        resultRepository.save(result);
-    }
-
     public List<Result> findResultsByQuizId(int quizId) {
         return resultRepository.findResultsByQuizId(quizId);
     }
@@ -42,24 +36,27 @@ public class ResultService {
     }
 
     @Transactional
-    public void updateResult(Result result, Quiz quiz, Person person, Date startDate, Date endDate, int score,
-                             Reward reward) {
-        result.setQuiz(quiz);
-        result.setPerson(person);
-        result.setStartDate(startDate);
-        result.setEndDate(endDate);
-        result.setScore(score);
-        result.setReward(reward);
-
-        resultRepository.save(result);
+    public boolean updateResult(int resultId, Person person, Date startDate, Date endDate, int score, Reward reward) {
+        return findResultById(resultId)
+                .map(result -> updateResult(resultId, result.getQuiz(), person, startDate, endDate, score, reward))
+                .orElse(false);
     }
 
     @Transactional
-    public boolean updateResult(ResultDTO resultDTO) {
-        return findResultById(resultDTO.getId())
+    public boolean updateResult(int resultId, Quiz quiz, Person person, Date startDate, Date endDate, int score,
+                             Reward reward) {
+
+        return findResultById(resultId)
                 .map(result -> {
-                    updateResult(result, result.getQuiz(), resultDTO.getPerson(),
-                            resultDTO.getStartDate(), resultDTO.getEndDate(), resultDTO.getScore(), resultDTO.getReward());
+                    result.setPerson(person);
+                    result.setQuiz(quiz);
+                    result.setStartDate(startDate);
+                    result.setEndDate(endDate);
+                    result.setScore(score);
+                    result.setReward(reward);
+
+                    resultRepository.save(result);
+
                     return true;
                 })
                 .orElse(false);

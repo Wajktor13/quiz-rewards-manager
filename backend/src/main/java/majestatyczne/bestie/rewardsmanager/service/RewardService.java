@@ -20,13 +20,8 @@ public class RewardService {
     private final RewardCategoryService rewardCategoryService;
 
     @Transactional
-    public boolean addReward(RewardDTO rewardDTO) {
-        if (findRewardByName(rewardDTO.getName()).isEmpty()) {
-            Reward reward = new Reward();
-            reward.setRewardCategory(rewardDTO.getRewardCategory());
-            reward.setName(rewardDTO.getName());
-            reward.setDescription(rewardDTO.getDescription());
-
+    public boolean addReward(Reward reward) {
+        if (findRewardByName(reward.getName()).isEmpty()) {
             rewardRepository.save(reward);
 
             return true;
@@ -89,10 +84,10 @@ public class RewardService {
     }
 
     @Transactional
-    public boolean updateReward(RewardDTO rewardDTO) {
-        return findRewardById(rewardDTO.getId())
+    public boolean updateReward(int rewardId, RewardCategory rewardCategory, String name, String description) {
+        return findRewardById(rewardId)
                 .map(reward -> {
-                    updateReward(reward, rewardDTO.getRewardCategory(), rewardDTO.getName(), rewardDTO.getDescription());
+                    updateReward(reward, rewardCategory, name, description);
                     return true;
                 })
                 .orElse(false);

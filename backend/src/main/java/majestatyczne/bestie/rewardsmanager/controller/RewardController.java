@@ -2,6 +2,7 @@ package majestatyczne.bestie.rewardsmanager.controller;
 
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
+import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.service.RewardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,19 @@ public class RewardController {
 
     @PutMapping
     public ResponseEntity<?> updateReward(@RequestBody RewardDTO rewardDTO) {
-        return rewardService.updateReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
+        return rewardService.updateReward(rewardDTO.getId(), rewardDTO.getRewardCategory(), rewardDTO.getName(),
+                rewardDTO.getDescription()) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PostMapping
     public ResponseEntity<String> addReward(@RequestBody RewardDTO rewardDTO) {
-        return rewardService.addReward(rewardDTO) ? ResponseEntity.status(HttpStatus.OK).build() :
+        Reward reward = new Reward();
+        reward.setName(rewardDTO.getName());
+        reward.setRewardCategory(rewardDTO.getRewardCategory());
+        reward.setDescription(rewardDTO.getDescription());
+
+        return rewardService.addReward(reward) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.CONFLICT).body(
                         String.format("Reward with the given name already exists: '%s'", rewardDTO.getName()));
     }
