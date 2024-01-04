@@ -71,7 +71,6 @@ public class RewardCategoryService {
         rewardCategoryRepository.save(rewardCategory);
     }
 
-    @Transactional
     public Optional<RewardCategory> findRewardCategoryByName(String name) {
         return Optional.ofNullable(rewardCategoryRepository.findRewardCategoryByName(name));
     }
