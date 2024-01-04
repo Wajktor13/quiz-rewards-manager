@@ -41,6 +41,9 @@ public interface APIService {
     @PUT("rewards")
     Call<Void> updateReward(@Body Reward reward);
 
+    @PUT("rewards/all")
+    Call<Void> updateRewards(@Body List<Reward> rewards);
+
     @POST("rewards")
     Call<Void> addReward(@Body Reward reward);
 

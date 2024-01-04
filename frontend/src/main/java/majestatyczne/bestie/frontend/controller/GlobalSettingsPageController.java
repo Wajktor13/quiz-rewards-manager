@@ -19,6 +19,7 @@ import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.RewardCategoryService;
 import majestatyczne.bestie.frontend.service.RewardService;
 import javafx.util.Callback;
+import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URL;
@@ -72,11 +73,12 @@ public class GlobalSettingsPageController implements Initializable {
         rewardNameColumn.setOnEditCommit(this::onRewardNameEdit);
         rewardDescriptionColumn.setOnEditCommit(this::onRewardDescriptionEdit);
         rewardCategoryChoiceColumn = new TableColumn<>("Zmien kategorie");
-        Callback<TableColumn<RewardView, RewardCategoryView>, TableCell<RewardView, RewardCategoryView>> cellFactory = new Callback<TableColumn<RewardView, RewardCategoryView>, TableCell<RewardView, RewardCategoryView>>() {
+        Callback<TableColumn<RewardView, RewardCategoryView>, TableCell<RewardView, RewardCategoryView>> cellFactory = new Callback<>() {
             @Override
             public TableCell<RewardView, RewardCategoryView> call(TableColumn<RewardView, RewardCategoryView> rewardViewRewardCategoryViewTableColumn) {
                 return new TableCell<>() {
                     private final ComboBox<RewardCategoryView> comboBoxTableCell = new ComboBox<>(rewardCategories);
+
                     {
                         comboBoxTableCell.setOnAction(event -> {
                             if (getTableRow() != null && getTableRow().getItem() != null) {
@@ -84,9 +86,9 @@ public class GlobalSettingsPageController implements Initializable {
                                 RewardCategoryView selectedCategory = comboBoxTableCell.getValue();
                                 if (selectedReward != null && selectedCategory != null) {
                                     RewardCategory category = rewardCategoryList.stream()
-                                                    .filter(x -> x.getId() == selectedCategory.getId())
-                                                            .findFirst()
-                                                                    .orElse(null);
+                                            .filter(x -> x.getId() == selectedCategory.getId())
+                                            .findFirst()
+                                            .orElse(null);
                                     selectedReward.setRewardCategory(category);
                                 }
                             }
@@ -137,9 +139,7 @@ public class GlobalSettingsPageController implements Initializable {
         rewards = FXCollections.observableArrayList();
         rewardList = rewardService.getRewards();
 
-        rewardList.forEach(reward -> {
-            rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription()));
-        });
+        rewardList.forEach(reward -> rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription())));
     }
 
     @FXML
@@ -156,6 +156,34 @@ public class GlobalSettingsPageController implements Initializable {
     }
 
     public void onSaveChangesClicked() {
+        RewardService rewardService = new RewardService();
+        rewards.forEach(rewardView -> rewardList.forEach(reward -> {
+            if (reward.getId() == rewardView.getId()) {
+                reward.setName(rewardView.getName());
+                reward.setRewardCategory(rewardView.getRewardCategory());
+                reward.setDescription(rewardView.getDescription());
+            }
+        }));
+        int responseCode = rewardService.updateRewards(rewardList);
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted();
+            default -> onRequestFailed(responseCode);
+        }
+    }
 
+    @FXML
+    private void onRequestFailed(int statusCode) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(Constants.UPDATE_REWARDS_ERROR_TITLE);
+        alert.setContentText(Constants.UPDATE_REWARDS_ERROR + statusCode);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void onRequestAccepted() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(Constants.UPDATE_REWARDS_INFO);
+        alert.setHeaderText(Constants.UPDATE_REWARDS_INFO);
+        alert.showAndWait();
     }
 }

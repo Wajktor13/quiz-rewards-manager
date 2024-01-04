@@ -20,12 +20,25 @@ public class RewardService {
         }
     }
 
-    public void updateReward(Reward reward) {
+    public int updateReward(Reward reward) {
         APIService service = getAPIService();
         try {
-            service.updateReward(reward).execute();
+            var response = service.updateReward(reward).execute();
+            return response.code();
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            return 500;
+        }
+    }
+
+    public int updateRewards(List<Reward> rewards) {
+        APIService service = getAPIService();
+        try {
+            var response = service.updateRewards(rewards).execute();
+            return response.code();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return 500;
         }
     }
 
