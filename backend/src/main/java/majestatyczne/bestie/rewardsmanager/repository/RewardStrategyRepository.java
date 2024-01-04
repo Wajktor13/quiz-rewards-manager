@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RewardStrategyRepository extends JpaRepository<RewardStrategy, Integer> {
+
+    RewardStrategy findRewardStrategyByQuizId(int quizId);
 }
