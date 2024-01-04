@@ -33,14 +33,19 @@ public class RewardCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
-        return rewardCategoryService.addRewardCategory(rewardCategoryDTO) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<String> addRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
+        RewardCategory rewardCategory = new RewardCategory();
+        rewardCategory.setName(rewardCategoryDTO.getName());
+
+        return rewardCategoryService.addRewardCategory(rewardCategory) ?
+                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.CONFLICT).body(
+                String.format("Category with the given name already exists: '%s'", rewardCategoryDTO.getName())
+        );
     }
 
     @PutMapping
     public ResponseEntity<?> updateRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
-        return rewardCategoryService.updateRewardCategory(rewardCategoryDTO) ?
+        return rewardCategoryService.updateRewardCategory(rewardCategoryDTO.getId(), rewardCategoryDTO.getName()) ?
                 ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 

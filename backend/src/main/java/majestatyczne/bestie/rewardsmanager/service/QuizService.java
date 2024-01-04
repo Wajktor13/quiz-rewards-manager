@@ -2,7 +2,6 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.dto.QuizDTO;
 import majestatyczne.bestie.rewardsmanager.model.Result;
 import majestatyczne.bestie.rewardsmanager.model.Preference;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
@@ -35,10 +34,8 @@ public class QuizService {
                 .findAll();
     }
 
-    public Optional<QuizDTO> findQuizById(int id) {
-        return quizRepository
-                .findById(id)
-                .map(q -> new QuizDTO(q.getId(), q.getName(), q.getMaxScore(), q.getDate()));
+    public Optional<Quiz> findQuizById(int id) {
+        return quizRepository.findById(id);
     }
 
     @Transactional

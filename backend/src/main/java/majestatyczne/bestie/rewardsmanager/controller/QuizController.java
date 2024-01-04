@@ -18,7 +18,9 @@ public class QuizController {
 
     @GetMapping
     public List<QuizDTO> getAllQuizzes() {
-        return quizService.findAllQuizzes().stream()
+        return quizService
+                .findAllQuizzes()
+                .stream()
                 .map(quiz -> new QuizDTO(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate()))
                 .toList();
     }
@@ -27,13 +29,15 @@ public class QuizController {
     public ResponseEntity<?> getQuizById(@PathVariable int quizId) {
         return quizService
                 .findQuizById(quizId)
+                .map(q -> new QuizDTO(q.getId(), q.getName(), q.getMaxScore(), q.getDate()))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @DeleteMapping("/{quizId}")
     public ResponseEntity<?> deleteQuizById(@PathVariable int quizId) {
-        return quizService.findQuizById(quizId)
+        return quizService
+                .findQuizById(quizId)
                 .map(quiz -> {
                     quizService.deleteQuizById(quizId);
                     return ResponseEntity.status(HttpStatus.OK).build();

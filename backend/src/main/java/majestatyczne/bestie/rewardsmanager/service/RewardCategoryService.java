@@ -2,13 +2,11 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.dto.RewardCategoryDTO;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.repository.RewardCategoryRepository;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,14 +17,8 @@ public class RewardCategoryService {
     private final RewardCategoryRepository rewardCategoryRepository;
 
     @Transactional
-    public boolean addRewardCategory(RewardCategoryDTO rewardCategoryDTO) {
-        if (findRewardCategoryByName(rewardCategoryDTO.getName()).isEmpty()) {
-            RewardCategory rewardCategory = new RewardCategory(
-                    rewardCategoryDTO.getId(),
-                    rewardCategoryDTO.getName(),
-                    new ArrayList<>()
-            );
-
+    public boolean addRewardCategory(RewardCategory rewardCategory) {
+        if (findRewardCategoryByName(rewardCategory.getName()).isEmpty()) {
             rewardCategoryRepository.save(rewardCategory);
 
             return true;
@@ -44,19 +36,14 @@ public class RewardCategoryService {
     }
 
     @Transactional
-    public void updateRewardCategory(RewardCategory rewardCategory, String name) {
-        rewardCategory.setName(name);
-
-        rewardCategoryRepository.save(rewardCategory);
-    }
-
-    @Transactional
-    public boolean updateRewardCategory(RewardCategoryDTO rewardCategoryDTO) {
-        return findRewardCategoryById(rewardCategoryDTO.getId())
+    public boolean updateRewardCategory(int rewardCategoryId, String name) {
+        return findRewardCategoryById(rewardCategoryId)
                 .map(rewardCategory -> {
-                    updateRewardCategory(rewardCategory, rewardCategoryDTO.getName());
+                    rewardCategory.setName(name);
+                    rewardCategoryRepository.save(rewardCategory);
                     return true;
-                }).orElse(false);
+                })
+                .orElse(false);
     }
 
     @Transactional
