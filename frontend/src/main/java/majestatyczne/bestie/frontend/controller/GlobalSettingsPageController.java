@@ -7,6 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -29,30 +32,54 @@ public class GlobalSettingsPageController implements Initializable {
 
     private ObservableList<RewardView> rewards;
 
+    private List<Reward> rewardList;
+
     private ObservableList<RewardCategoryView> rewardCategories;
+
+    private List<RewardCategory> rewardCategoryList;
+
+    @FXML
+    private TableView<RewardView> rewardTable;
+
+    @FXML
+    private TableColumn<RewardView, String> rewardNameColumn;
+
+    @FXML
+    private TableColumn<RewardView, String> rewardCategoryColumn;
+
+    @FXML
+    private TableColumn<RewardView, String> rewardDescriptionColumn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeRewardTable();
         setData();
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
+    }
+
+    private void initializeRewardTable() {
+        rewardNameColumn.setCellValueFactory(value -> value.getValue().getNameProperty());
+        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryProperty());
+        rewardDescriptionColumn.setCellValueFactory(value -> value.getValue().getDescriptionProperty());
     }
 
     private void setData() {
         initializeRewardCategories();
         initializeRewards();
+        rewardTable.setItems(rewards);
     }
 
     private void initializeRewardCategories() {
         RewardCategoryService rewardCategoryService = new RewardCategoryService();
         rewardCategories = FXCollections.observableArrayList();
-        List<RewardCategory> rewardCategoryList = rewardCategoryService.getRewardCategories();
+        rewardCategoryList = rewardCategoryService.getRewardCategories();
         rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory.getId(), rewardCategory.getName())));
     }
 
     private void initializeRewards() {
         RewardService rewardService = new RewardService();
         rewards = FXCollections.observableArrayList();
-        List<Reward> rewardList = rewardService.getRewards();
+        rewardList = rewardService.getRewards();
         rewardList.forEach(reward -> rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription())));
     }
 

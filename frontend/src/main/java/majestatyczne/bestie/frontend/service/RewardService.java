@@ -20,6 +20,15 @@ public class RewardService {
         }
     }
 
+    public void updateReward(Reward reward) {
+        APIService service = getAPIService();
+        try {
+            service.updateReward(reward).execute();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private APIService getAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
