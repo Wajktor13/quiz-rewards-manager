@@ -36,7 +36,7 @@ public class RewardStrategyService {
             List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
                     .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
 
-            rewardStrategy.setParameters(rewardStrategyParameters);
+            rewardStrategy.getParameters().addAll(rewardStrategyParameters);
 
             rewardStrategyRepository.save(rewardStrategy);
 
