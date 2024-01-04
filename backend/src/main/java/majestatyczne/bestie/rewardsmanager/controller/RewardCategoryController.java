@@ -17,8 +17,16 @@ public class RewardCategoryController {
 
     private final RewardCategoryService rewardCategoryService;
 
+    @GetMapping("/{rewardCategoryId}")
+    public ResponseEntity<?> getRewardCategoryById(@PathVariable int rewardCategoryId) {
+        return rewardCategoryService
+                .findRewardCategoryById(rewardCategoryId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
     @GetMapping
-    public List<RewardCategory> getAllRewardCategories() {
+    public List<RewardCategoryDTO> getAllRewardCategories() {
         return rewardCategoryService.findAllRewardCategories();
     }
 
@@ -34,9 +42,9 @@ public class RewardCategoryController {
                 ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
-        rewardCategoryService.deleteRewardCategory(rewardCategoryDTO);
+    @DeleteMapping("/{rewardCategoryId}")
+    public ResponseEntity<?> deleteRewardCategoryById(@PathVariable int rewardCategoryId) {
+        rewardCategoryService.deleteRewardCategoryById(rewardCategoryId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -97,4 +97,8 @@ public class RewardService {
                 })
                 .orElse(false);
     }
+
+    public void deleteRewardById(int rewardId) {
+        rewardRepository.deleteById(rewardId);
+    }
 }

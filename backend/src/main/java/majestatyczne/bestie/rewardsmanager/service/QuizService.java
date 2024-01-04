@@ -45,28 +45,28 @@ public class QuizService {
     }
 
     @Transactional
-    public void deleteQuiz(QuizDTO quizDTO) {
+    public void deleteQuizById(int quizId) {
         preferenceService.deleteAllPreferencesByIds(
                 preferenceService
-                .findAllPreferencesByQuizId(quizDTO.getId())
+                .findAllPreferencesByQuizId(quizId)
                 .stream()
                 .map(Preference::getId)
                 .toList());
 
         resultService.deleteAllResultsByIds(
                 resultService
-                .findResultsByQuizId(quizDTO.getId())
+                .findResultsByQuizId(quizId)
                 .stream()
                 .map(ResultDTO::getId)
                 .toList());
 
         rewardStrategyService.deleteAllRewardStrategiesByIds(
                 rewardStrategyService
-                .findRewardStrategyByQuizId(quizDTO.getId())
+                .findRewardStrategyByQuizId(quizId)
                 .stream()
                 .map(RewardStrategy::getId)
                 .toList());
 
-        quizRepository.deleteById(quizDTO.getId());
+        quizRepository.deleteById(quizId);
     }
 }

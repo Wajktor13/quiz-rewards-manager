@@ -29,10 +29,13 @@ public class QuizController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteQuiz(@RequestBody QuizDTO quizDTO) {
-        quizService.deleteQuiz(quizDTO);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @DeleteMapping("/{quizId}")
+    public ResponseEntity<?> deleteQuizById(@PathVariable int quizId) {
+        return quizService.findQuizById(quizId)
+                .map(quiz -> {
+                    quizService.deleteQuizById(quizId);
+                    return ResponseEntity.status(HttpStatus.OK).build();
+                })
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

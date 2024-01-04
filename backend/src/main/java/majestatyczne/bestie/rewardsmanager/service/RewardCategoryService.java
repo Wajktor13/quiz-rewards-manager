@@ -35,8 +35,11 @@ public class RewardCategoryService {
         return false;
     }
 
-    public List<RewardCategory> findAllRewardCategories() {
-        return rewardCategoryRepository.findAll();
+    public List<RewardCategoryDTO> findAllRewardCategories() {
+        return rewardCategoryRepository.findAll()
+                .stream()
+                .map(category -> new RewardCategoryDTO(category.getId(), category.getName()))
+                .toList();
     }
 
     public Optional<RewardCategory> findRewardCategoryById(int rewardCategoryId) {
@@ -60,8 +63,8 @@ public class RewardCategoryService {
     }
 
     @Transactional
-    public void deleteRewardCategory(RewardCategoryDTO rewardCategoryDTO) {
-        rewardCategoryRepository.deleteById(rewardCategoryDTO.getId());
+    public void deleteRewardCategoryById(int rewardCategoryId) {
+        rewardCategoryRepository.deleteById(rewardCategoryId);
     }
 
     @Transactional
