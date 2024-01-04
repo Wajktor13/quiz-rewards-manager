@@ -120,3 +120,8 @@
 .quiz-page-table-view .table-row-cell:filled:selected {
     -fx-background-color: -fx-grey-color;
 }
+
+.settings-header-label {
+    -fx-font-size: 12pt;
+    -fx-padding: 10 10 10 10px;
+}

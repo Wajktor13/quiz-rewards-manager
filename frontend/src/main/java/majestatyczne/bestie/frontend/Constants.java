@@ -32,8 +32,10 @@ public class Constants {
 
     public static final String QUIZ_MAX_SCORE_INFO = "Punkty do uzyskania: ";
 
-    public static final String UPDATE_REWARDS_INFO = "Zmiany zostały wprowadzone!";
-    public static final String UPDATE_REWARDS_ERROR_TITLE = "Zmiany nie zostały wprowadzone!";
-
+    public static final String UPDATE_REWARDS_INFO = "Zmiany w nagrodach zostały wprowadzone!";
+    public static final String UPDATE_REWARDS_ERROR_TITLE = "Zmiany w nagrodach nie zostały wprowadzone!";
     public static final String UPDATE_REWARDS_ERROR = "Kod błędu: ";
+
+    public static final String UPDATE_REWARD_CATEGORIES_INFO = "Zmiany w kategoriach zostały wprowadzone!";
+    public static final String UPDATE_REWARD_CATEGORIES_ERROR_TITLE = "Zmiany w kategoriach nagród nie zostały wprowadzone!";
 }

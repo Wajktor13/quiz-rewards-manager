@@ -54,11 +54,28 @@ public class GlobalSettingsPageController implements Initializable {
     @FXML
     private TableColumn<RewardView, RewardCategoryView> rewardCategoryChoiceColumn;
 
+    @FXML
+    private TableView<RewardCategoryView> categoryTable;
+
+    @FXML
+    private TableColumn<RewardCategoryView, String> categoryNameColumn;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeRewardTable();
+        initializeRewardCategoriesTable();
         setData();
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
+    }
+
+    private void initializeRewardCategoriesTable() {
+        categoryNameColumn.setCellValueFactory(value -> value.getValue().getNameProperty());
+        categoryNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        categoryNameColumn.setOnEditCommit(this::onCategoryEdit);
+    }
+
+    private void onCategoryEdit(TableColumn.CellEditEvent<RewardCategoryView, String> event) {
+        event.getRowValue().setName(event.getNewValue());
     }
 
     private void initializeRewardTable() {
@@ -125,6 +142,7 @@ public class GlobalSettingsPageController implements Initializable {
         initializeRewardCategories();
         initializeRewards();
         rewardTable.setItems(rewards);
+        categoryTable.setItems(rewardCategories);
     }
 
     private void initializeRewardCategories() {
@@ -166,24 +184,36 @@ public class GlobalSettingsPageController implements Initializable {
         }));
         int responseCode = rewardService.updateRewards(rewardList);
         switch (responseCode) {
-            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted();
-            default -> onRequestFailed(responseCode);
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted(Constants.UPDATE_REWARDS_INFO);
+            default -> onRequestFailed(responseCode, Constants.UPDATE_REWARDS_ERROR_TITLE);
+        }
+
+        RewardCategoryService rewardCategoryService = new RewardCategoryService();
+        rewardCategories.forEach(rewardCategoryView -> rewardCategoryList.forEach(rewardCategory -> {
+            if (rewardCategory.getId() == rewardCategoryView.getId()) {
+                rewardCategory.setName(rewardCategoryView.getName());
+            }
+        }));
+        responseCode = rewardCategoryService.updateRewardCategories(rewardCategoryList);
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted(Constants.UPDATE_REWARD_CATEGORIES_INFO);
+            default -> onRequestFailed(responseCode, Constants.UPDATE_REWARD_CATEGORIES_ERROR_TITLE);
         }
     }
 
     @FXML
-    private void onRequestFailed(int statusCode) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(Constants.UPDATE_REWARDS_ERROR_TITLE);
-        alert.setContentText(Constants.UPDATE_REWARDS_ERROR + statusCode);
+    private void onRequestAccepted(String alertTitle) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(alertTitle);
+        alert.setHeaderText(alertTitle);
         alert.showAndWait();
     }
 
     @FXML
-    private void onRequestAccepted() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Constants.UPDATE_REWARDS_INFO);
-        alert.setHeaderText(Constants.UPDATE_REWARDS_INFO);
+    private void onRequestFailed(int statusCode, String alertTitle) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(alertTitle);
+        alert.setContentText(Constants.UPDATE_REWARDS_ERROR + statusCode);
         alert.showAndWait();
     }
 }

@@ -21,6 +21,17 @@ public class RewardCategoryService {
         }
     }
 
+    public int updateRewardCategories(List<RewardCategory> rewardCategories) {
+        APIService service = getAPIService();
+        try {
+            var response = service.updateRewardCategories(rewardCategories).execute();
+            return response.code();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return 500;
+        }
+    }
+
     private APIService getAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")

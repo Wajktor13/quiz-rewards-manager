@@ -29,6 +29,9 @@ public interface APIService {
     @PUT("reward-categories")
     Call<Void> updateRewardCategory(@Body RewardCategory rewardCategory);
 
+    @PUT("reward-categories/all")
+    Call<Void> updateRewardCategories(@Body List<RewardCategory> rewardCategories);
+
     @POST("reward-categories")
     Call<Void> addRewardCategory(@Body RewardCategory rewardCategory);
 
