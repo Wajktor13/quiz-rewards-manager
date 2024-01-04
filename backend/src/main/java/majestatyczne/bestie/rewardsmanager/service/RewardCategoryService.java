@@ -35,11 +35,8 @@ public class RewardCategoryService {
         return false;
     }
 
-    public List<RewardCategoryDTO> findAllRewardCategories() {
-        return rewardCategoryRepository.findAll()
-                .stream()
-                .map(category -> new RewardCategoryDTO(category.getId(), category.getName()))
-                .toList();
+    public List<RewardCategory> findAllRewardCategories() {
+        return rewardCategoryRepository.findAll();
     }
 
     public Optional<RewardCategory> findRewardCategoryById(int rewardCategoryId) {

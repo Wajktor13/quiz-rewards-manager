@@ -3,7 +3,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.QuizDTO;
-import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
+import majestatyczne.bestie.rewardsmanager.model.Result;
 import majestatyczne.bestie.rewardsmanager.model.Preference;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.repository.QuizRepository;
@@ -30,12 +30,9 @@ public class QuizService {
         quizRepository.save(quiz);
     }
 
-    public List<QuizDTO> findAllQuizzes() {
+    public List<Quiz> findAllQuizzes() {
         return quizRepository
-                .findAll()
-                .stream()
-                .map(quiz -> new QuizDTO(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate()))
-                .toList();
+                .findAll();
     }
 
     public Optional<QuizDTO> findQuizById(int id) {
@@ -57,7 +54,7 @@ public class QuizService {
                 resultService
                 .findResultsByQuizId(quizId)
                 .stream()
-                .map(ResultDTO::getId)
+                .map(Result::getId)
                 .toList());
 
         rewardStrategyService.deleteAllRewardStrategiesByIds(

@@ -18,7 +18,9 @@ public class QuizController {
 
     @GetMapping
     public List<QuizDTO> getAllQuizzes() {
-        return quizService.findAllQuizzes();
+        return quizService.findAllQuizzes().stream()
+                .map(quiz -> new QuizDTO(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate()))
+                .toList();
     }
 
     @GetMapping("/{quizId}")

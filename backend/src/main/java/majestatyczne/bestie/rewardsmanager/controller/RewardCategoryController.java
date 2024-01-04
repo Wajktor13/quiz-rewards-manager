@@ -27,7 +27,9 @@ public class RewardCategoryController {
 
     @GetMapping
     public List<RewardCategoryDTO> getAllRewardCategories() {
-        return rewardCategoryService.findAllRewardCategories();
+        return rewardCategoryService.findAllRewardCategories().stream()
+                .map(category -> new RewardCategoryDTO(category.getId(), category.getName()))
+                .toList();
     }
 
     @PostMapping
