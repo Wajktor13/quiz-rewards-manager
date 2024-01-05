@@ -45,6 +45,11 @@
                 </columnResizePolicy>
             </TableView>
             <Label text="Kategorie nagród" styleClass="settings-header-label"/>
+            <HBox>
+                <TextField fx:id="newCategoryTextField" styleClass="text-field"/>
+                <Button fx:id="addCategoryButton" onAction="#onAddCategoryClicked" text="Dodaj"/>
+            </HBox>
+
             <TableView fx:id="categoryTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
                 <columns>
                     <TableColumn fx:id="categoryNameColumn" text="Nazwa" editable="true"/>

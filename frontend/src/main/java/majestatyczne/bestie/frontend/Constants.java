@@ -38,4 +38,12 @@ public class Constants {
 
     public static final String UPDATE_REWARD_CATEGORIES_INFO = "Zmiany w kategoriach zostały wprowadzone!";
     public static final String UPDATE_REWARD_CATEGORIES_ERROR_TITLE = "Zmiany w kategoriach nagród nie zostały wprowadzone!";
+
+    public static final String NEW_REWARD_CATEGORY_PROMPT = "Wpisz nazwę nowej kategorii";
+
+    public static final String ADD_REWARD_CATEGORY_INFO = "Nowa kategoria została dodana!";
+
+    public static final String ADD_REWARD_CATEGORY_ERROR_TITLE = "Nie udało się dodać nowej kategorii!";
+
+    public static final String ADD_REWARD_CATEGORY_EMPTY_WARNING = "Nie zostawiaj kategorii pustej";
 }

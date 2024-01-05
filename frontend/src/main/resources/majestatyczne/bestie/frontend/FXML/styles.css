@@ -125,3 +125,7 @@
     -fx-font-size: 12pt;
     -fx-padding: 10 10 10 10px;
 }
+
+.text-field {
+    -fx-label-padding: 10 5 10 5px;
+}
