@@ -19,7 +19,6 @@ public class RewardStrategyDTO {
 
     private RewardStrategyType rewardStrategyType;
 
-    @JsonIgnore
     private Quiz quiz;
 
     private List<RewardStrategyParameterDTO> parameters;

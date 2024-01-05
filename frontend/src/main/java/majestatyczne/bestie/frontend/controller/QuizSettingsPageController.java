@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javafx.util.Callback;
 
 public class QuizSettingsPageController implements Initializable {
@@ -82,6 +83,8 @@ public class QuizSettingsPageController implements Initializable {
     private TableColumn<RewardStrategyParameterView, RewardCategoryView> rewardCategoryChoiceColumn;
 
 
+
+
     public void setQuizView(QuizView quizView) {
         this.quizView = quizView;
         setData();
@@ -90,7 +93,7 @@ public class QuizSettingsPageController implements Initializable {
     private void setData() {
         quizNameLabel.setText(quizView.getName());
         quizScoreLabel.setText(Constants.QUIZ_MAX_SCORE_INFO + quizView.getMaxScore());
-        getStrategy();
+        initializeStrategy();
         parametersTable.setItems(parameters);
         parametersTable.setVisible(false);
         parametersTable.setManaged(false);
@@ -105,18 +108,12 @@ public class QuizSettingsPageController implements Initializable {
 
     }
 
-    private void getStrategy() {
-        RewardStrategyService rewardStrategyService = new RewardStrategyService();
+    private void initializeStrategy() {
         parameters = FXCollections.observableArrayList();
-        strategy = rewardStrategyService.getRewardStrategyById(quizView.getId()).orElse(null);
-        if (strategy == null ) {
-            strategy = new RewardStrategy();
-            QuizService quizService = new QuizService();
-            strategy.setQuiz(quizService.getQuizById(quizView.getId()).orElseThrow(() -> new IllegalArgumentException("Quiz not found")));
-            strategy.setRewardStrategyType(RewardStrategyType.PERCENTAGE);
-        } else{
+        strategy = new RewardStrategy();
+        QuizService quizService = new QuizService();
+        strategy.setQuiz(quizService.getQuizById(quizView.getId()).orElseThrow(() -> new IllegalArgumentException("Quiz not found")));
 
-        }
     }
 
     @Override
@@ -136,8 +133,6 @@ public class QuizSettingsPageController implements Initializable {
 
         priorityColumn.setOnEditCommit(this::onPriorityEdit);
         parameterValueColumn.setOnEditCommit(this::onParameterValueEdit);
-
-//        rewardCategoryChoiceColumn = new TableColumn<>("Zmień kategorię");
 
         Callback<TableColumn<RewardStrategyParameterView, RewardCategoryView>, TableCell<RewardStrategyParameterView, RewardCategoryView>> cellFactory = new Callback<>() {
             @Override
@@ -175,8 +170,6 @@ public class QuizSettingsPageController implements Initializable {
             }
         };
         rewardCategoryChoiceColumn.setCellFactory(cellFactory);
-        parametersTable.getColumns().add(rewardCategoryChoiceColumn);
-
     }
 
     private void onPriorityEdit(TableColumn.CellEditEvent<RewardStrategyParameterView, Integer> event) {
@@ -210,15 +203,14 @@ public class QuizSettingsPageController implements Initializable {
         switch (selectedType) {
             case PERCENTAGE -> showPercentageStrategyDetails();
             case SCORE -> showScoreStrategyDetails();
-            default -> {
-//                alert ioio
-            }
         }
 
     }
 
-    private void generateParameters(int numberOfRaws) {
-
+    private void generateParameters(int numberOfRows) {
+        for (int i = 0; i < numberOfRows; i++) {
+            parameters.add(new RewardStrategyParameterView(i + 1, i + 1, 0, null));
+        }
     }
 
     private void showPercentageStrategyDetails() {
@@ -228,16 +220,9 @@ public class QuizSettingsPageController implements Initializable {
         percentageVBox.setManaged(true);
         scoreVBox.setVisible(false);
         scoreVBox.setManaged(false);
+        strategy.setRewardStrategyType(RewardStrategyType.PERCENTAGE);
         System.out.println(strategy);
-        if (strategy.getParameters() == null) {
-            parameters.addAll(new RewardStrategyParameterView(1, 1, 0, null),
-                    new RewardStrategyParameterView(2, 2, 0, null));
-
-        } else {
-            strategy.getParameters().forEach(parameter -> parameters.add(new RewardStrategyParameterView(parameter.getId(),
-                    parameter.getPriority(), parameter.getParameterValue(), parameter.getRewardCategory())));
-
-        }
+        generateParameters(2);
     }
 
     private void showScoreStrategyDetails() {
@@ -247,14 +232,22 @@ public class QuizSettingsPageController implements Initializable {
         scoreVBox.setManaged(true);
         percentageVBox.setVisible(false);
         percentageVBox.setManaged(false);
+        strategy.setRewardStrategyType(RewardStrategyType.SCORE);
+        System.out.println(strategy);
+        generateParameters(quizView.getMaxScore() + 1);
     }
 
     @FXML
     public void onSaveButtonClicked(ActionEvent actionEvent) {
         var rewardStrategyService = new RewardStrategyService();
         strategy.setParameters(parameters.stream().map(RewardStrategyParameterView::toRewardStrategyParameter).toList());
-        System.out.println(strategy);
-        System.out.println(rewardStrategyService.addRewardStrategy(strategy));
+        RewardStrategy existingStrategy = rewardStrategyService.getRewardStrategyById(quizView.getId()).orElse(null);
+        if (existingStrategy == null) {
+            System.out.println("add " + rewardStrategyService.addRewardStrategy(strategy));
+        } else {
+            strategy.setId(existingStrategy.getId());
+            System.out.println("update " + rewardStrategyService.updateRewardStrategy(strategy));
+        }
         onGoBackClicked();
     }
 }
