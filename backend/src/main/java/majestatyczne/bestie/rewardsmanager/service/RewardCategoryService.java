@@ -19,13 +19,11 @@ public class RewardCategoryService {
 
     @Transactional
     public boolean addRewardCategory(RewardCategory rewardCategory) {
-        if (findRewardCategoryByName(rewardCategory.getName()).isEmpty()) {
-            rewardCategoryRepository.save(rewardCategory);
-
-            return true;
+        if (findRewardCategoryByName(rewardCategory.getName()).isPresent()) {
+            return false;
         }
-
-        return false;
+        rewardCategoryRepository.save(rewardCategory);
+        return true;
     }
 
     public List<RewardCategory> findAllRewardCategories() {
