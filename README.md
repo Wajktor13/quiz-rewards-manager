@@ -1,3 +1,4 @@
+
 # Technologie obiektowe projekt - grupa Majestatyczne Bestie
 
 
@@ -57,6 +58,23 @@ Po uruchomieniu aplikacji serwerowej, należy w drugim oknie otworzyć folder fr
 		- Odpowiednio z endpointami po stronie serwerowej: GET listy quizów, GET wyników dla danego quizu, POST przesłania pliku do zaimportowania do aplikacji
 	- Stworzenie modeli przechwytujących dane z serwera
 	- Stworzenie modeli widokowych, potrzebnych do wyświetlenia przechwyconych danych po stronie klienta
+
+### Milestone 2 (do 5.01.2024)
+- Dodane funkcjonalności:
+	- Automatyczny import nagród z arkusza
+	- Możliwość definiowania i przydzielania kategorii nagród
+	- Wyliczanie nagród na podstawie dwóch strategii -> punktowej i procentowej
+	- Poprawiony wygląd 
+	- Możliwość przydzielania strategii oraz jego parametrów dla danego arkusza
+	- Nowe endpointy
+	- Zostały rozszerzone modele bazodanowe
+	- Package reward_selection_strategy zawiera implementacje algorytmów strategii
+	- Frontend:
+		- Nowe widoki (pliki FXML):
+			- global-settings-page -> konfiguracja kategorii na stronie głównej 
+			- quiz-settings-page -> konfiguracja strategii dla danego quizu (otwierana przez zębatke w widoku quiz-page)
+		- Nowe modele
+		- Kontrolery obsługujące nowe widoki
 
 <u>Uwaga:</u> Logiem aplikacji jest ikonka majestatycznej bestii :)
 Źródło: https://github.com/Soamid/obiektowe-lab/blob/master/img/owlbear7.png
