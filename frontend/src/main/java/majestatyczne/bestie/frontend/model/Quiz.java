@@ -15,6 +15,5 @@ public class Quiz {
 
     private Date date;
 
-    private RewardStrategy rewardStrategy;
 }
 

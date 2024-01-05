@@ -7,8 +7,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class QuizService {
+
+    public Optional<Quiz> getQuizById(int quizId) {
+        APIService service = getAPIService();
+        try {
+            return Optional.ofNullable(service.getQuizById(quizId).execute().body());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return Optional.empty();
+        }
+    }
+
     public List<Quiz> getQuizzes() {
         APIService service = getAPIService();
         try {

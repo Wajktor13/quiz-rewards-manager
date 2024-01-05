@@ -1,15 +1,15 @@
 package majestatyczne.bestie.frontend.service;
 
-import majestatyczne.bestie.frontend.model.Quiz;
-import majestatyczne.bestie.frontend.model.Result;
-import majestatyczne.bestie.frontend.model.Reward;
-import majestatyczne.bestie.frontend.model.RewardCategory;
+import majestatyczne.bestie.frontend.model.*;
 import retrofit2.Call;
 import retrofit2.http.*;
 
 import java.util.List;
 
 public interface APIService {
+
+    @GET("quizzes/{quizId}")
+    Call<Quiz> getQuizById(@Path("quizId") int quizId);
 
     @GET("quizzes")
     Call<List<Quiz>> getQuizzes();
@@ -52,4 +52,13 @@ public interface APIService {
 
     @DELETE("rewards/{rewardId}")
     Call<Void> deleteRewardById(@Path("rewardId") int rewardId);
+
+    @GET("reward-strategies/{quizId}")
+    Call<RewardStrategy> getRewardStrategyByQuizId(@Path("quizId") int quizId);
+
+    @POST("reward-strategies")
+    Call<Void> addRewardStrategy(@Body RewardStrategy rewardStrategy);
+
+    @PUT("reward-strategies")
+    Call<Void> updateRewardStrategy(@Body RewardStrategy rewardStrategy);
 }

@@ -46,4 +46,8 @@ public class Constants {
     public static final String ADD_REWARD_CATEGORY_ERROR_TITLE = "Nie udało się dodać nowej kategorii!";
 
     public static final String ADD_REWARD_CATEGORY_EMPTY_WARNING = "Nie zostawiaj kategorii pustej";
+
+    public static final String PERCENTAGE_REWARD_STRATEGY_DESCRIPTION = "X% najlepszych (maksymalny wynik i najszybciej) - kategoria1, reszta - kategoria2";
+
+    public static final String SCORE_REWARD_STRATEGY_DESCRIPTION = "X poprawnych odpowiedzi - kategoria1, X-1 poprawnych - kategoria2, ...";
 }

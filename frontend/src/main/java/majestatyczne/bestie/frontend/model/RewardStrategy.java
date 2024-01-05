@@ -2,11 +2,16 @@ package majestatyczne.bestie.frontend.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class RewardStrategy {
+
     private int id;
 
     private RewardStrategyType rewardStrategyType;
 
-//    private List<RewardStrategyParameter> rewardStrategyParameterList;
+    private Quiz quiz;
+
+    private List<RewardStrategyParameter> parameters;
 }
