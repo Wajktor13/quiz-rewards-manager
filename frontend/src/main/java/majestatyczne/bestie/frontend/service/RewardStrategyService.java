@@ -3,16 +3,14 @@ package majestatyczne.bestie.frontend.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import majestatyczne.bestie.frontend.model.RewardStrategy;
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Path;
 
 import java.io.IOException;
 import java.util.Optional;
 
 public class RewardStrategyService {
-    public Optional<RewardStrategy> getRewardStrategyById(int quizId) {
+    public Optional<RewardStrategy> getRewardStrategyByQuizId(int quizId) {
         APIService service = getAPIService();
         try {
             return Optional.ofNullable(service.getRewardStrategyByQuizId(quizId).execute().body());

@@ -241,7 +241,8 @@ public class QuizSettingsPageController implements Initializable {
     public void onSaveButtonClicked(ActionEvent actionEvent) {
         var rewardStrategyService = new RewardStrategyService();
         strategy.setParameters(parameters.stream().map(RewardStrategyParameterView::toRewardStrategyParameter).toList());
-        RewardStrategy existingStrategy = rewardStrategyService.getRewardStrategyById(quizView.getId()).orElse(null);
+        RewardStrategy existingStrategy = rewardStrategyService.getRewardStrategyByQuizId(quizView.getId()).orElse(null);
+        System.out.println("existing strategy " + existingStrategy);
         if (existingStrategy == null) {
             System.out.println("add " + rewardStrategyService.addRewardStrategy(strategy));
         } else {

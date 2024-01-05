@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "quiz")
 @Data
 @NoArgsConstructor
+@ToString(exclude = "results")
 public class Quiz {
 
     @Id
@@ -28,11 +30,10 @@ public class Quiz {
     @Column(nullable = false)
     private Date date;
 
+//    @JsonIgnore
     @OneToMany(mappedBy = "quiz")
-    @JsonIgnore
     private List<Result> results;
 
-    @OneToOne
-    @JoinColumn(name = "reward_strategy_id")
+    @OneToOne(mappedBy = "quiz")
     private RewardStrategy rewardStrategy;
 }
