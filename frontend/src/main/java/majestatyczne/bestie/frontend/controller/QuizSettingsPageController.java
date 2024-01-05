@@ -233,7 +233,6 @@ public class QuizSettingsPageController implements Initializable {
         percentageVBox.setVisible(false);
         percentageVBox.setManaged(false);
         strategy.setRewardStrategyType(RewardStrategyType.SCORE);
-        System.out.println(strategy);
         generateParameters(quizView.getMaxScore() + 1);
     }
 
@@ -242,12 +241,11 @@ public class QuizSettingsPageController implements Initializable {
         var rewardStrategyService = new RewardStrategyService();
         strategy.setParameters(parameters.stream().map(RewardStrategyParameterView::toRewardStrategyParameter).toList());
         RewardStrategy existingStrategy = rewardStrategyService.getRewardStrategyByQuizId(quizView.getId()).orElse(null);
-        System.out.println("existing strategy " + existingStrategy);
         if (existingStrategy == null) {
-            System.out.println("add " + rewardStrategyService.addRewardStrategy(strategy));
+            rewardStrategyService.addRewardStrategy(strategy);
         } else {
             strategy.setId(existingStrategy.getId());
-            System.out.println("update " + rewardStrategyService.updateRewardStrategy(strategy));
+            rewardStrategyService.updateRewardStrategy(strategy);
         }
         onGoBackClicked();
     }

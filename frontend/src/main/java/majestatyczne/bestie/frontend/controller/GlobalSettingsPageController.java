@@ -213,7 +213,6 @@ public class GlobalSettingsPageController implements Initializable {
     private void saveRewardCategories() {
         RewardCategoryService rewardCategoryService = new RewardCategoryService();
         for (RewardCategoryView rewardCategoryView : rewardCategories) {
-            System.out.println(rewardCategoryView.getName());
             if (rewardCategoryView.getName().isEmpty()) {
                 showAlert(Alert.AlertType.WARNING, Constants.ADD_REWARD_CATEGORY_EMPTY_WARNING);
                 return;
