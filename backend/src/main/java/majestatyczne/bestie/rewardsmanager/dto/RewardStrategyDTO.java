@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class RewardStrategyDTO {
 
     private RewardStrategyType rewardStrategyType;
 
+    @JsonIgnore
     private Quiz quiz;
 
     private List<RewardStrategyParameterDTO> parameters;
