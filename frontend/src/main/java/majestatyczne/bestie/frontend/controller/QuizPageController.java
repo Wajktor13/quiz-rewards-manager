@@ -100,4 +100,18 @@ public class QuizPageController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    public void onSettingsClicked() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_QUIZ_SETTINGS_RESOURCE));
+        Stage stage = (Stage) resultTable.getScene().getWindow();
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            QuizSettingsPageController quizSettingsPageController = fxmlLoader.getController();
+            quizSettingsPageController.setQuizView(quizView);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

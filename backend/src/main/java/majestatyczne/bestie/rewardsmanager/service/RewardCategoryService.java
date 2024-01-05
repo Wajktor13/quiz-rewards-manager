@@ -2,6 +2,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.dto.RewardCategoryDTO;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.repository.RewardCategoryRepository;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
@@ -60,5 +61,23 @@ public class RewardCategoryService {
 
     public Optional<RewardCategory> findRewardCategoryByName(String name) {
         return Optional.ofNullable(rewardCategoryRepository.findRewardCategoryByName(name));
+    }
+
+    @Transactional
+    public void updateRewardCategories(List<RewardCategoryDTO> rewardCategoryDTOS) {
+        List<RewardCategory> rewardCategories = rewardCategoryRepository.findAll();
+        List<RewardCategory> updatedRewardCategories = rewardCategoryDTOS.stream()
+                .map(rewardCategoryDTO -> {
+                    RewardCategory matchingRewardCategory = rewardCategories
+                            .stream()
+                            .filter(reward -> reward.getId() == rewardCategoryDTO.getId())
+                            .findFirst()
+                            .orElse(null);
+                    matchingRewardCategory.setName(rewardCategoryDTO.getName());
+                    return matchingRewardCategory;
+                })
+                .toList();
+        rewardCategoryRepository.saveAll(updatedRewardCategories);
+
     }
 }

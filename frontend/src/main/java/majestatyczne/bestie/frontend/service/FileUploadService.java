@@ -31,10 +31,8 @@ public class FileUploadService {
         try {
             HttpResponse response;
             response = httpClient.execute(httpPost);
-            System.out.println("[FileUploadClient] Server response after file upload: " + response.getStatusLine());
             return response.getStatusLine().getStatusCode();
         } catch (IOException e) {
-            System.out.println("[503] Couldn't get server response");
             System.out.println(e.getMessage());
             return HttpStatus.SC_BAD_REQUEST;
         }

@@ -12,7 +12,7 @@ public class RewardDTO {
 
     private int id;
 
-    private RewardCategory rewardCategory;
+    private RewardCategoryDTO rewardCategory;
 
     private String name;
 

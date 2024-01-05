@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="majestatyczne.bestie.frontend.controller.GlobalSettingsPageController"
+      prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <HBox prefHeight="50.0" prefWidth="200.0" alignment="BASELINE_CENTER" styleClass="quiz-page-header">
+            <children>
+                <HBox styleClass="quiz-page-header-left">
+                    <ImageView fx:id="backIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true"
+                               onMouseClicked="#onGoBackClicked">
+                        <Image url="@left-arrow.png"/>
+                    </ImageView>
+                </HBox>
+                <VBox styleClass="quiz-page-header-middle" HBox.hgrow="ALWAYS">
+                </VBox>
+                <HBox styleClass="quiz-page-header-right">
+                    <Button mnemonicParsing="false" text="Zapisz zmiany" onAction="#onSaveChangesClicked"/>
+                </HBox>
+
+            </children>
+
+        </HBox>
+        <VBox>
+            <Label text="Nagrody" styleClass="settings-header-label"/>
+            <TableView fx:id="rewardTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
+                <columns>
+                    <TableColumn fx:id="rewardNameColumn" text="Nazwa" editable="true"/>
+                    <TableColumn fx:id="rewardCategoryColumn" text="Kategoria"/>
+                    <TableColumn fx:id="rewardDescriptionColumn" text="Opis" editable="true"/>
+                    <TableColumn fx:id="rewardCategoryChoiceColumn"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+            <Label text="Kategorie nagród" styleClass="settings-header-label"/>
+            <TableView fx:id="categoryTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
+                <columns>
+                    <TableColumn fx:id="categoryNameColumn" text="Nazwa" editable="true"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
+
+</VBox>

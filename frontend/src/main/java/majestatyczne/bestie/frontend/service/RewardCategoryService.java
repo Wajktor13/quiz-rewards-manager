@@ -1,6 +1,7 @@
 package majestatyczne.bestie.frontend.service;
 
-import majestatyczne.bestie.frontend.model.Quiz;
+import majestatyczne.bestie.frontend.model.Reward;
+import majestatyczne.bestie.frontend.model.RewardCategory;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -8,23 +9,26 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class QuizService {
-    public List<Quiz> getQuizzes() {
+public class RewardCategoryService {
+
+    public List<RewardCategory> getRewardCategories() {
         APIService service = getAPIService();
         try {
-            return service.getQuizzes().execute().body();
+            return service.getRewardCategories().execute().body();
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return Collections.emptyList();
         }
     }
 
-    public void deleteQuizById(int quizId) {
+    public int updateRewardCategories(List<RewardCategory> rewardCategories) {
         APIService service = getAPIService();
         try {
-            service.deleteQuizById(quizId).execute();
+            var response = service.updateRewardCategories(rewardCategories).execute();
+            return response.code();
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            return 500;
         }
     }
 

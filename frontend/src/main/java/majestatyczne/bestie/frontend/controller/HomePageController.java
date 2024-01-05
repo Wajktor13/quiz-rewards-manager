@@ -2,17 +2,17 @@ package majestatyczne.bestie.frontend.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.service.FileUploadService;
@@ -38,6 +38,9 @@ public class HomePageController implements Initializable {
     private TableColumn<QuizView, Date> dateColumn;
 
     @FXML
+    private TableColumn<QuizView, Void> deleteColumn;
+
+    @FXML
     private ImageView settingsIcon;
 
     private ObservableList<QuizView> quizzes;
@@ -61,12 +64,13 @@ public class HomePageController implements Initializable {
     }
 
     @FXML
-    private void onRequestFailed(int statusCode){
+    private void onRequestFailed(int statusCode) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(Constants.FILE_UPLOAD_ERROR_TITLE);
         alert.setContentText(Constants.FILE_UPLOAD_ERROR_INFO + statusCode);
         alert.showAndWait();
     }
+
     @FXML
     private void onRequestAccepted() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -99,14 +103,67 @@ public class HomePageController implements Initializable {
         }
     }
 
+    @FXML
+    public void onSettingsClicked() {
+        Stage stage = (Stage) quizTable.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_GLOBAL_SETTINGS_RESOURCE));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeDefaultUploadDirectory();
         nameColumn.setCellValueFactory(nameValue -> nameValue.getValue().getNameProperty());
         dateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getDateProperty());
+        addDeleteButtonsToTable();
         setData();
         settingsIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.SETTINGS_ICON_RESOURCE))));
     }
+
+    private void addDeleteButtonsToTable() {
+        deleteColumn = new TableColumn<>("Button Column");
+        Callback<TableColumn<QuizView, Void>, TableCell<QuizView, Void>> cellFactory = new Callback<TableColumn<QuizView, Void>, TableCell<QuizView, Void>>() {
+            @Override
+            public TableCell<QuizView, Void> call(final TableColumn<QuizView, Void> param) {
+                final TableCell<QuizView, Void> cell = new TableCell<>() {
+                    private final Button button = new Button("Delete");
+                    {
+                        button.setOnAction((ActionEvent event) -> {
+                            QuizView quizView = quizTable.getItems().get(getIndex());
+                            onDeleteButtonClicked(quizView);
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(button);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        deleteColumn.setCellFactory(cellFactory);
+        quizTable.getColumns().add(deleteColumn);
+    }
+
+
+    private void onDeleteButtonClicked(QuizView quizView) {
+        QuizService quizService = new QuizService();
+        quizService.deleteQuizById(quizView.getId());
+        setData();
+    }
+
 
     private void initializeQuizzes() {
         QuizService quizService = new QuizService();

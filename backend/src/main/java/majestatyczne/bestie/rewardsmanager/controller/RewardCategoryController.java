@@ -49,6 +49,12 @@ public class RewardCategoryController {
                 ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @PutMapping("/all")
+    public ResponseEntity<?> updateRewardCategories(@RequestBody List<RewardCategoryDTO> rewardCategoryDTOS) {
+        rewardCategoryService.updateRewardCategories(rewardCategoryDTOS);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @DeleteMapping("/{rewardCategoryId}")
     public ResponseEntity<?> deleteRewardCategoryById(@PathVariable int rewardCategoryId) {
         return rewardCategoryService.findRewardCategoryById(rewardCategoryId)
