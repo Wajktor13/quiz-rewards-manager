@@ -19,12 +19,15 @@ public class RewardStrategyDTO {
 
     private RewardStrategyType rewardStrategyType;
 
-    private Quiz quiz;
+    private QuizDTO quiz;
 
     private List<RewardStrategyParameterDTO> parameters;
 
     public static RewardStrategyDTO fromRewardStrategy(RewardStrategy rewardStrategy) {
+        Quiz quiz1 = rewardStrategy.getQuiz();
+        QuizDTO quizDTO = new QuizDTO(quiz1.getId(), quiz1.getName(), quiz1.getMaxScore(), quiz1.getDate());
+
         return new RewardStrategyDTO(rewardStrategy.getId(), rewardStrategy.getRewardStrategyType(),
-                rewardStrategy.getQuiz(), RewardStrategyParameterDTO.fromRewardStrategyParameters(rewardStrategy.getParameters()));
+                quizDTO, RewardStrategyParameterDTO.fromRewardStrategyParameters(rewardStrategy.getParameters()));
     }
 }

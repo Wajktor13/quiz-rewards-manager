@@ -14,11 +14,16 @@ public class ResultView {
     
     private StringProperty reward;
 
-    public ResultView(String personName, Date endDate, int score) {
+    public ResultView(String personName, Date endDate, int score, Reward reward) {
         this.personName = new SimpleStringProperty(personName);
         this.endDate = new SimpleObjectProperty<>(endDate);
         this.score = new SimpleObjectProperty<>(score);
-        this.reward = new SimpleStringProperty("placeholder");
+
+        if (reward == null) {
+            this.reward = new SimpleStringProperty("placeholder");
+        } else {
+            this.reward = new SimpleStringProperty(reward.getName());
+        }
     }
 
     public String getPersonName() {

@@ -14,26 +14,30 @@ import java.util.TreeSet;
 @AllArgsConstructor
 public class PercentageStrategy implements RewardSelectionStrategy {
     @Override
-    public List<Result> insertRewards(Quiz quiz, List<Preference> preferences) {
+    public List<Result> insertRewards(Quiz quiz, RewardStrategy rewardStrategy, List<Preference> preferences) {
         var results = quiz.getResults();
-        var rewardStrategy = quiz.getRewardStrategy();
         var rewardParameters =  rewardStrategy.getParameters();
+        results.sort(
+                Comparator.comparing(Result::getScore, Comparator.reverseOrder())
+                        .thenComparing(Result::getEndDate)
+        );
         rewardParameters.sort(Comparator.comparingInt(RewardStrategyParameter::getPriority));
 
-        int j = 0;
+        int resultIndex = 0;
         for (RewardStrategyParameter parameter: rewardParameters) {
-            var quantity = parameter.getParameterValue() / 100 * results.size();
+            var quantity = parameter.getParameterValue() * 100 / results.size();
+            var reward = parameter.getRewardCategory().getRewards().stream()
+                    .filter(r -> r.getRewardCategory().equals(parameter.getRewardCategory()))
+                    .findFirst().orElseThrow();
             for (int i = 0; i < quantity; i++) {
-                var reward = parameter.getRewardCategory().getRewards().stream()
-                        .filter(r -> r.getRewardCategory().equals(parameter.getRewardCategory()))
-                        .findFirst().orElseThrow();
-                results.get(j).setReward(reward);
-                j++;
+                results.get(resultIndex).setReward(reward);
+                resultIndex++;
             }
         }
-        if (j < results.size()) {
-            results.get(j).setReward(rewardParameters.get(rewardParameters.size() - 1)
+        while (resultIndex < results.size()) {
+            results.get(resultIndex).setReward(rewardParameters.get(rewardParameters.size() - 1)
                     .getRewardCategory().getRewards().get(0));
+            resultIndex++;
         }
 
         return results;

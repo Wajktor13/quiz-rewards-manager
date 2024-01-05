@@ -17,16 +17,10 @@ public enum RewardStrategyType {
     public static RewardSelectionStrategy getRewardSelectionStrategy(RewardStrategy rewardSelection) {
         RewardStrategyType rewardSelectionStrategyType = rewardSelection.getRewardStrategyType();
 
-        switch (rewardSelectionStrategyType) {
-            case PERCENTAGE:
-                // get parameters for strategy 1...
-                return new PercentageStrategy();
-            case SCORE:
-                // get parameters for strategy 2...
-                return new ScoreStrategy();
-            default:
-                throw new IllegalArgumentException("Unsupported strategy type: " + rewardSelectionStrategyType);
-        }
+        return switch (rewardSelectionStrategyType) {
+            case PERCENTAGE -> new PercentageStrategy();
+            case SCORE -> new ScoreStrategy();
+        };
     }
 
 }

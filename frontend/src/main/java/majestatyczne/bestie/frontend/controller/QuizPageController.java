@@ -67,9 +67,13 @@ public class QuizPageController implements Initializable {
         var quizResultsService = new QuizResultsService();
         var resultList = quizResultsService.getResults(quizView.getId());
         resultList.forEach(result -> results.add(new ResultView(
-                result.getPerson().getName(), result.getEndDate(), result.getScore()
+                result.getPerson().getName(), result.getEndDate(), result.getScore(), result.getReward()
         )));
-        results.sort(Comparator.comparing(ResultView::getScore).reversed());
+        results.sort(
+                Comparator.comparing(ResultView::getScore, Comparator.reverseOrder())
+                        .thenComparing(ResultView::getEndDate)
+        );
+
     }
 
     private void setData() {

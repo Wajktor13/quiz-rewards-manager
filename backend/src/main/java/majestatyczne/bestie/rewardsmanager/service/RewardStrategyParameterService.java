@@ -34,7 +34,7 @@ public class RewardStrategyParameterService {
                         rewardStrategyParameter.setRewardStrategy(rewardStrategy);
 
                         Optional<RewardCategory> rewardCategory =  rewardCategoryService
-                                .findRewardCategoryById(rewardStrategyParameterDTO.getId());
+                                .findRewardCategoryById(rewardStrategyParameterDTO.getRewardCategory().getId());
                         if (rewardCategory.isPresent()) {
                             rewardStrategyParameter.setRewardCategory(rewardCategory.get());
                         } else {
@@ -45,7 +45,7 @@ public class RewardStrategyParameterService {
                     })
                 .toList();
 
-        rewardStrategyParameterRepository.saveAll(rewardStrategyParameters);
+        rewardStrategyParameterRepository.saveAllAndFlush(rewardStrategyParameters);
 
         return rewardStrategyParameters;
     }
@@ -54,10 +54,7 @@ public class RewardStrategyParameterService {
     public void updateAllRewardStrategyParameters(List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs,
                                                   RewardStrategy rewardStrategy) {
 
-        rewardStrategyParameterRepository.deleteAllById(rewardStrategyParameterDTOs
-                .stream()
-                .map(RewardStrategyParameterDTO::getId)
-                .toList());
+        rewardStrategyParameterRepository.deleteAllByRewardStrategyId(rewardStrategy.getId());
 
         addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
     }

@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "reward_strategy_parameter")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "rewardStrategy")
 public class RewardStrategyParameter {
 
     @Id

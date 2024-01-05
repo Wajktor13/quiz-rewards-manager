@@ -14,4 +14,6 @@ public interface RewardStrategyParameterRepository extends JpaRepository<RewardS
     @Modifying
     @Query(nativeQuery = true, value = "DELETE FROM reward_strategy_parameter WHERE reward_strategy_id IN :strategyIds")
     void deleteAllByRewardStrategyIds(List<Integer> strategyIds);
+
+    void deleteAllByRewardStrategyId(int rewardStrategyId);
 }

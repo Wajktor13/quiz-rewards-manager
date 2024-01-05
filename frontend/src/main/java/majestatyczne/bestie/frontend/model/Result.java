@@ -17,5 +17,7 @@ public class Result {
 
     private int score;
 
+    private Reward reward;
+
 }
 
