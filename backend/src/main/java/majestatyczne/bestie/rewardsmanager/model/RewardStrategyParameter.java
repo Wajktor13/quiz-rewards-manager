@@ -1,36 +1,33 @@
 package majestatyczne.bestie.rewardsmanager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
-
 @Entity
-@Table(name = "quiz")
+@Table(name = "reward_strategy_parameter")
 @Data
 @NoArgsConstructor
-public class Quiz {
+@AllArgsConstructor
+public class RewardStrategyParameter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quiz_id")
+    @Column(name = "reward_strategy_parameter_id")
     private int id;
 
     @Column(nullable = false)
-    private String name;
+    private int priority;
 
     @Column(nullable = false)
-    private int maxScore;
+    private int parameterValue;
 
-    @Column(nullable = false)
-    private Date date;
+    @ManyToOne
+    @JoinColumn(name = "reward_category_id")
+    private RewardCategory rewardCategory;
 
-    @OneToMany(mappedBy = "quiz")
-    private List<Result> results;
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "reward_strategy_id")
     private RewardStrategy rewardStrategy;
 }

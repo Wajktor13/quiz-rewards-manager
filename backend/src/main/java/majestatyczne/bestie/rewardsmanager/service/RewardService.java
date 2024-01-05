@@ -17,11 +17,17 @@ public class RewardService {
 
     private final RewardRepository rewardRepository;
 
+    private final RewardCategoryService rewardCategoryService;
+
     @Transactional
-    public void addReward(Reward reward) {
+    public boolean addReward(Reward reward) {
         if (findRewardByName(reward.getName()).isEmpty()) {
             rewardRepository.save(reward);
+
+            return true;
         }
+
+        return false;
     }
 
     public Optional<Reward> findRewardByName(String name) {
@@ -51,8 +57,13 @@ public class RewardService {
         rewardRepository.saveAll(newRewards);
     }
 
-    public List<Reward> findAllRewards() {
-        return rewardRepository.findAll();
+    public List<RewardDTO> findAllRewards() {
+        return rewardRepository
+                .findAll()
+                .stream()
+                .map(reward -> new RewardDTO(reward.getId(), reward.getRewardCategory(), reward.getName(),
+                        reward.getDescription()))
+                .toList();
     }
 
     public Optional<Reward> findRewardById(int rewardId) {
@@ -63,17 +74,26 @@ public class RewardService {
     public void updateReward(Reward reward, RewardCategory rewardCategory, String name, String description) {
         reward.setRewardCategory(rewardCategory);
         reward.setName(name);
-        reward.setName(description);
+        reward.setDescription(description);
+
+        if (reward.getRewardCategory() != null) {
+            rewardCategoryService.addReward(rewardCategory, reward);
+        }
 
         rewardRepository.save(reward);
     }
+
     @Transactional
-    public boolean updateReward(RewardDTO rewardDTO) {
-        return findRewardById(rewardDTO.getId())
+    public boolean updateReward(int rewardId, RewardCategory rewardCategory, String name, String description) {
+        return findRewardById(rewardId)
                 .map(reward -> {
-                    updateReward(reward, rewardDTO.getRewardCategory(), rewardDTO.getName(), rewardDTO.getDescription());
+                    updateReward(reward, rewardCategory, name, description);
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public void deleteRewardById(int rewardId) {
+        rewardRepository.deleteById(rewardId);
     }
 }

@@ -39,4 +39,13 @@ public class PreferenceService {
         });
         preferenceRepository.saveAll(preferences);
     }
+
+    public List<Preference> findAllPreferencesByQuizId(int quizId) {
+        return preferenceRepository.findAllByQuizId(quizId);
+    }
+
+    @Transactional
+    public void deleteAllPreferencesByIds(List<Integer> PreferenceIds) {
+        preferenceRepository.deleteAllById(PreferenceIds);
+    }
 }
