@@ -61,7 +61,7 @@ public class RewardService {
         return rewardRepository
                 .findAll()
                 .stream()
-                .map(reward -> new RewardDTO(reward.getId(), RewardCategoryDTO.toDTO(reward.getRewardCategory()), reward.getName(),
+                .map(reward -> new RewardDTO(reward.getId(), RewardCategoryDTO.fromRewardCategory(reward.getRewardCategory()), reward.getName(),
                         reward.getDescription()))
                 .toList();
     }

@@ -13,7 +13,7 @@ public class RewardCategoryDTO {
     private int id;
 
     private String name;
-    public static RewardCategoryDTO toDTO(RewardCategory rewardCategory) {
+    public static RewardCategoryDTO fromRewardCategory(RewardCategory rewardCategory) {
         if(rewardCategory == null) {
             return null;
         }

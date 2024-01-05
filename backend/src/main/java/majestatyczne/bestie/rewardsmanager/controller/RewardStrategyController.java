@@ -26,4 +26,11 @@ public class RewardStrategyController {
         return rewardStrategyService.updateRewardStrategy(rewardStrategyDTO) ?
                 ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+    @GetMapping("/{quizId}")
+    public ResponseEntity<RewardStrategyDTO> getRewardStrategyByQuizId(@PathVariable int quizId) {
+        var rewardStrategy = rewardStrategyService.findRewardStrategyByQuizId(quizId);
+        return rewardStrategy.map(value -> ResponseEntity.status(HttpStatus.OK)
+                        .body(RewardStrategyDTO.fromRewardStrategy(value)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 }
