@@ -23,27 +23,25 @@ public class RewardStrategyService {
 
     @Transactional
     public boolean addRewardStrategy(RewardStrategyDTO rewardStrategyDTO) {
-        if (findRewardStrategyByQuizId(rewardStrategyDTO.getQuiz().getId()).isEmpty())
-        {
-            RewardStrategy rewardStrategy = new RewardStrategy();
-            rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
-            rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
-            rewardStrategy.setParameters(new ArrayList<>());
-
-            rewardStrategyRepository.save(rewardStrategy);
-
-            List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
-            List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
-                    .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
-
-            rewardStrategy.getParameters().addAll(rewardStrategyParameters);
-
-            rewardStrategyRepository.save(rewardStrategy);
-
-            return true;
+        if (findRewardStrategyByQuizId(rewardStrategyDTO.getQuiz().getId()).isPresent()) {
+            return false;
         }
+        RewardStrategy rewardStrategy = new RewardStrategy();
+        rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
+        rewardStrategy.setQuiz(rewardStrategyDTO.getQuiz());
+        rewardStrategy.setParameters(new ArrayList<>());
 
-        return false;
+        rewardStrategyRepository.save(rewardStrategy);
+
+        List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
+        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
+                .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
+
+        rewardStrategy.getParameters().addAll(rewardStrategyParameters);
+
+        rewardStrategyRepository.save(rewardStrategy);
+
+        return true;
     }
 
     @Transactional
@@ -61,9 +59,8 @@ public class RewardStrategyService {
             rewardStrategyRepository.save(rewardStrategy);
 
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public Optional<RewardStrategy> findRewardStrategyByQuizId(int quizId) {
