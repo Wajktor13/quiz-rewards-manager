@@ -24,8 +24,7 @@ public class RewardStrategy {
     @Column(nullable = false)
     private RewardStrategyType rewardStrategyType;
 
-    @OneToOne
-    @JoinColumn(name = "quiz_id")
+    @OneToOne(mappedBy = "rewardStrategy")
     private Quiz quiz;
 
     @OneToMany(mappedBy = "rewardStrategy")
