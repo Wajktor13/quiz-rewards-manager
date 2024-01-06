@@ -29,5 +29,6 @@ public class RewardStrategy {
     private Quiz quiz;
 
     @OneToMany(mappedBy = "rewardStrategy")
+    @OrderBy("priority ASC")
     private List<RewardStrategyParameter> parameters;
 }

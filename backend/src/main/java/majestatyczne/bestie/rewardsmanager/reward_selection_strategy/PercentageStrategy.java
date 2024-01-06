@@ -3,7 +3,6 @@ package majestatyczne.bestie.rewardsmanager.reward_selection_strategy;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 @AllArgsConstructor
@@ -12,11 +11,6 @@ public class PercentageStrategy implements RewardSelectionStrategy {
     public List<Result> insertRewards(Quiz quiz, RewardStrategy rewardStrategy, List<Preference> preferences) {
         var results = quiz.getResults();
         var rewardParameters =  rewardStrategy.getParameters();
-        results.sort(
-                Comparator.comparing(Result::getScore, Comparator.reverseOrder())
-                        .thenComparing(Result::getEndDate)
-        );
-        rewardParameters.sort(Comparator.comparingInt(RewardStrategyParameter::getPriority));
 
         int resultIndex = 0;
         for (RewardStrategyParameter parameter: rewardParameters) {

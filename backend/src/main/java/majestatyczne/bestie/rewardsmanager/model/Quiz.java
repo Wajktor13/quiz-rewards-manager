@@ -28,6 +28,7 @@ public class Quiz {
     private Date date;
 
     @OneToMany(mappedBy = "quiz")
+    @OrderBy("score DESC, endDate ASC")
     private List<Result> results;
 
     @OneToOne(mappedBy = "quiz")
