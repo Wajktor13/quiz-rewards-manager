@@ -29,16 +29,16 @@ public class RewardStrategyController {
     private final RewardCategoryService rewardCategoryService;
 
     @PostMapping
-    public ResponseEntity<String> addRewardStrategyWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+    public ResponseEntity<String> addWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         try {
-            RewardStrategy rewardStrategy = rewardStrategyService.addRewardStrategy(rewardStrategyDTO.getQuiz().id(),
+            RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.getQuiz().id(),
                     rewardStrategyDTO.getRewardStrategyType());
 
             List<RewardStrategyParameter> rewardStrategyParameters =
                     RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getParameters(), rewardStrategy,
                             rewardCategoryService);
 
-            rewardStrategyParameterService.addAllRewardStrategyParameters(rewardStrategyParameters);
+            rewardStrategyParameterService.addAll(rewardStrategyParameters);
 
             rewardStrategyService.addParametersToStrategy(rewardStrategy, rewardStrategyParameters);
 
@@ -57,16 +57,16 @@ public class RewardStrategyController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateRewardStrategyWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+    public ResponseEntity<String> updateWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         try {
-            RewardStrategy rewardStrategy = rewardStrategyService.updateRewardStrategy(rewardStrategyDTO.getQuiz().id(),
+            RewardStrategy rewardStrategy = rewardStrategyService.update(rewardStrategyDTO.getQuiz().id(),
                     rewardStrategyDTO.getRewardStrategyType());
 
             List<RewardStrategyParameter> rewardStrategyParameters =
                     RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getParameters(), rewardStrategy,
                             rewardCategoryService);
 
-            rewardStrategyParameterService.updateAllRewardStrategyParameters(rewardStrategyParameters, rewardStrategy);
+            rewardStrategyParameterService.updateAll(rewardStrategyParameters, rewardStrategy);
 
             rewardStrategyService.addParametersToStrategy(rewardStrategy, rewardStrategyParameters);
 
@@ -85,11 +85,11 @@ public class RewardStrategyController {
     }
 
     @GetMapping("/{quizId}")
-    public ResponseEntity<RewardStrategyDTO> getRewardStrategyByQuizId(@PathVariable int quizId) {
-        Optional<RewardStrategy> rewardStrategy = rewardStrategyService.findRewardStrategyByQuizId(quizId);
+    public ResponseEntity<RewardStrategyDTO> getByQuizId(@PathVariable int quizId) {
+        Optional<RewardStrategy> rewardStrategy = rewardStrategyService.findByQuizId(quizId);
 
         return rewardStrategy
-                .map(value -> ResponseEntity.status(HttpStatus.OK).body(RewardStrategyDTO.fromRewardStrategy(value)))
+                .map(value -> ResponseEntity.status(HttpStatus.OK).body(RewardStrategyDTO.convertToDTO(value)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

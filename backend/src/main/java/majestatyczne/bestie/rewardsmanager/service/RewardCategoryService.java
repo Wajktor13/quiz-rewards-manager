@@ -18,25 +18,25 @@ public class RewardCategoryService {
     private final RewardCategoryRepository rewardCategoryRepository;
 
     @Transactional
-    public boolean addRewardCategory(RewardCategory rewardCategory) {
-        if (findRewardCategoryByName(rewardCategory.getName()).isPresent()) {
+    public boolean add(RewardCategory rewardCategory) {
+        if (findByName(rewardCategory.getName()).isPresent()) {
             return false;
         }
         rewardCategoryRepository.save(rewardCategory);
         return true;
     }
 
-    public List<RewardCategory> findAllRewardCategories() {
+    public List<RewardCategory> findAll() {
         return rewardCategoryRepository.findAll();
     }
 
-    public Optional<RewardCategory> findRewardCategoryById(int rewardCategoryId) {
+    public Optional<RewardCategory> findById(int rewardCategoryId) {
         return rewardCategoryRepository.findById(rewardCategoryId);
     }
 
     @Transactional
-    public boolean updateRewardCategory(int rewardCategoryId, String name) {
-        return findRewardCategoryById(rewardCategoryId)
+    public boolean update(int rewardCategoryId, String name) {
+        return findById(rewardCategoryId)
                 .map(rewardCategory -> {
                     rewardCategory.setName(name);
                     rewardCategoryRepository.save(rewardCategory);
@@ -46,23 +46,23 @@ public class RewardCategoryService {
     }
 
     @Transactional
-    public void deleteRewardCategoryById(int rewardCategoryId) {
+    public void deleteById(int rewardCategoryId) {
         rewardCategoryRepository.deleteById(rewardCategoryId);
     }
 
     @Transactional
-    public void addReward(RewardCategory rewardCategory, Reward reward) {
+    public void addRewardToCategory(RewardCategory rewardCategory, Reward reward) {
         rewardCategory.getRewards().add(reward);
 
         rewardCategoryRepository.save(rewardCategory);
     }
 
-    public Optional<RewardCategory> findRewardCategoryByName(String name) {
+    public Optional<RewardCategory> findByName(String name) {
         return Optional.ofNullable(rewardCategoryRepository.findRewardCategoryByName(name));
     }
 
     @Transactional
-    public void updateRewardCategories(List<RewardCategoryDTO> rewardCategoryDTOS) {
+    public void updateAll(List<RewardCategoryDTO> rewardCategoryDTOS) {
         List<RewardCategory> rewardCategories = rewardCategoryRepository.findAll();
         List<RewardCategory> updatedRewardCategories = rewardCategoryDTOS.stream()
                 .map(rewardCategoryDTO -> {

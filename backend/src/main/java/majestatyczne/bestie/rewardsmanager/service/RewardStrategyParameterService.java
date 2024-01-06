@@ -17,19 +17,19 @@ public class RewardStrategyParameterService {
 
 
     @Transactional
-    public void addAllRewardStrategyParameters(List<RewardStrategyParameter> rewardStrategyParameters) {
+    public void addAll(List<RewardStrategyParameter> rewardStrategyParameters) {
         rewardStrategyParameterRepository.saveAllAndFlush(rewardStrategyParameters);
     }
 
     @Transactional
-    public void updateAllRewardStrategyParameters(List<RewardStrategyParameter> rewardStrategyParameters,
-                                                  RewardStrategy rewardStrategy) {
+    public void updateAll(List<RewardStrategyParameter> rewardStrategyParameters,
+                          RewardStrategy rewardStrategy) {
         rewardStrategyParameterRepository.deleteAllByRewardStrategyId(rewardStrategy.getId());
-        addAllRewardStrategyParameters(rewardStrategyParameters);
+        addAll(rewardStrategyParameters);
     }
 
     @Transactional
-    public void deleteAllRewardStrategyParametersByRewardStrategyIds(List<Integer> rewardStrategyIds) {
+    public void deleteAllByRewardStrategyIds(List<Integer> rewardStrategyIds) {
         rewardStrategyParameterRepository.deleteAllByRewardStrategyIds(rewardStrategyIds);
     }
 }

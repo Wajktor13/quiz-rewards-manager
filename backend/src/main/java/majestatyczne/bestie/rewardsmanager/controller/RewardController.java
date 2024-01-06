@@ -20,47 +20,47 @@ public class RewardController {
     private final RewardCategoryService rewardCategoryService;
 
     @GetMapping
-    public List<RewardDTO> getAllRewards() {
-        return rewardService.findAllRewards();
+    public List<RewardDTO> getAll() {
+        return rewardService.findAll();
     }
 
     @PutMapping
-    public ResponseEntity<?> updateReward(@RequestBody RewardDTO rewardDTO) {
+    public ResponseEntity<?> update(@RequestBody RewardDTO rewardDTO) {
         var category = rewardDTO.getRewardCategory() == null ? null :
-                rewardCategoryService.findRewardCategoryById(rewardDTO.getRewardCategory().getId()).orElse(null);
+                rewardCategoryService.findById(rewardDTO.getRewardCategory().getId()).orElse(null);
 
-        return rewardService.updateReward(rewardDTO.getId(), category, rewardDTO.getName(),
+        return rewardService.update(rewardDTO.getId(), category, rewardDTO.getName(),
                 rewardDTO.getDescription()) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     @PutMapping("/all")
-    public ResponseEntity<?> updateRewards(@RequestBody List<RewardDTO> rewardDTOS) {
-        rewardService.updateRewards(rewardDTOS);
+    public ResponseEntity<?> updateAll(@RequestBody List<RewardDTO> rewardDTOS) {
+        rewardService.updateAll(rewardDTOS);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping
-    public ResponseEntity<String> addReward(@RequestBody RewardDTO rewardDTO) {
+    public ResponseEntity<String> add(@RequestBody RewardDTO rewardDTO) {
         Reward reward = new Reward();
         reward.setName(rewardDTO.getName());
         if (rewardDTO.getRewardCategory() == null) {
             reward.setRewardCategory(null);
         }
         else {
-            reward.setRewardCategory(rewardCategoryService.findRewardCategoryById(rewardDTO.getRewardCategory().getId()).orElse(null));
+            reward.setRewardCategory(rewardCategoryService.findById(rewardDTO.getRewardCategory().getId()).orElse(null));
         }
         reward.setDescription(rewardDTO.getDescription());
 
-        return rewardService.addReward(reward) ? ResponseEntity.status(HttpStatus.OK).build() :
+        return rewardService.add(reward) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.CONFLICT).body(
                         String.format("Reward with the given name already exists: '%s'", rewardDTO.getName()));
     }
 
     @DeleteMapping("/{rewardId}")
-    public ResponseEntity<?> deleteRewardById(@PathVariable int rewardId) {
-        return rewardService.findRewardById(rewardId)
+    public ResponseEntity<?> deleteById(@PathVariable int rewardId) {
+        return rewardService.findById(rewardId)
                 .map(reward -> {
-                    rewardService.deleteRewardById(rewardId);
+                    rewardService.deleteById(rewardId);
                     return ResponseEntity.status(HttpStatus.OK).build();
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());

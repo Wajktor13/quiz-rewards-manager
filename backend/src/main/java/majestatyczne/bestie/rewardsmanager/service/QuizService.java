@@ -25,38 +25,38 @@ public class QuizService {
     private final PreferenceService preferenceService;
 
     @Transactional
-    public void addQuiz(Quiz quiz) {
+    public void add(Quiz quiz) {
         quizRepository.save(quiz);
     }
 
-    public List<Quiz> findAllQuizzes() {
+    public List<Quiz> findAll() {
         return quizRepository
                 .findAll();
     }
 
-    public Optional<Quiz> findQuizById(int id) {
+    public Optional<Quiz> findById(int id) {
         return quizRepository.findById(id);
     }
 
     @Transactional
-    public void deleteQuizById(int quizId) {
-        preferenceService.deleteAllPreferencesByIds(
+    public void deleteById(int quizId) {
+        preferenceService.deleteAllByIds(
                 preferenceService
-                .findAllPreferencesByQuizId(quizId)
+                .findAllByQuizId(quizId)
                 .stream()
                 .map(Preference::getId)
                 .toList());
 
-        resultService.deleteAllResultsByIds(
+        resultService.deleteAllByIds(
                 resultService
-                .findResultsByQuizId(quizId)
+                .findAllByQuizId(quizId)
                 .stream()
                 .map(Result::getId)
                 .toList());
 
-        rewardStrategyService.deleteAllRewardStrategiesByIds(
+        rewardStrategyService.deleteAllByIds(
                 rewardStrategyService
-                .findRewardStrategyByQuizId(quizId)
+                .findByQuizId(quizId)
                 .stream()
                 .map(RewardStrategy::getId)
                 .toList());

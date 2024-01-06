@@ -29,14 +29,14 @@ public class RewardStrategyService {
     private final QuizService quizService;
 
     @Transactional
-    public RewardStrategy addRewardStrategy(int quizId, RewardStrategyType rewardStrategyType) {
-        Optional<Quiz> quiz = quizService.findQuizById(quizId);
+    public RewardStrategy add(int quizId, RewardStrategyType rewardStrategyType) {
+        Optional<Quiz> quiz = quizService.findById(quizId);
 
         if (quiz.isEmpty()) {
             throw new EntityNotFoundException("quiz has not been found");
         }
 
-        if (findRewardStrategyByQuizId(quizId).isPresent()) {
+        if (findByQuizId(quizId).isPresent()) {
             throw new EntityExistsException("strategy for the given quiz already exists");
         }
 
@@ -51,14 +51,14 @@ public class RewardStrategyService {
     }
 
     @Transactional
-    public RewardStrategy updateRewardStrategy(int quizId, RewardStrategyType rewardStrategyType) {
-        Optional<RewardStrategy> rewardStrategyOptional = findRewardStrategyByQuizId(quizId);
+    public RewardStrategy update(int quizId, RewardStrategyType rewardStrategyType) {
+        Optional<RewardStrategy> rewardStrategyOptional = findByQuizId(quizId);
         if (rewardStrategyOptional.isEmpty()) {
             throw new EntityNotFoundException("reward strategy has not been found");
         }
         RewardStrategy rewardStrategy = rewardStrategyOptional.get();
 
-        Optional<Quiz> quiz = quizService.findQuizById(quizId);
+        Optional<Quiz> quiz = quizService.findById(quizId);
         if (quiz.isEmpty()) {
             throw new EntityNotFoundException("quiz has not been found");
         }
@@ -71,12 +71,12 @@ public class RewardStrategyService {
         return rewardStrategy;
     }
 
-    public Optional<RewardStrategy> findRewardStrategyByQuizId(int quizId) {
+    public Optional<RewardStrategy> findByQuizId(int quizId) {
         return Optional.ofNullable(rewardStrategyRepository.findRewardStrategyByQuizId(quizId));
     }
 
-    public void deleteAllRewardStrategiesByIds(List<Integer> rewardStrategiesIds) {
-        rewardStrategyParameterService.deleteAllRewardStrategyParametersByRewardStrategyIds(rewardStrategiesIds);
+    public void deleteAllByIds(List<Integer> rewardStrategiesIds) {
+        rewardStrategyParameterService.deleteAllByRewardStrategyIds(rewardStrategiesIds);
         rewardStrategyRepository.deleteAllById(rewardStrategiesIds);
     }
 

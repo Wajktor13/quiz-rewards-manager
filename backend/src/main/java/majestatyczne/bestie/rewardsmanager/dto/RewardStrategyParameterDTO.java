@@ -27,7 +27,7 @@ public class RewardStrategyParameterDTO {
 
     public static RewardStrategyParameterDTO convertToDTO(RewardStrategyParameter rewardStrategyParameter) {
         return new RewardStrategyParameterDTO(rewardStrategyParameter.getId(), rewardStrategyParameter.getPriority(),
-                rewardStrategyParameter.getParameterValue(), RewardCategoryDTO.fromRewardCategory(rewardStrategyParameter.getRewardCategory()));
+                rewardStrategyParameter.getParameterValue(), RewardCategoryDTO.convertToDTO(rewardStrategyParameter.getRewardCategory()));
     }
 
     public static List<RewardStrategyParameterDTO> convertAllToDTO(List<RewardStrategyParameter> rewardStrategyParameters) {
@@ -60,7 +60,7 @@ public class RewardStrategyParameterDTO {
                         throw new IllegalStateException("reward category in parameter cannot be null");
                     }
 
-                    Optional<RewardCategory> rewardCategory = rewardCategoryService.findRewardCategoryById(
+                    Optional<RewardCategory> rewardCategory = rewardCategoryService.findById(
                             rewardStrategyParameterDTO.getRewardCategory().getId());
 
                     if (rewardCategory.isEmpty()) {

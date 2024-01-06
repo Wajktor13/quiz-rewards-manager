@@ -22,7 +22,7 @@ public class RewardStrategyDTO {
 
     private List<RewardStrategyParameterDTO> parameters;
 
-    public static RewardStrategyDTO fromRewardStrategy(RewardStrategy rewardStrategy) {
+    public static RewardStrategyDTO convertToDTO(RewardStrategy rewardStrategy) {
         Quiz quiz1 = rewardStrategy.getQuiz();
         QuizDTO quizDTO = new QuizDTO(quiz1.getId(), quiz1.getName(), quiz1.getMaxScore(), quiz1.getDate());
 

@@ -17,9 +17,9 @@ public class ResultController {
     private final ResultService resultService;
 
     @GetMapping
-    public List<ResultDTO> getResultsByQuizId(@RequestParam int quizId) {
+    public List<ResultDTO> getAllByQuizId(@RequestParam int quizId) {
         return resultService
-                .findResultsByQuizId(quizId)
+                .findAllByQuizId(quizId)
                 .stream()
                 .map(result -> new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(),
                         result.getEndDate(), result.getScore(), result.getReward()))
@@ -27,8 +27,8 @@ public class ResultController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateResult(@RequestBody ResultDTO resultDTO) {
-        return resultService.updateResult(resultDTO.getId(), resultDTO.getPerson(), resultDTO.getStartDate(),
+    public ResponseEntity<?> update(@RequestBody ResultDTO resultDTO) {
+        return resultService.update(resultDTO.getId(), resultDTO.getPerson(), resultDTO.getStartDate(),
                 resultDTO.getEndDate(), resultDTO.getScore(), resultDTO.getReward())
                 ? ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }

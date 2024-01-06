@@ -21,31 +21,31 @@ public class PreferenceService {
     private final PersonService personService;
 
     @Transactional
-    public void addPreference(Preference preference) {
+    public void add(Preference preference) {
         preferenceRepository.save(preference);
     }
 
     @Transactional
-    public void addPreferences(List<Preference> preferences) {
+    public void addAll(List<Preference> preferences) {
         preferences.forEach(preference -> {
-            Reward reward = rewardService.findRewardByName(preference.getReward().getName()).orElse(null);
-            Person person = personService.findPersonByName(preference.getPerson().getName()).orElse(null);
+            Reward reward = rewardService.findByName(preference.getReward().getName()).orElse(null);
+            Person person = personService.findByName(preference.getPerson().getName()).orElse(null);
 
             if (reward != null && person != null) {
                 preference.setReward(reward);
                 preference.setPerson(person);
             }
-            addPreference(preference);
+            add(preference);
         });
         preferenceRepository.saveAll(preferences);
     }
 
-    public List<Preference> findAllPreferencesByQuizId(int quizId) {
+    public List<Preference> findAllByQuizId(int quizId) {
         return preferenceRepository.findAllByQuizId(quizId);
     }
 
     @Transactional
-    public void deleteAllPreferencesByIds(List<Integer> PreferenceIds) {
+    public void deleteAllByIds(List<Integer> PreferenceIds) {
         preferenceRepository.deleteAllById(PreferenceIds);
     }
 }

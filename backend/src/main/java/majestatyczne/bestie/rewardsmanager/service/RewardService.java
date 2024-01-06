@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,30 +21,30 @@ public class RewardService {
     private final RewardCategoryService rewardCategoryService;
 
     @Transactional
-    public boolean addReward(Reward reward) {
-        if (findRewardByName(reward.getName()).isEmpty()) {
+    public boolean add(Reward reward) {
+        if (findByName(reward.getName()).isEmpty()) {
             rewardRepository.save(reward);
             return true;
         }
         return false;
     }
 
-    public Optional<Reward> findRewardByName(String name) {
+    public Optional<Reward> findByName(String name) {
         return Optional.ofNullable(rewardRepository.findRewardByName(name));
     }
 
-    public List<Reward> findAllRewardsByName(List<String> names) {
+    public List<Reward> findAllByNames(List<String> names) {
         return rewardRepository.findAllRewardsByNames(names);
     }
 
     @Transactional
-    public void addRewardsWithoutDuplicates(List<Reward> rewards) {
+    public void addWithoutDuplicates(List<Reward> rewards) {
         List<String> names = rewards
                 .stream()
                 .map(Reward::getName)
                 .toList();
 
-        List<Reward> alreadyAddedRewards = findAllRewardsByName(names);
+        List<Reward> alreadyAddedRewards = findAllByNames(names);
 
         List<Reward> newRewards = rewards
                 .stream()
@@ -57,41 +56,43 @@ public class RewardService {
         rewardRepository.saveAll(newRewards);
     }
 
-    public List<RewardDTO> findAllRewards() {
+    public List<RewardDTO> findAll() {
         return rewardRepository
                 .findAll()
                 .stream()
-                .map(reward -> new RewardDTO(reward.getId(), RewardCategoryDTO.fromRewardCategory(reward.getRewardCategory()), reward.getName(),
+                .map(reward -> new RewardDTO(reward.getId(), RewardCategoryDTO.convertToDTO(reward.getRewardCategory()), reward.getName(),
                         reward.getDescription()))
                 .toList();
     }
 
-    public Optional<Reward> findRewardById(int rewardId) {
+    public Optional<Reward> findById(int rewardId) {
         return rewardRepository.findById(rewardId);
     }
 
     @Transactional
-    public void updateReward(Reward reward, RewardCategory rewardCategory, String name, String description) {
+    public void update(Reward reward, RewardCategory rewardCategory, String name, String description) {
         reward.setRewardCategory(rewardCategory);
         reward.setName(name);
         reward.setDescription(description);
 
         if (reward.getRewardCategory() != null) {
-            rewardCategoryService.addReward(rewardCategory, reward);
+            rewardCategoryService.addRewardToCategory(rewardCategory, reward);
         }
 
         rewardRepository.save(reward);
     }
 
-    public boolean updateReward(int rewardId, RewardCategory rewardCategory, String name, String description) {
-        return findRewardById(rewardId)
+    @Transactional
+    public boolean update(int rewardId, RewardCategory rewardCategory, String name, String description) {
+        return findById(rewardId)
                 .map(reward -> {
-                    updateReward(reward, rewardCategory, name, description);
+                    update(reward, rewardCategory, name, description);
                     return true;
                 })
                 .orElse(false);
     }
-    public void updateRewards(List<RewardDTO> rewardDTOS) {
+
+    public void updateAll(List<RewardDTO> rewardDTOS) {
         List<Reward> rewards = rewardRepository.findAll();
         List<Reward> updatedRewards = rewardDTOS.stream()
                 .map(rewardDTO -> {
@@ -104,7 +105,7 @@ public class RewardService {
                     if (rewardDTO.getRewardCategory() == null) {
                         matchingReward.setRewardCategory(null);
                     } else {
-                        matchingReward.setRewardCategory(rewardCategoryService.findRewardCategoryById(rewardDTO.getRewardCategory().getId()).orElse(null));
+                        matchingReward.setRewardCategory(rewardCategoryService.findById(rewardDTO.getRewardCategory().getId()).orElse(null));
                     }
                     matchingReward.setDescription(rewardDTO.getDescription());
                     return matchingReward;
@@ -113,23 +114,8 @@ public class RewardService {
         rewardRepository.saveAll(updatedRewards);
 
     }
-//
-//    @Transactional
-//    public boolean updateReward(RewardDTO rewardDTO) {
-//        return findRewardById(rewardDTO.getId())
-//                .map(reward -> {
-//                    if (rewardDTO.getRewardCategory() == null) {
-//                        updateReward(reward, null, rewardDTO.getName(), rewardDTO.getDescription());
-//                    } else {
-//                        updateReward(reward, rewardCategoryService.findRewardCategoryById(rewardDTO.getRewardCategory().getId()).orElse(null), rewardDTO.getName(), rewardDTO.getDescription());
-//                    }
-//
-//                    return true;
-//                })
-//                .orElse(false);
-//    }
 
-    public void deleteRewardById(int rewardId) {
+    public void deleteById(int rewardId) {
         rewardRepository.deleteById(rewardId);
     }
 }
