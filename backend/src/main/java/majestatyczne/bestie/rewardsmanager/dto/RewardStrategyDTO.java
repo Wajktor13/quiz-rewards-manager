@@ -1,6 +1,5 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +27,6 @@ public class RewardStrategyDTO {
         QuizDTO quizDTO = new QuizDTO(quiz1.getId(), quiz1.getName(), quiz1.getMaxScore(), quiz1.getDate());
 
         return new RewardStrategyDTO(rewardStrategy.getId(), rewardStrategy.getRewardStrategyType(),
-                quizDTO, RewardStrategyParameterDTO.fromRewardStrategyParameters(rewardStrategy.getParameters()));
+                quizDTO, RewardStrategyParameterDTO.convertAllToDTO(rewardStrategy.getParameters()));
     }
 }

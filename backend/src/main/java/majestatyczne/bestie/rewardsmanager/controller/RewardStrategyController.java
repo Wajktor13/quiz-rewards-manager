@@ -1,13 +1,21 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardStrategyDTO;
-import majestatyczne.bestie.rewardsmanager.model.Quiz;
-import majestatyczne.bestie.rewardsmanager.service.QuizService;
+import majestatyczne.bestie.rewardsmanager.dto.RewardStrategyParameterDTO;
+import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
+import majestatyczne.bestie.rewardsmanager.model.RewardStrategyParameter;
+import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
+import majestatyczne.bestie.rewardsmanager.service.RewardStrategyParameterService;
 import majestatyczne.bestie.rewardsmanager.service.RewardStrategyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("reward-strategies")
@@ -16,33 +24,72 @@ public class RewardStrategyController {
 
     private final RewardStrategyService rewardStrategyService;
 
-    private final QuizService quizService;
+    private final RewardStrategyParameterService rewardStrategyParameterService;
+
+    private final RewardCategoryService rewardCategoryService;
 
     @PostMapping
-    public ResponseEntity<String> addRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
-        rewardStrategyDTO.setQuiz(rewardStrategyDTO.getQuiz());
+    public ResponseEntity<String> addRewardStrategyWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+        try {
+            RewardStrategy rewardStrategy = rewardStrategyService.addRewardStrategy(rewardStrategyDTO.getQuiz().id(),
+                    rewardStrategyDTO.getRewardStrategyType());
 
-        Quiz quiz = quizService.findQuizById(rewardStrategyDTO.getQuiz().getId()).orElse(null);
+            List<RewardStrategyParameter> rewardStrategyParameters =
+                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getParameters(), rewardStrategy,
+                            rewardCategoryService);
 
-        return rewardStrategyService.addRewardStrategy(rewardStrategyDTO, quiz) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.CONFLICT).body(
-                        "Strategy for the given quiz already exists");
+            rewardStrategyParameterService.addAllRewardStrategyParameters(rewardStrategyParameters);
+
+            rewardStrategyService.addParametersToStrategy(rewardStrategy, rewardStrategyParameters);
+
+            // should it be called here or by a different endpoint?
+            rewardStrategyService.insertRewards(rewardStrategy);
+
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        } catch (EntityExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PutMapping
-    public ResponseEntity<?> updateRewardStrategy(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
-        rewardStrategyDTO.setQuiz(rewardStrategyDTO.getQuiz());
+    public ResponseEntity<String> updateRewardStrategyWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+        try {
+            RewardStrategy rewardStrategy = rewardStrategyService.updateRewardStrategy(rewardStrategyDTO.getQuiz().id(),
+                    rewardStrategyDTO.getRewardStrategyType());
 
-        Quiz quiz = quizService.findQuizById(rewardStrategyDTO.getQuiz().getId()).orElse(null);
+            List<RewardStrategyParameter> rewardStrategyParameters =
+                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getParameters(), rewardStrategy,
+                            rewardCategoryService);
 
-        return rewardStrategyService.updateRewardStrategy(rewardStrategyDTO, quiz) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            rewardStrategyParameterService.updateAllRewardStrategyParameters(rewardStrategyParameters, rewardStrategy);
+
+            rewardStrategyService.addParametersToStrategy(rewardStrategy, rewardStrategyParameters);
+
+            // should it be called here or by a different endpoint?
+            rewardStrategyService.insertRewards(rewardStrategy);
+
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        } catch (EntityExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
+
     @GetMapping("/{quizId}")
     public ResponseEntity<RewardStrategyDTO> getRewardStrategyByQuizId(@PathVariable int quizId) {
-        var rewardStrategy = rewardStrategyService.findRewardStrategyByQuizId(quizId);
-        return rewardStrategy.map(value -> ResponseEntity.status(HttpStatus.OK)
-                        .body(RewardStrategyDTO.fromRewardStrategy(value)))
+        Optional<RewardStrategy> rewardStrategy = rewardStrategyService.findRewardStrategyByQuizId(quizId);
+
+        return rewardStrategy
+                .map(value -> ResponseEntity.status(HttpStatus.OK).body(RewardStrategyDTO.fromRewardStrategy(value)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }
