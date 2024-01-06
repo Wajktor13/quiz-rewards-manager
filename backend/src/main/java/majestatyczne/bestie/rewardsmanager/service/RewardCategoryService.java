@@ -58,7 +58,7 @@ public class RewardCategoryService {
     }
 
     public Optional<RewardCategory> findByName(String name) {
-        return Optional.ofNullable(rewardCategoryRepository.findRewardCategoryByName(name));
+        return Optional.ofNullable(rewardCategoryRepository.findByName(name));
     }
 
     @Transactional

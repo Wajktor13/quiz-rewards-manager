@@ -22,7 +22,7 @@ public class ResultService {
     private final PersonService personService;
 
     public List<Result> findAllByQuizId(int quizId) {
-        return resultRepository.findResultsByQuizId(quizId);
+        return resultRepository.findAllByQuizId(quizId);
     }
 
     @Transactional

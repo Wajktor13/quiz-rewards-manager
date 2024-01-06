@@ -72,7 +72,7 @@ public class RewardStrategyService {
     }
 
     public Optional<RewardStrategy> findByQuizId(int quizId) {
-        return Optional.ofNullable(rewardStrategyRepository.findRewardStrategyByQuizId(quizId));
+        return Optional.ofNullable(rewardStrategyRepository.findByQuizId(quizId));
     }
 
     public void deleteAllByIds(List<Integer> rewardStrategiesIds) {

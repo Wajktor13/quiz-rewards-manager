@@ -30,11 +30,11 @@ public class RewardService {
     }
 
     public Optional<Reward> findByName(String name) {
-        return Optional.ofNullable(rewardRepository.findRewardByName(name));
+        return Optional.ofNullable(rewardRepository.findByName(name));
     }
 
     public List<Reward> findAllByNames(List<String> names) {
-        return rewardRepository.findAllRewardsByNames(names);
+        return rewardRepository.findAllByNames(names);
     }
 
     @Transactional

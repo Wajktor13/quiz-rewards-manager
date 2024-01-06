@@ -18,11 +18,11 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     public Optional<Person> findByName(String name) {
-        return Optional.ofNullable(personRepository.findPersonByName(name));
+        return Optional.ofNullable(personRepository.findByName(name));
     }
 
     public List<Person> findAllByNames(List<String> names) {
-        return personRepository.findAllPeopleByNames(names);
+        return personRepository.findAllByNames(names);
     }
 
     @Transactional
