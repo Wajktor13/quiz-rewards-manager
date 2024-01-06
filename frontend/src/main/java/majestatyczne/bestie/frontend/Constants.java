@@ -56,6 +56,10 @@ public class Constants {
 
     public static final String UPDATE_REWARD_CATEGORY_EMPTY_ERROR = "Co najmniej jedna z nazw kategorii jest pusta. Zmiany w kategoriach nagród nie zostaną wprowadzone!";
 
+    public static final String DELETE_QUIZ_INFO = "Wybrany quiz został usunięty!";
+
+    public static final String DELETE_QUIZ_ERROR = "Nie udało się usunąć wybranego quizu!";
+
     // general alert texts
     public static final String ALERT_WARNING_TITLE = "Uwaga";
 

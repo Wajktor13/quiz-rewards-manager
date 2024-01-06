@@ -2,7 +2,6 @@ package majestatyczne.bestie.frontend.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.service.FileUploadService;
@@ -20,6 +18,7 @@ import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
 import majestatyczne.bestie.frontend.model.QuizView;
 import majestatyczne.bestie.frontend.util.AlertManager;
+import majestatyczne.bestie.frontend.util.DeleteButtonCell;
 import org.apache.http.HttpStatus;
 
 import java.io.File;
@@ -105,47 +104,21 @@ public class HomePageController implements Initializable {
         initializeDefaultUploadDirectory();
         nameColumn.setCellValueFactory(nameValue -> nameValue.getValue().getNameProperty());
         dateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getDateProperty());
-        addDeleteButtonsToTable();
+        deleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteButtonClicked));
         setData();
         settingsIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.SETTINGS_ICON_RESOURCE))));
     }
 
-    private void addDeleteButtonsToTable() {
-        Callback<TableColumn<QuizView, Void>, TableCell<QuizView, Void>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<QuizView, Void> call(final TableColumn<QuizView, Void> param) {
-                final TableCell<QuizView, Void> cell = new TableCell<>() {
-                    private final Button button = new Button("Delete");
-                    {
-                        button.setOnAction((ActionEvent event) -> {
-                            QuizView quizView = quizTable.getItems().get(getIndex());
-                            onDeleteButtonClicked(quizView);
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(button);
-                        }
-                    }
-                };
-                return cell;
-            }
-        };
-        deleteColumn.setCellFactory(cellFactory);
-    }
-
-
     private void onDeleteButtonClicked(QuizView quizView) {
         QuizService quizService = new QuizService();
-        quizService.deleteQuizById(quizView.getId());
+        int responseCode = quizService.deleteQuizById(quizView.getId());
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.DELETE_QUIZ_INFO);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.DELETE_QUIZ_ERROR);
+        }
         setData();
     }
-
 
     private void initializeQuizzes() {
         QuizService quizService = new QuizService();

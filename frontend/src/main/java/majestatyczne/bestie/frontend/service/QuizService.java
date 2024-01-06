@@ -31,12 +31,14 @@ public class QuizService {
         }
     }
 
-    public void deleteQuizById(int quizId) {
+    public int deleteQuizById(int quizId) {
         APIService service = getAPIService();
         try {
-            service.deleteQuizById(quizId).execute();
+            var response = service.deleteQuizById(quizId).execute();
+            return response.code();
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            return 500;
         }
     }
 
