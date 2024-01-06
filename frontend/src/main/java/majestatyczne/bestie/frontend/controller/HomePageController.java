@@ -19,6 +19,7 @@ import majestatyczne.bestie.frontend.service.FileUploadService;
 import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
 import majestatyczne.bestie.frontend.model.QuizView;
+import majestatyczne.bestie.frontend.util.AlertManager;
 import org.apache.http.HttpStatus;
 
 import java.io.File;
@@ -57,26 +58,11 @@ public class HomePageController implements Initializable {
         }
         int statusCode = fileUploadService.makeRequest(file);
         switch (statusCode) {
-            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted();
-            default -> onRequestFailed(statusCode);
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
+            default -> AlertManager.showErrorAlert(statusCode, Constants.FILE_UPLOAD_ERROR_TITLE);
         }
         setData();
-    }
-
-    @FXML
-    private void onRequestFailed(int statusCode) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(Constants.FILE_UPLOAD_ERROR_TITLE);
-        alert.setContentText(Constants.FILE_UPLOAD_ERROR_INFO + statusCode);
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void onRequestAccepted() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
-        alert.setHeaderText(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
-        alert.showAndWait();
     }
 
     @FXML
@@ -85,7 +71,6 @@ public class HomePageController implements Initializable {
             QuizView selectedQuiz = quizTable.getSelectionModel().getSelectedItem();
             moveToQuizPage(selectedQuiz);
         } catch (NullPointerException e) {
-            System.out.println("Couldn't get selected quiz");
             System.out.println(e.getMessage());
         }
     }
@@ -126,8 +111,7 @@ public class HomePageController implements Initializable {
     }
 
     private void addDeleteButtonsToTable() {
-        deleteColumn = new TableColumn<>("Button Column");
-        Callback<TableColumn<QuizView, Void>, TableCell<QuizView, Void>> cellFactory = new Callback<TableColumn<QuizView, Void>, TableCell<QuizView, Void>>() {
+        Callback<TableColumn<QuizView, Void>, TableCell<QuizView, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<QuizView, Void> call(final TableColumn<QuizView, Void> param) {
                 final TableCell<QuizView, Void> cell = new TableCell<>() {
@@ -152,9 +136,7 @@ public class HomePageController implements Initializable {
                 return cell;
             }
         };
-
         deleteColumn.setCellFactory(cellFactory);
-        quizTable.getColumns().add(deleteColumn);
     }
 
 

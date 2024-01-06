@@ -20,6 +20,7 @@ import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.RewardCategoryService;
 import majestatyczne.bestie.frontend.service.RewardService;
 import javafx.util.Callback;
+import majestatyczne.bestie.frontend.util.AlertManager;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
@@ -183,7 +184,7 @@ public class GlobalSettingsPageController implements Initializable {
     public void onAddCategoryClicked(ActionEvent actionEvent) {
         String categoryName = newCategoryTextField.getText();
         if (categoryName.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Wpisz nazwę kategorii");
+            AlertManager.showWarningAlert(Constants.ADD_REWARD_CATEGORY_EMPTY_WARNING);
             return;
         }
         RewardCategory rewardCategory = new RewardCategory(categoryName);
@@ -192,17 +193,10 @@ public class GlobalSettingsPageController implements Initializable {
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_CREATED -> {
                 newCategoryTextField.clear();
-                onRequestAccepted(Constants.ADD_REWARD_CATEGORY_INFO);
+                AlertManager.showConfirmationAlert(Constants.ADD_REWARD_CATEGORY_INFO);
             }
-            default -> onRequestFailed(responseCode, Constants.ADD_REWARD_CATEGORY_ERROR_TITLE);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.ADD_REWARD_CATEGORY_ERROR_TITLE);
         }
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(title);
-        alert.showAndWait();
     }
 
     public void onSaveChangesClicked() {
@@ -214,7 +208,7 @@ public class GlobalSettingsPageController implements Initializable {
         RewardCategoryService rewardCategoryService = new RewardCategoryService();
         for (RewardCategoryView rewardCategoryView : rewardCategories) {
             if (rewardCategoryView.getName().isEmpty()) {
-                showAlert(Alert.AlertType.WARNING, Constants.ADD_REWARD_CATEGORY_EMPTY_WARNING);
+                AlertManager.showWarningAlert(Constants.UPDATE_REWARD_CATEGORY_EMPTY_ERROR);
                 return;
             }
         }
@@ -225,8 +219,9 @@ public class GlobalSettingsPageController implements Initializable {
         }));
         int responseCode = rewardCategoryService.updateRewardCategories(rewardCategoryList);
         switch (responseCode) {
-            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted(Constants.UPDATE_REWARD_CATEGORIES_INFO);
-            default -> onRequestFailed(responseCode, Constants.UPDATE_REWARD_CATEGORIES_ERROR_TITLE);
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.UPDATE_REWARD_CATEGORIES_INFO);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.UPDATE_REWARD_CATEGORIES_ERROR_TITLE);
         }
     }
 
@@ -241,24 +236,9 @@ public class GlobalSettingsPageController implements Initializable {
         }));
         int responseCode = rewardService.updateRewards(rewardList);
         switch (responseCode) {
-            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted(Constants.UPDATE_REWARDS_INFO);
-            default -> onRequestFailed(responseCode, Constants.UPDATE_REWARDS_ERROR_TITLE);
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.UPDATE_REWARDS_INFO);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.UPDATE_REWARDS_ERROR_TITLE);
         }
-    }
-
-    @FXML
-    private void onRequestAccepted(String alertTitle) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(alertTitle);
-        alert.setHeaderText(alertTitle);
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void onRequestFailed(int statusCode, String alertTitle) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(alertTitle);
-        alert.setContentText(Constants.UPDATE_REWARDS_ERROR + statusCode);
-        alert.showAndWait();
     }
 }
