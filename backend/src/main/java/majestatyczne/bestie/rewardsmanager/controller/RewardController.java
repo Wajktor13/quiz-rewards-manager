@@ -21,7 +21,11 @@ public class RewardController {
 
     @GetMapping
     public List<RewardDTO> getAll() {
-        return rewardService.findAll();
+        return rewardService
+                .findAll()
+                .stream()
+                .map(RewardDTO::convertToDTO)
+                .toList();
     }
 
     @PutMapping

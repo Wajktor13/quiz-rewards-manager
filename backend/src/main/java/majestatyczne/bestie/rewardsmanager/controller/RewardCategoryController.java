@@ -21,6 +21,7 @@ public class RewardCategoryController {
     public ResponseEntity<?> getById(@PathVariable int rewardCategoryId) {
         return rewardCategoryService
                 .findById(rewardCategoryId)
+                .map(RewardCategoryDTO::convertToDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -28,7 +29,7 @@ public class RewardCategoryController {
     @GetMapping
     public List<RewardCategoryDTO> getAll() {
         return rewardCategoryService.findAll().stream()
-                .map(category -> new RewardCategoryDTO(category.getId(), category.getName()))
+                .map(RewardCategoryDTO::convertToDTO)
                 .toList();
     }
 
