@@ -8,5 +8,6 @@ import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import java.util.List;
 
 public interface RewardSelectionStrategy {
-    public List<Result> insertRewards(Quiz quiz, RewardStrategy rewardStrategy, List<Preference> preferences);
+
+    List<Result> insertRewards(Quiz quiz, RewardStrategy rewardStrategy, List<Preference> preferences);
 }

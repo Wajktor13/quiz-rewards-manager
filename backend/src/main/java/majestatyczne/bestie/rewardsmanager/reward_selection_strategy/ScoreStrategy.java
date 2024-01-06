@@ -1,7 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.reward_selection_strategy;
 
 import majestatyczne.bestie.rewardsmanager.model.*;
-import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
 
 import java.util.Comparator;
 import java.util.List;

@@ -1,14 +1,12 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.EntityNotFoundException;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategyParameter;
 import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
 
 import java.util.List;
-import java.util.Optional;
 
 public record RewardStrategyParameterDTO (
 
