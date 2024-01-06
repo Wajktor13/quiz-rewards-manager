@@ -1,15 +1,10 @@
 package majestatyczne.bestie.rewardsmanager.reward_selection_strategy;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.*;
-import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 
 @AllArgsConstructor
 public class PercentageStrategy implements RewardSelectionStrategy {
@@ -25,7 +20,7 @@ public class PercentageStrategy implements RewardSelectionStrategy {
 
         int resultIndex = 0;
         for (RewardStrategyParameter parameter: rewardParameters) {
-            var quantity = parameter.getParameterValue() * 100 / results.size();
+            var quantity = parameter.getParameterValue() * results.size() / 100;
             var reward = parameter.getRewardCategory().getRewards().stream()
                     .filter(r -> r.getRewardCategory().equals(parameter.getRewardCategory()))
                     .findFirst().orElseThrow();
