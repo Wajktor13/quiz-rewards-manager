@@ -35,17 +35,17 @@ public class RewardCategoryController {
     @PostMapping
     public ResponseEntity<String> add(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
         RewardCategory rewardCategory = new RewardCategory();
-        rewardCategory.setName(rewardCategoryDTO.getName());
+        rewardCategory.setName(rewardCategoryDTO.name());
 
         return rewardCategoryService.add(rewardCategory) ?
                 ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.CONFLICT).body(
-                String.format("Category with the given name already exists: '%s'", rewardCategoryDTO.getName())
+                String.format("Category with the given name already exists: '%s'", rewardCategoryDTO.name())
         );
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
-        return rewardCategoryService.update(rewardCategoryDTO.getId(), rewardCategoryDTO.getName()) ?
+        return rewardCategoryService.update(rewardCategoryDTO.id(), rewardCategoryDTO.name()) ?
                 ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 

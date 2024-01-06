@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,9 +19,11 @@ public class RewardStrategyDTO {
 
     private RewardStrategyType rewardStrategyType;
 
-    private QuizDTO quiz;
+    @JsonProperty("quiz")
+    private QuizDTO quizDTO;
 
-    private List<RewardStrategyParameterDTO> parameters;
+    @JsonProperty("parameters")
+    private List<RewardStrategyParameterDTO> RewardStrategyParameterDTOs;
 
     public static RewardStrategyDTO convertToDTO(RewardStrategy rewardStrategy) {
         Quiz quiz1 = rewardStrategy.getQuiz();

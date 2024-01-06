@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Person;
@@ -21,6 +22,8 @@ public class ResultService {
 
     private final PersonService personService;
 
+    private final RewardService rewardService;
+
     public List<Result> findAllByQuizId(int quizId) {
         return resultRepository.findAllByQuizId(quizId);
     }
@@ -36,9 +39,15 @@ public class ResultService {
     }
 
     @Transactional
-    public boolean update(int resultId, Person person, Date startDate, Date endDate, int score, Reward reward) {
+    public boolean update(int resultId, Person person, Date startDate, Date endDate, int score, int rewardId) {
+        Optional<Reward> reward = rewardService.findById(rewardId);
+
+        if (reward.isEmpty()) {
+            throw new EntityNotFoundException("reward has not been found");
+        }
+
         return findById(resultId)
-                .map(result -> update(resultId, result.getQuiz(), person, startDate, endDate, score, reward))
+                .map(result -> update(resultId, result.getQuiz(), person, startDate, endDate, score, reward.get()))
                 .orElse(false);
     }
 

@@ -31,11 +31,11 @@ public class RewardStrategyController {
     @PostMapping
     public ResponseEntity<String> addWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         try {
-            RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.getQuiz().id(),
+            RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.getQuizDTO().id(),
                     rewardStrategyDTO.getRewardStrategyType());
 
             List<RewardStrategyParameter> rewardStrategyParameters =
-                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getParameters(), rewardStrategy,
+                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getRewardStrategyParameterDTOs(), rewardStrategy,
                             rewardCategoryService);
 
             rewardStrategyParameterService.addAll(rewardStrategyParameters);
@@ -59,11 +59,11 @@ public class RewardStrategyController {
     @PutMapping
     public ResponseEntity<String> updateWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         try {
-            RewardStrategy rewardStrategy = rewardStrategyService.update(rewardStrategyDTO.getQuiz().id(),
+            RewardStrategy rewardStrategy = rewardStrategyService.update(rewardStrategyDTO.getQuizDTO().id(),
                     rewardStrategyDTO.getRewardStrategyType());
 
             List<RewardStrategyParameter> rewardStrategyParameters =
-                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getParameters(), rewardStrategy,
+                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getRewardStrategyParameterDTOs(), rewardStrategy,
                             rewardCategoryService);
 
             rewardStrategyParameterService.updateAll(rewardStrategyParameters, rewardStrategy);

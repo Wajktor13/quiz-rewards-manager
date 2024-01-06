@@ -98,16 +98,16 @@ public class RewardService {
                 .map(rewardDTO -> {
                     Reward matchingReward = rewards
                             .stream()
-                            .filter(reward -> reward.getId() == rewardDTO.getId())
+                            .filter(reward -> reward.getId() == rewardDTO.id())
                             .findFirst()
                             .orElse(null);
-                    matchingReward.setName(rewardDTO.getName());
-                    if (rewardDTO.getRewardCategory() == null) {
+                    matchingReward.setName(rewardDTO.name());
+                    if (rewardDTO.rewardCategoryDTO() == null) {
                         matchingReward.setRewardCategory(null);
                     } else {
-                        matchingReward.setRewardCategory(rewardCategoryService.findById(rewardDTO.getRewardCategory().getId()).orElse(null));
+                        matchingReward.setRewardCategory(rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()).orElse(null));
                     }
-                    matchingReward.setDescription(rewardDTO.getDescription());
+                    matchingReward.setDescription(rewardDTO.description());
                     return matchingReward;
                 })
                 .toList();

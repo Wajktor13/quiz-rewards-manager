@@ -26,11 +26,11 @@ public class RewardController {
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody RewardDTO rewardDTO) {
-        var category = rewardDTO.getRewardCategory() == null ? null :
-                rewardCategoryService.findById(rewardDTO.getRewardCategory().getId()).orElse(null);
+        var category = rewardDTO.rewardCategoryDTO() == null ? null :
+                rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()).orElse(null);
 
-        return rewardService.update(rewardDTO.getId(), category, rewardDTO.getName(),
-                rewardDTO.getDescription()) ? ResponseEntity.status(HttpStatus.OK).build() :
+        return rewardService.update(rewardDTO.id(), category, rewardDTO.name(),
+                rewardDTO.description()) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     @PutMapping("/all")
@@ -42,18 +42,18 @@ public class RewardController {
     @PostMapping
     public ResponseEntity<String> add(@RequestBody RewardDTO rewardDTO) {
         Reward reward = new Reward();
-        reward.setName(rewardDTO.getName());
-        if (rewardDTO.getRewardCategory() == null) {
+        reward.setName(rewardDTO.name());
+        if (rewardDTO.rewardCategoryDTO() == null) {
             reward.setRewardCategory(null);
         }
         else {
-            reward.setRewardCategory(rewardCategoryService.findById(rewardDTO.getRewardCategory().getId()).orElse(null));
+            reward.setRewardCategory(rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()).orElse(null));
         }
-        reward.setDescription(rewardDTO.getDescription());
+        reward.setDescription(rewardDTO.description());
 
         return rewardService.add(reward) ? ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.CONFLICT).body(
-                        String.format("Reward with the given name already exists: '%s'", rewardDTO.getName()));
+                        String.format("Reward with the given name already exists: '%s'", rewardDTO.name()));
     }
 
     @DeleteMapping("/{rewardId}")

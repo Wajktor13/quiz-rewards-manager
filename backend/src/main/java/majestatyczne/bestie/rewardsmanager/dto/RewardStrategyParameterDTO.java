@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,8 @@ public class RewardStrategyParameterDTO {
 
     private int parameterValue;
 
-    private RewardCategoryDTO rewardCategory;
+    @JsonProperty("rewardCategory")
+    private RewardCategoryDTO rewardCategoryDTO;
 
     public static RewardStrategyParameterDTO convertToDTO(RewardStrategyParameter rewardStrategyParameter) {
         return new RewardStrategyParameterDTO(rewardStrategyParameter.getId(), rewardStrategyParameter.getPriority(),
@@ -41,8 +43,8 @@ public class RewardStrategyParameterDTO {
         rewardStrategyParameter.setParameterValue(rewardStrategyParameterDTO.getParameterValue());
         rewardStrategyParameter.setPriority(rewardStrategyParameterDTO.getPriority());
 
-        if (rewardStrategyParameterDTO.getRewardCategory() == null) {
-            throw new IllegalStateException("reward category cannot be null");
+        if (rewardStrategyParameterDTO.getRewardCategoryDTO() == null) {
+            throw new IllegalStateException("rewardDTO category cannot be null");
         }
         rewardStrategyParameter.setRewardCategory(rewardCategory);
 
@@ -56,12 +58,12 @@ public class RewardStrategyParameterDTO {
                 .stream()
                 .map(rewardStrategyParameterDTO ->
                 {
-                    if (rewardStrategyParameterDTO == null) {
+                    if (rewardStrategyParameterDTO.getRewardCategoryDTO() == null) {
                         throw new IllegalStateException("reward category in parameter cannot be null");
                     }
 
                     Optional<RewardCategory> rewardCategory = rewardCategoryService.findById(
-                            rewardStrategyParameterDTO.getRewardCategory().getId());
+                            rewardStrategyParameterDTO.getRewardCategoryDTO().id());
 
                     if (rewardCategory.isEmpty()) {
                         throw new EntityNotFoundException("reward category has not been found");

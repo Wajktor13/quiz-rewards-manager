@@ -54,7 +54,7 @@ public class RewardStrategyService {
     public RewardStrategy update(int quizId, RewardStrategyType rewardStrategyType) {
         Optional<RewardStrategy> rewardStrategyOptional = findByQuizId(quizId);
         if (rewardStrategyOptional.isEmpty()) {
-            throw new EntityNotFoundException("reward strategy has not been found");
+            throw new EntityNotFoundException("rewardDTO strategy has not been found");
         }
         RewardStrategy rewardStrategy = rewardStrategyOptional.get();
 

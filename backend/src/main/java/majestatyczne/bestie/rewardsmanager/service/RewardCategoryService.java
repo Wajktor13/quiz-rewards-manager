@@ -68,10 +68,10 @@ public class RewardCategoryService {
                 .map(rewardCategoryDTO -> {
                     RewardCategory matchingRewardCategory = rewardCategories
                             .stream()
-                            .filter(reward -> reward.getId() == rewardCategoryDTO.getId())
+                            .filter(reward -> reward.getId() == rewardCategoryDTO.id())
                             .findFirst()
                             .orElse(null);
-                    matchingRewardCategory.setName(rewardCategoryDTO.getName());
+                    matchingRewardCategory.setName(rewardCategoryDTO.name());
                     return matchingRewardCategory;
                 })
                 .toList();

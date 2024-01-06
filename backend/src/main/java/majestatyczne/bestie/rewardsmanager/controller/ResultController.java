@@ -21,15 +21,14 @@ public class ResultController {
         return resultService
                 .findAllByQuizId(quizId)
                 .stream()
-                .map(result -> new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(),
-                        result.getEndDate(), result.getScore(), result.getReward()))
+                .map(ResultDTO::convertToDTO)
                 .toList();
     }
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody ResultDTO resultDTO) {
-        return resultService.update(resultDTO.getId(), resultDTO.getPerson(), resultDTO.getStartDate(),
-                resultDTO.getEndDate(), resultDTO.getScore(), resultDTO.getReward())
+        return resultService.update(resultDTO.id(), resultDTO.person(), resultDTO.startDate(),
+                resultDTO.endDate(), resultDTO.score(), resultDTO.rewardDTO().id())
                 ? ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
