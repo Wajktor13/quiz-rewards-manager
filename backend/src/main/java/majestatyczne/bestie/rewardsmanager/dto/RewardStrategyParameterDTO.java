@@ -2,9 +2,6 @@ package majestatyczne.bestie.rewardsmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategyParameter;
@@ -13,19 +10,17 @@ import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class RewardStrategyParameterDTO {
+public record RewardStrategyParameterDTO (
 
-    private int id;
+    int id,
 
-    private int priority;
+    int priority,
 
-    private int parameterValue;
+    int parameterValue,
 
     @JsonProperty("rewardCategory")
-    private RewardCategoryDTO rewardCategoryDTO;
+    RewardCategoryDTO rewardCategoryDTO
+) {
 
     public static RewardStrategyParameterDTO convertToDTO(RewardStrategyParameter rewardStrategyParameter) {
         return new RewardStrategyParameterDTO(rewardStrategyParameter.getId(), rewardStrategyParameter.getPriority(),
@@ -40,10 +35,10 @@ public class RewardStrategyParameterDTO {
                                                   RewardStrategy rewardStrategy, RewardCategory rewardCategory) {
         RewardStrategyParameter rewardStrategyParameter = new RewardStrategyParameter();
         rewardStrategyParameter.setRewardStrategy(rewardStrategy);
-        rewardStrategyParameter.setParameterValue(rewardStrategyParameterDTO.getParameterValue());
-        rewardStrategyParameter.setPriority(rewardStrategyParameterDTO.getPriority());
+        rewardStrategyParameter.setParameterValue(rewardStrategyParameterDTO.parameterValue);
+        rewardStrategyParameter.setPriority(rewardStrategyParameterDTO.priority);
 
-        if (rewardStrategyParameterDTO.getRewardCategoryDTO() == null) {
+        if (rewardStrategyParameterDTO.rewardCategoryDTO == null) {
             throw new IllegalStateException("rewardDTO category cannot be null");
         }
         rewardStrategyParameter.setRewardCategory(rewardCategory);
@@ -58,12 +53,12 @@ public class RewardStrategyParameterDTO {
                 .stream()
                 .map(rewardStrategyParameterDTO ->
                 {
-                    if (rewardStrategyParameterDTO.getRewardCategoryDTO() == null) {
+                    if (rewardStrategyParameterDTO.rewardCategoryDTO == null) {
                         throw new IllegalStateException("reward category in parameter cannot be null");
                     }
 
                     Optional<RewardCategory> rewardCategory = rewardCategoryService.findById(
-                            rewardStrategyParameterDTO.getRewardCategoryDTO().id());
+                            rewardStrategyParameterDTO.rewardCategoryDTO.id());
 
                     if (rewardCategory.isEmpty()) {
                         throw new EntityNotFoundException("reward category has not been found");

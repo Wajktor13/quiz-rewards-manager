@@ -31,12 +31,12 @@ public class RewardStrategyController {
     @PostMapping
     public ResponseEntity<String> addWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         try {
-            RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.getQuizDTO().id(),
-                    rewardStrategyDTO.getRewardStrategyType());
+            RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.quizDTO().id(),
+                    rewardStrategyDTO.rewardStrategyType());
 
             List<RewardStrategyParameter> rewardStrategyParameters =
-                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getRewardStrategyParameterDTOs(), rewardStrategy,
-                            rewardCategoryService);
+                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.rewardStrategyParameterDTOs(),
+                            rewardStrategy, rewardCategoryService);
 
             rewardStrategyParameterService.addAll(rewardStrategyParameters);
 
@@ -59,12 +59,12 @@ public class RewardStrategyController {
     @PutMapping
     public ResponseEntity<String> updateWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
         try {
-            RewardStrategy rewardStrategy = rewardStrategyService.update(rewardStrategyDTO.getQuizDTO().id(),
-                    rewardStrategyDTO.getRewardStrategyType());
+            RewardStrategy rewardStrategy = rewardStrategyService.update(rewardStrategyDTO.quizDTO().id(),
+                    rewardStrategyDTO.rewardStrategyType());
 
             List<RewardStrategyParameter> rewardStrategyParameters =
-                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.getRewardStrategyParameterDTOs(), rewardStrategy,
-                            rewardCategoryService);
+                    RewardStrategyParameterDTO.convertAllFromDTO(rewardStrategyDTO.rewardStrategyParameterDTOs(),
+                            rewardStrategy, rewardCategoryService);
 
             rewardStrategyParameterService.updateAll(rewardStrategyParameters, rewardStrategy);
 
