@@ -60,8 +60,7 @@ public class QuizService {
                 .toList());
 
         rewardStrategyService.deleteAllByIds(
-                rewardStrategyService
-                .findByQuizId(quizId)
+                Optional.ofNullable(rewardStrategyService.findByQuizId(quizId))
                 .stream()
                 .map(RewardStrategy::getId)
                 .toList());

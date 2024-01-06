@@ -80,7 +80,7 @@ public class XlsxDataLoader implements FileDataLoader {
     }
 
     private void loadRewards() {
-        rewardService.addWithoutDuplicates(parsedData.getRewards());
+        rewardService.addAllWithoutDuplicates(parsedData.getRewards());
     }
 
     private void loadPreferences() {

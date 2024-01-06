@@ -1,6 +1,5 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor(onConstructor_ ={@Lazy})
@@ -32,9 +30,10 @@ public class RewardStrategyService {
     public RewardStrategy add(int quizId, RewardStrategyType rewardStrategyType) {
         Quiz quiz = quizService.findById(quizId);
 
-        if (findByQuizId(quizId).isPresent()) {
-            throw new EntityExistsException("strategy for the given quiz already exists");
-        }
+        try {
+            findByQuizId(quizId);
+            throw new IllegalStateException("strategy for the given quiz already exists");
+        } catch (EntityNotFoundException ignored) { }
 
         RewardStrategy rewardStrategy = new RewardStrategy();
         rewardStrategy.setQuiz(quiz);
@@ -48,11 +47,7 @@ public class RewardStrategyService {
 
     @Transactional
     public RewardStrategy update(int quizId, RewardStrategyType rewardStrategyType) {
-        Optional<RewardStrategy> rewardStrategyOptional = findByQuizId(quizId);
-        if (rewardStrategyOptional.isEmpty()) {
-            throw new EntityNotFoundException("rewardDTO strategy has not been found");
-        }
-        RewardStrategy rewardStrategy = rewardStrategyOptional.get();
+        RewardStrategy rewardStrategy = findByQuizId(quizId);
 
         Quiz quiz = quizService.findById(quizId);
 
@@ -64,10 +59,14 @@ public class RewardStrategyService {
         return rewardStrategy;
     }
 
-    public Optional<RewardStrategy> findByQuizId(int quizId) {
-        return Optional.ofNullable(rewardStrategyRepository.findByQuizId(quizId));
+    public RewardStrategy findByQuizId(int quizId) {
+        return rewardStrategyRepository
+                .findByQuizId(quizId)
+                .orElseThrow(() -> new EntityNotFoundException("reward selection strategy has not been found for the" +
+                        " given quiz"));
     }
 
+    @Transactional
     public void deleteAllByIds(List<Integer> rewardStrategiesIds) {
         rewardStrategyParameterService.deleteAllByRewardStrategyIds(rewardStrategiesIds);
         rewardStrategyRepository.deleteAllById(rewardStrategiesIds);

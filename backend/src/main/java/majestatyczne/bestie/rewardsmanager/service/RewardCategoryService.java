@@ -8,7 +8,6 @@ import majestatyczne.bestie.rewardsmanager.dto.RewardCategoryDTO;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import majestatyczne.bestie.rewardsmanager.repository.RewardCategoryRepository;
 import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class RewardCategoryService {
     @Transactional
     public void add(String name) {
         if (findByName(name).isPresent()) {
-            throw new EntityExistsException("reward category with given name already exists");
+            throw new EntityExistsException("reward category with the given name already exists");
         }
 
         RewardCategory rewardCategory = new RewardCategory();
@@ -56,10 +55,11 @@ public class RewardCategoryService {
     }
 
     @Transactional
-    public void addRewardToCategory(RewardCategory rewardCategory, Reward reward) {
-        rewardCategory.getRewards().add(reward);
-
-        rewardCategoryRepository.save(rewardCategory);
+    public void addRewardToCategory(Reward reward, RewardCategory rewardCategory) {
+        if (rewardCategory != null && reward != null) {
+            rewardCategory.getRewards().add(reward);
+            rewardCategoryRepository.save(rewardCategory);
+        }
     }
 
     public Optional<RewardCategory> findByName(String name) {
@@ -88,5 +88,13 @@ public class RewardCategoryService {
                 .toList();
 
         rewardCategoryRepository.saveAll(updatedRewardCategories);
+    }
+
+    @Transactional
+    public void removeRewardFromCategory(Reward reward, RewardCategory rewardCategory) {
+        if (rewardCategory != null && reward != null) {
+            rewardCategory.getRewards().remove(reward);
+            rewardCategoryRepository.save(rewardCategory);
+        }
     }
 }

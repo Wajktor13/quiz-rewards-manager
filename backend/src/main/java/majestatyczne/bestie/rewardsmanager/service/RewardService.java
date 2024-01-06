@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,6 @@ import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +22,22 @@ public class RewardService {
     private final RewardCategoryService rewardCategoryService;
 
     @Transactional
-    public boolean add(Reward reward) {
-        if (findByName(reward.getName()).isEmpty()) {
-            rewardRepository.save(reward);
-            return true;
+    public void add(String name, String description, int rewardCategoryId) {
+        if (findByName(name).isPresent()) {
+            throw new EntityExistsException(String.format("Reward with the the given name already exists: '%s'",
+                    name));
         }
-        return false;
+
+        RewardCategory rewardCategory = rewardCategoryService.findById(rewardCategoryId);
+
+        Reward reward = new Reward();
+        reward.setName(name);
+        reward.setDescription(description);
+        reward.setRewardCategory(rewardCategory);
+
+        rewardRepository.save(reward);
+
+        rewardCategoryService.addRewardToCategory(reward, rewardCategory);
     }
 
     public Optional<Reward> findByName(String name) {
@@ -39,7 +49,7 @@ public class RewardService {
     }
 
     @Transactional
-    public void addWithoutDuplicates(List<Reward> rewards) {
+    public void addAllWithoutDuplicates(List<Reward> rewards) {
         List<String> names = rewards
                 .stream()
                 .map(Reward::getName)
@@ -49,7 +59,8 @@ public class RewardService {
 
         List<Reward> newRewards = rewards
                 .stream()
-                .filter(reward -> alreadyAddedRewards
+                .filter(reward ->
+                        alreadyAddedRewards
                         .stream()
                         .noneMatch(alreadyAddedReward -> alreadyAddedReward.getName().equals(reward.getName())))
                 .toList();
@@ -69,11 +80,19 @@ public class RewardService {
 
     @Transactional
     public void update(Reward reward, RewardCategory rewardCategory, String name, String description) {
+        if (reward.getRewardCategory() != null) {
+            rewardCategoryService.removeRewardFromCategory(reward, rewardCategory);
+        }
+
         reward.setRewardCategory(rewardCategory);
         reward.setName(name);
         reward.setDescription(description);
 
         rewardRepository.save(reward);
+
+        if (rewardCategory != null) {
+            rewardCategoryService.addRewardToCategory(reward, rewardCategory);
+        }
     }
 
     @Transactional
@@ -85,26 +104,39 @@ public class RewardService {
         update(reward, rewardCategory, name, description);
     }
 
+    @Transactional
     public void updateAll(List<RewardDTO> rewardDTOS) {
         List<Reward> rewards = rewardRepository.findAll();
 
-        List<Reward> updatedRewards = rewardDTOS.stream()
+        List<Reward> updatedRewards =
+                rewardDTOS
+                .stream()
                 .map(rewardDTO -> {
-                    Reward matchingReward = rewards
+                    Reward matchingReward =
+                            rewards
                             .stream()
                             .filter(reward -> reward.getId() == rewardDTO.id())
                             .findFirst()
                             .orElse(null);
 
-                    matchingReward.setName(rewardDTO.name());
+                    if (matchingReward != null) {
+                        matchingReward.setName(rewardDTO.name());
 
-                    if (rewardDTO.rewardCategoryDTO() == null) {
-                        matchingReward.setRewardCategory(null);
-                    } else {
-                        matchingReward.setRewardCategory(
-                                rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()));
+                        if (rewardDTO.rewardCategoryDTO() == null) {
+                            matchingReward.setRewardCategory(null);
+                        } else {
+                            RewardCategory rewardCategory =
+                                    rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id());
+
+                            rewardCategoryService.removeRewardFromCategory(matchingReward,
+                                    matchingReward.getRewardCategory());
+
+                            matchingReward.setRewardCategory(rewardCategory);
+
+                            rewardCategoryService.addRewardToCategory(matchingReward, rewardCategory);
+                        }
+                        matchingReward.setDescription(rewardDTO.description());
                     }
-                    matchingReward.setDescription(rewardDTO.description());
 
                     return matchingReward;
 
@@ -114,6 +146,7 @@ public class RewardService {
         rewardRepository.saveAll(updatedRewards);
     }
 
+    @Transactional
     public void deleteById(int rewardId) {
         findById(rewardId); // throws exception when not found
         rewardRepository.deleteById(rewardId);

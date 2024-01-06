@@ -1,10 +1,9 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
-import majestatyczne.bestie.rewardsmanager.model.Reward;
-import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
 import majestatyczne.bestie.rewardsmanager.service.RewardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import java.util.List;
 public class RewardController {
 
     private final RewardService rewardService;
-    private final RewardCategoryService rewardCategoryService;
 
     @GetMapping
     public List<RewardDTO> getAll() {
@@ -41,6 +39,7 @@ public class RewardController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
     @PutMapping("/all")
     public ResponseEntity<?> updateAll(@RequestBody List<RewardDTO> rewardDTOS) {
         rewardService.updateAll(rewardDTOS);
@@ -49,19 +48,17 @@ public class RewardController {
 
     @PostMapping
     public ResponseEntity<String> add(@RequestBody RewardDTO rewardDTO) {
-        Reward reward = new Reward();
-        reward.setName(rewardDTO.name());
-        if (rewardDTO.rewardCategoryDTO() == null) {
-            reward.setRewardCategory(null);
-        }
-        else {
-            reward.setRewardCategory(rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()));
-        }
-        reward.setDescription(rewardDTO.description());
+        int rewardCategoryId = rewardDTO.rewardCategoryDTO() == null ? -1 : rewardDTO.rewardCategoryDTO().id();
 
-        return rewardService.add(reward) ? ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.CONFLICT).body(
-                        String.format("Reward with the given name already exists: '%s'", rewardDTO.name()));
+        try {
+            rewardService.add(rewardDTO.name(), rewardDTO.description(), rewardCategoryId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        } catch (EntityExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{rewardId}")

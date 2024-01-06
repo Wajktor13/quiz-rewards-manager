@@ -15,7 +15,6 @@ public class RewardStrategyParameterService {
 
     private final RewardStrategyParameterRepository rewardStrategyParameterRepository;
 
-
     @Transactional
     public void addAll(List<RewardStrategyParameter> rewardStrategyParameters) {
         rewardStrategyParameterRepository.saveAllAndFlush(rewardStrategyParameters);

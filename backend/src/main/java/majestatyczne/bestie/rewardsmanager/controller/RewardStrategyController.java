@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("reward-strategies")
@@ -85,11 +84,12 @@ public class RewardStrategyController {
     }
 
     @GetMapping("/{quizId}")
-    public ResponseEntity<RewardStrategyDTO> getByQuizId(@PathVariable int quizId) {
-        Optional<RewardStrategy> rewardStrategy = rewardStrategyService.findByQuizId(quizId);
-
-        return rewardStrategy
-                .map(value -> ResponseEntity.status(HttpStatus.OK).body(RewardStrategyDTO.convertToDTO(value)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<?> getByQuizId(@PathVariable int quizId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    RewardStrategyDTO.convertToDTO(rewardStrategyService.findByQuizId(quizId)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
