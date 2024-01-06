@@ -30,18 +30,14 @@ public class RewardStrategyService {
 
     @Transactional
     public RewardStrategy add(int quizId, RewardStrategyType rewardStrategyType) {
-        Optional<Quiz> quiz = quizService.findById(quizId);
-
-        if (quiz.isEmpty()) {
-            throw new EntityNotFoundException("quiz has not been found");
-        }
+        Quiz quiz = quizService.findById(quizId);
 
         if (findByQuizId(quizId).isPresent()) {
             throw new EntityExistsException("strategy for the given quiz already exists");
         }
 
         RewardStrategy rewardStrategy = new RewardStrategy();
-        rewardStrategy.setQuiz(quiz.get());
+        rewardStrategy.setQuiz(quiz);
         rewardStrategy.setRewardStrategyType(rewardStrategyType);
         rewardStrategy.setParameters(new ArrayList<>());
 
@@ -58,13 +54,10 @@ public class RewardStrategyService {
         }
         RewardStrategy rewardStrategy = rewardStrategyOptional.get();
 
-        Optional<Quiz> quiz = quizService.findById(quizId);
-        if (quiz.isEmpty()) {
-            throw new EntityNotFoundException("quiz has not been found");
-        }
+        Quiz quiz = quizService.findById(quizId);
 
         rewardStrategy.setRewardStrategyType(rewardStrategyType);
-        rewardStrategy.setQuiz(quiz.get());
+        rewardStrategy.setQuiz(quiz);
 
         rewardStrategyRepository.saveAndFlush(rewardStrategy);
 

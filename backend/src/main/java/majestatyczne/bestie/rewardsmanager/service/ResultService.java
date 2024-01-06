@@ -34,41 +34,29 @@ public class ResultService {
         resultRepository.saveAll(results);
     }
 
-    public Optional<Result> findById(int resultId) {
-        return resultRepository.findById(resultId);
+    public Result findById(int resultId) {
+        return resultRepository
+                .findById(resultId)
+                .orElseThrow(() -> new EntityNotFoundException("result has not been found"));
     }
 
     @Transactional
-    public boolean update(int resultId, Person person, Date startDate, Date endDate, int score, int rewardId) {
-        Optional<Reward> reward = rewardService.findById(rewardId);
+    public void update(int resultId, Person person, Date startDate, Date endDate, int score, int rewardId) {
+        Result result = findById(resultId);
+        Reward reward = rewardService.findById(rewardId);
 
-        if (reward.isEmpty()) {
-            throw new EntityNotFoundException("reward has not been found");
-        }
-
-        return findById(resultId)
-                .map(result -> update(resultId, result.getQuiz(), person, startDate, endDate, score, reward.get()))
-                .orElse(false);
+        update(result, result.getQuiz(), person, startDate, endDate, score, reward);
     }
 
     @Transactional
-    public boolean update(int resultId, Quiz quiz, Person person, Date startDate, Date endDate, int score,
+    public void update(Result result, Quiz quiz, Person person, Date startDate, Date endDate, int score,
                           Reward reward) {
-
-        return findById(resultId)
-                .map(result -> {
-                    result.setPerson(person);
-                    result.setQuiz(quiz);
-                    result.setStartDate(startDate);
-                    result.setEndDate(endDate);
-                    result.setScore(score);
-                    result.setReward(reward);
-
-                    resultRepository.save(result);
-
-                    return true;
-                })
-                .orElse(false);
+        result.setPerson(person);
+        result.setQuiz(quiz);
+        result.setStartDate(startDate);
+        result.setEndDate(endDate);
+        result.setScore(score);
+        result.setReward(reward);
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
@@ -29,13 +30,16 @@ public class RewardController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody RewardDTO rewardDTO) {
-        var category = rewardDTO.rewardCategoryDTO() == null ? null :
-                rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()).orElse(null);
+    public ResponseEntity<String> update(@RequestBody RewardDTO rewardDTO) {
+        int categoryId = rewardDTO.rewardCategoryDTO() == null ? -1 : rewardDTO.rewardCategoryDTO().id();
 
-        return rewardService.update(rewardDTO.id(), category, rewardDTO.name(),
-                rewardDTO.description()) ? ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            rewardService.update(rewardDTO.id(), categoryId, rewardDTO.name(),
+                    rewardDTO.description());
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     @PutMapping("/all")
     public ResponseEntity<?> updateAll(@RequestBody List<RewardDTO> rewardDTOS) {
@@ -51,7 +55,7 @@ public class RewardController {
             reward.setRewardCategory(null);
         }
         else {
-            reward.setRewardCategory(rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()).orElse(null));
+            reward.setRewardCategory(rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()));
         }
         reward.setDescription(rewardDTO.description());
 
@@ -62,11 +66,11 @@ public class RewardController {
 
     @DeleteMapping("/{rewardId}")
     public ResponseEntity<?> deleteById(@PathVariable int rewardId) {
-        return rewardService.findById(rewardId)
-                .map(reward -> {
-                    rewardService.deleteById(rewardId);
-                    return ResponseEntity.status(HttpStatus.OK).build();
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        try {
+            rewardService.deleteById(rewardId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

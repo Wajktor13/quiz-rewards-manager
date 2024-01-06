@@ -1,7 +1,9 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.QuizDTO;
+import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import majestatyczne.bestie.rewardsmanager.service.QuizService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,27 +23,26 @@ public class QuizController {
         return quizService
                 .findAll()
                 .stream()
-                .map(quiz -> new QuizDTO(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate()))
+                .map(QuizDTO::convertToDTO)
                 .toList();
     }
 
     @GetMapping("/{quizId}")
     public ResponseEntity<?> getById(@PathVariable int quizId) {
-        return quizService
-                .findById(quizId)
-                .map(q -> new QuizDTO(q.getId(), q.getName(), q.getMaxScore(), q.getDate()))
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(QuizDTO.convertToDTO(quizService.findById(quizId)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{quizId}")
-    public ResponseEntity<?> deleteById(@PathVariable int quizId) {
-        return quizService
-                .findById(quizId)
-                .map(quiz -> {
-                    quizService.deleteById(quizId);
-                    return ResponseEntity.status(HttpStatus.OK).build();
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<String> deleteById(@PathVariable int quizId) {
+        try {
+            quizService.deleteById(quizId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

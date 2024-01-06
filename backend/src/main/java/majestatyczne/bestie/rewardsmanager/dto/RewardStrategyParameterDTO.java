@@ -57,15 +57,11 @@ public record RewardStrategyParameterDTO (
                         throw new IllegalStateException("reward category in parameter cannot be null");
                     }
 
-                    Optional<RewardCategory> rewardCategory = rewardCategoryService.findById(
+                    RewardCategory rewardCategory = rewardCategoryService.findById(
                             rewardStrategyParameterDTO.rewardCategoryDTO.id());
 
-                    if (rewardCategory.isEmpty()) {
-                        throw new EntityNotFoundException("reward category has not been found");
-                    }
-
                     return RewardStrategyParameterDTO.convertFromDTO(rewardStrategyParameterDTO, rewardStrategy,
-                            rewardCategory.get());
+                            rewardCategory);
                 })
                 .toList();
     }

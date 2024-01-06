@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardDTO;
@@ -8,6 +9,7 @@ import majestatyczne.bestie.rewardsmanager.repository.RewardRepository;
 import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,8 +61,10 @@ public class RewardService {
         return rewardRepository.findAll();
     }
 
-    public Optional<Reward> findById(int rewardId) {
-        return rewardRepository.findById(rewardId);
+    public Reward findById(int rewardId) {
+        return rewardRepository
+                .findById(rewardId)
+                .orElseThrow(() -> new EntityNotFoundException("reward has not been found"));
     }
 
     @Transactional
@@ -69,25 +73,21 @@ public class RewardService {
         reward.setName(name);
         reward.setDescription(description);
 
-        if (reward.getRewardCategory() != null) {
-            rewardCategoryService.addRewardToCategory(rewardCategory, reward);
-        }
-
         rewardRepository.save(reward);
     }
 
     @Transactional
-    public boolean update(int rewardId, RewardCategory rewardCategory, String name, String description) {
-        return findById(rewardId)
-                .map(reward -> {
-                    update(reward, rewardCategory, name, description);
-                    return true;
-                })
-                .orElse(false);
+    public void update(int rewardId, int rewardCategoryId, String name, String description) {
+        Reward reward = findById(rewardId);
+        RewardCategory rewardCategory = rewardCategoryId == -1 ? null :
+                rewardCategoryService.findById(rewardCategoryId);
+
+        update(reward, rewardCategory, name, description);
     }
 
     public void updateAll(List<RewardDTO> rewardDTOS) {
         List<Reward> rewards = rewardRepository.findAll();
+
         List<Reward> updatedRewards = rewardDTOS.stream()
                 .map(rewardDTO -> {
                     Reward matchingReward = rewards
@@ -95,21 +95,27 @@ public class RewardService {
                             .filter(reward -> reward.getId() == rewardDTO.id())
                             .findFirst()
                             .orElse(null);
+
                     matchingReward.setName(rewardDTO.name());
+
                     if (rewardDTO.rewardCategoryDTO() == null) {
                         matchingReward.setRewardCategory(null);
                     } else {
-                        matchingReward.setRewardCategory(rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()).orElse(null));
+                        matchingReward.setRewardCategory(
+                                rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id()));
                     }
                     matchingReward.setDescription(rewardDTO.description());
+
                     return matchingReward;
+
                 })
                 .toList();
-        rewardRepository.saveAll(updatedRewards);
 
+        rewardRepository.saveAll(updatedRewards);
     }
 
     public void deleteById(int rewardId) {
+        findById(rewardId); // throws exception when not found
         rewardRepository.deleteById(rewardId);
     }
 }

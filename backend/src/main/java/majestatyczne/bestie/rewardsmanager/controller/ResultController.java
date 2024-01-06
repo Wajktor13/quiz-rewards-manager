@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
 import majestatyczne.bestie.rewardsmanager.service.ResultService;
@@ -27,8 +28,12 @@ public class ResultController {
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody ResultDTO resultDTO) {
-        return resultService.update(resultDTO.id(), resultDTO.person(), resultDTO.startDate(),
-                resultDTO.endDate(), resultDTO.score(), resultDTO.rewardDTO().id())
-                ? ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            resultService.update(resultDTO.id(), resultDTO.person(), resultDTO.startDate(),
+                    resultDTO.endDate(), resultDTO.score(), resultDTO.rewardDTO().id());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
