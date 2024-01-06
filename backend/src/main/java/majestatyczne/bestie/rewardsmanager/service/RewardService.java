@@ -11,6 +11,7 @@ import majestatyczne.bestie.rewardsmanager.model.Reward;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -108,42 +109,38 @@ public class RewardService {
     public void updateAll(List<RewardDTO> rewardDTOS) {
         List<Reward> rewards = rewardRepository.findAll();
 
-        List<Reward> updatedRewards =
-                rewardDTOS
-                .stream()
-                .map(rewardDTO -> {
-                    Reward matchingReward =
-                            rewards
-                            .stream()
-                            .filter(reward -> reward.getId() == rewardDTO.id())
-                            .findFirst()
-                            .orElse(null);
-
-                    if (matchingReward != null) {
-                        matchingReward.setName(rewardDTO.name());
-
-                        if (rewardDTO.rewardCategoryDTO() == null) {
-                            matchingReward.setRewardCategory(null);
-                        } else {
-                            RewardCategory rewardCategory =
-                                    rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id());
-
-                            rewardCategoryService.removeRewardFromCategory(matchingReward,
-                                    matchingReward.getRewardCategory());
-
-                            matchingReward.setRewardCategory(rewardCategory);
-
-                            rewardCategoryService.addRewardToCategory(matchingReward, rewardCategory);
-                        }
-                        matchingReward.setDescription(rewardDTO.description());
-                    }
-
-                    return matchingReward;
-
-                })
+        List<Reward> updatedRewards = rewardDTOS.stream()
+                .map(rewardDTO -> updateRewardFromDTO(rewards, rewardDTO))
+                .filter(Objects::nonNull)
                 .toList();
 
         rewardRepository.saveAll(updatedRewards);
+    }
+
+    private Reward updateRewardFromDTO(List<Reward> rewards, RewardDTO rewardDTO) {
+        Reward matchingReward = rewards.stream()
+                .filter(reward -> reward.getId() == rewardDTO.id())
+                .findFirst()
+                .orElse(null);
+
+        if (matchingReward != null) {
+            matchingReward.setName(rewardDTO.name());
+
+            if (rewardDTO.rewardCategoryDTO() == null) {
+                matchingReward.setRewardCategory(null);
+            } else {
+                RewardCategory rewardCategory = rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id());
+
+                rewardCategoryService.removeRewardFromCategory(matchingReward, matchingReward.getRewardCategory());
+
+                matchingReward.setRewardCategory(rewardCategory);
+
+                rewardCategoryService.addRewardToCategory(matchingReward, rewardCategory);
+            }
+            matchingReward.setDescription(rewardDTO.description());
+        }
+
+        return matchingReward;
     }
 
     @Transactional

@@ -66,28 +66,27 @@ public class RewardCategoryService {
         return Optional.ofNullable(rewardCategoryRepository.findByName(name));
     }
 
-    @Transactional
     public void updateAll(List<RewardCategoryDTO> rewardCategoryDTOS) {
         List<RewardCategory> rewardCategories = rewardCategoryRepository.findAll();
 
         List<RewardCategory> updatedRewardCategories = rewardCategoryDTOS.stream()
-                .map(rewardCategoryDTO -> {
-                    RewardCategory matchingRewardCategory = rewardCategories
-                            .stream()
-                            .filter(reward -> reward.getId() == rewardCategoryDTO.id())
-                            .findFirst()
-                            .orElse(null);
-
-                    if (matchingRewardCategory != null) {
-                        matchingRewardCategory.setName(rewardCategoryDTO.name());
-                    }
-
-                    return matchingRewardCategory;
-
-                })
+                .map(rewardCategoryDTO -> updateRewardCategoryFromDTO(rewardCategories, rewardCategoryDTO))
                 .toList();
 
         rewardCategoryRepository.saveAll(updatedRewardCategories);
+    }
+
+    private RewardCategory updateRewardCategoryFromDTO(List<RewardCategory> rewardCategories, RewardCategoryDTO rewardCategoryDTO) {
+        RewardCategory matchingRewardCategory = rewardCategories.stream()
+                .filter(rewardCategory -> rewardCategory.getId() == rewardCategoryDTO.id())
+                .findFirst()
+                .orElse(null);
+
+        if (matchingRewardCategory != null) {
+            matchingRewardCategory.setName(rewardCategoryDTO.name());
+        }
+
+        return matchingRewardCategory;
     }
 
     @Transactional
