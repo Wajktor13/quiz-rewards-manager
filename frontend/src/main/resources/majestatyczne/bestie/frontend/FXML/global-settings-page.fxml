@@ -25,40 +25,57 @@
                 <VBox styleClass="quiz-page-header-middle" HBox.hgrow="ALWAYS">
                 </VBox>
                 <HBox styleClass="quiz-page-header-right">
-                    <Button mnemonicParsing="false" text="Zapisz zmiany" onAction="#onSaveChangesClicked"/>
                 </HBox>
 
             </children>
 
         </HBox>
-        <VBox>
-            <Label text="Nagrody" styleClass="settings-header-label"/>
-            <TableView fx:id="rewardTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
-                <columns>
-                    <TableColumn fx:id="rewardNameColumn" text="Nazwa" editable="true"/>
-                    <TableColumn fx:id="rewardCategoryColumn" text="Kategoria"/>
-                    <TableColumn fx:id="rewardDescriptionColumn" text="Opis" editable="true"/>
-                    <TableColumn fx:id="rewardCategoryChoiceColumn"/>
-                </columns>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                </columnResizePolicy>
-            </TableView>
-            <Label text="Kategorie nagród" styleClass="settings-header-label"/>
-            <HBox>
-                <TextField fx:id="newCategoryTextField" styleClass="text-field"/>
-                <Button fx:id="addCategoryButton" onAction="#onAddCategoryClicked" text="Dodaj"/>
-            </HBox>
+        <HBox spacing="100.0" style="-fx-padding: 0 10 0 10px;">
+            <VBox prefWidth="750.0">
+                <HBox styleClass="global-settings-page-section-title">
+                    <Label text="Nagrody" styleClass="settings-header-label"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button text="Zapisz nagrody" onAction="#onSaveRewardsClicked"/>
+                </HBox>
+                <HBox styleClass="global-settings-page-new-element-hbox">
+                    <TextField fx:id="newRewardNameTextField" styleClass="text-field"/>
+                    <TextField fx:id="newRewardDescriptionTextField" styleClass="text-field"/>
+                    <Button fx:id="addRewardButton" onAction="#onAddRewardClicked" text="Dodaj" styleClass="secondary-button"/>
+                </HBox>
+                <TableView fx:id="rewardTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
+                    <columns>
+                        <TableColumn fx:id="rewardNameColumn" text="Nazwa" editable="true"/>
+                        <TableColumn fx:id="rewardDescriptionColumn" text="Opis" editable="true"/>
+                        <TableColumn fx:id="rewardCategoryColumn" text="Kategoria"/>
+                        <TableColumn fx:id="rewardCategoryChoiceColumn" text="Zmień kategorię"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+            <VBox>
+                <HBox styleClass="global-settings-page-section-title">
+                    <Label text="Kategorie nagród" styleClass="settings-header-label"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button text="Zapisz kategorie" onAction="#onSaveRewardCategoriesClicked"/>
+                </HBox>
+                <HBox styleClass="global-settings-page-new-element-hbox">
+                    <TextField fx:id="newCategoryTextField" styleClass="text-field"/>
+                    <Button fx:id="addCategoryButton" onAction="#onAddCategoryClicked" text="Dodaj" styleClass="secondary-button"/>
+                </HBox>
 
-            <TableView fx:id="categoryTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
-                <columns>
-                    <TableColumn fx:id="categoryNameColumn" text="Nazwa" editable="true"/>
-                </columns>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                </columnResizePolicy>
-            </TableView>
-        </VBox>
+                <TableView fx:id="categoryTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
+                    <columns>
+                        <TableColumn fx:id="categoryNameColumn" text="Nazwa" editable="true"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+
+        </HBox>
     </children>
     <stylesheets>
         <URL value="@styles.css"/>

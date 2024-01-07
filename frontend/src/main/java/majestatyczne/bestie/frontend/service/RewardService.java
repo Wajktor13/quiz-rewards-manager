@@ -42,6 +42,17 @@ public class RewardService {
         }
     }
 
+    public int addReward(Reward reward) {
+        APIService service = getAPIService();
+        try {
+            var response = service.addReward(reward).execute();
+            return response.code();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return 500;
+        }
+    }
+
     private APIService getAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
