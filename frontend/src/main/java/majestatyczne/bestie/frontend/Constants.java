@@ -70,6 +70,14 @@ public class Constants {
 
     public static final String DELETE_QUIZ_ERROR = "Nie udało się usunąć wybranego quizu!";
 
+    public static final String DELETE_REWARD_INFO = "Wybrana nagroda została usunięta!";
+
+    public static final String DELETE_REWARD_ERROR = "Nie udało się usunąć wybranej nagrody!";
+
+    public static final String DELETE_REWARD_CATEGORY_INFO = "Wybrana kategoria nagrody została usunięta!";
+
+    public static final String DELETE_REWARD_CATEGORY_ERROR = "Nie udało się usunąć wybranej kategorii nagrody!";
+
     // general alert texts
     public static final String ALERT_WARNING_TITLE = "Uwaga";
 

@@ -43,6 +43,17 @@ public class RewardCategoryService {
         }
     }
 
+    public int deleteRewardCategoryById(int rewardCategoryId) {
+        APIService service = getAPIService();
+        try {
+            var response = service.deleteRewardCategoryById(rewardCategoryId).execute();
+            return response.code();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return 500;
+        }
+    }
+
     private APIService getAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
@@ -50,4 +61,5 @@ public class RewardCategoryService {
                 .build();
         return retrofit.create(APIService.class);
     }
+
 }

@@ -53,6 +53,17 @@ public class RewardService {
         }
     }
 
+    public int deleteRewardById(int rewardId) {
+        APIService service = getAPIService();
+        try {
+            var response = service.deleteRewardById(rewardId).execute();
+            return response.code();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return 500;
+        }
+    }
+
     private APIService getAPIService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://localhost:8080/")
