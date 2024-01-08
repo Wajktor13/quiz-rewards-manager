@@ -2,7 +2,6 @@ package majestatyczne.bestie.frontend.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,7 +25,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.util.Callback;
+import majestatyczne.bestie.frontend.util.RewardCategoryChoiceCell;
 
 public class QuizSettingsPageController implements Initializable {
 
@@ -82,7 +81,9 @@ public class QuizSettingsPageController implements Initializable {
     @FXML
     private TableColumn<RewardStrategyParameterView, RewardCategoryView> rewardCategoryChoiceColumn;
 
+    private final RewardStrategyService rewardStrategyService = new RewardStrategyService();
 
+    private final RewardCategoryService rewardCategoryService = new RewardCategoryService();
 
 
     public void setQuizView(QuizView quizView) {
@@ -101,7 +102,6 @@ public class QuizSettingsPageController implements Initializable {
     }
 
     private void initializeRewardCategories() {
-        RewardCategoryService rewardCategoryService = new RewardCategoryService();
         rewardCategories = FXCollections.observableArrayList();
         rewardCategoryList = rewardCategoryService.getRewardCategories();
         rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory.getId(), rewardCategory.getName())));
@@ -133,43 +133,17 @@ public class QuizSettingsPageController implements Initializable {
 
         priorityColumn.setOnEditCommit(this::onPriorityEdit);
         parameterValueColumn.setOnEditCommit(this::onParameterValueEdit);
+        rewardCategoryChoiceColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
+    }
 
-        Callback<TableColumn<RewardStrategyParameterView, RewardCategoryView>, TableCell<RewardStrategyParameterView, RewardCategoryView>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<RewardStrategyParameterView, RewardCategoryView> call(TableColumn<RewardStrategyParameterView, RewardCategoryView> tableColumn) {
-                return new TableCell<>() {
-                    private final ComboBox<RewardCategoryView> comboBoxTableCell = new ComboBox<>(rewardCategories);
-
-                    {
-                        comboBoxTableCell.setOnAction(event -> {
-                            if (getTableRow() != null && getTableRow().getItem() != null) {
-                                RewardStrategyParameterView selectedParameterView = getTableRow().getItem();
-                                RewardCategoryView selectedCategory = comboBoxTableCell.getValue();
-                                if (selectedParameterView != null && selectedCategory != null) {
-                                    RewardCategory category = rewardCategoryList.stream()
-                                            .filter(x -> x.getId() == selectedCategory.getId())
-                                            .findFirst()
-                                            .orElse(null);
-                                    selectedParameterView.setRewardCategory(category);
-                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void updateItem(RewardCategoryView item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(comboBoxTableCell);
-                            comboBoxTableCell.setValue(item);
-                        }
-                    }
-                };
-            }
-        };
-        rewardCategoryChoiceColumn.setCellFactory(cellFactory);
+    private void onChosenRewardCategory(RewardStrategyParameterView selectedStrategyParameter, RewardCategoryView selectedCategory) {
+        if (selectedStrategyParameter != null && selectedCategory != null) {
+            RewardCategory category = rewardCategoryList.stream()
+                    .filter(x -> x.getId() == selectedCategory.getId())
+                    .findFirst()
+                    .orElse(null);
+            selectedStrategyParameter.setRewardCategory(category);
+        }
     }
 
     private void onPriorityEdit(TableColumn.CellEditEvent<RewardStrategyParameterView, Integer> event) {
@@ -195,7 +169,7 @@ public class QuizSettingsPageController implements Initializable {
     }
 
     @FXML
-    public void onRewardStrategyTypeBoxClicked(ActionEvent actionEvent) {
+    public void onRewardStrategyTypeBoxClicked() {
         saveButton.setDisable(false);
         RewardStrategyType selectedType = rewardStrategyTypeBox.getValue();
         parametersTable.setVisible(true);
@@ -221,7 +195,7 @@ public class QuizSettingsPageController implements Initializable {
         scoreVBox.setVisible(false);
         scoreVBox.setManaged(false);
         strategy.setRewardStrategyType(RewardStrategyType.PERCENTAGE);
-        System.out.println(strategy);
+        parameterValueColumn.setText(Constants.PERCENTAGE_STRATEGY_PARAMETER_COLUMN_NAME);
         generateParameters(2);
     }
 
@@ -233,12 +207,12 @@ public class QuizSettingsPageController implements Initializable {
         percentageVBox.setVisible(false);
         percentageVBox.setManaged(false);
         strategy.setRewardStrategyType(RewardStrategyType.SCORE);
+        parameterValueColumn.setText(Constants.SCORE_STRATEGY_PARAMETER_COLUMN_NAME);
         generateParameters(quizView.getMaxScore() + 1);
     }
 
     @FXML
-    public void onSaveButtonClicked(ActionEvent actionEvent) {
-        var rewardStrategyService = new RewardStrategyService();
+    public void onSaveButtonClicked() {
         strategy.setParameters(parameters.stream().map(RewardStrategyParameterView::toRewardStrategyParameter).toList());
         RewardStrategy existingStrategy = rewardStrategyService.getRewardStrategyByQuizId(quizView.getId()).orElse(null);
         if (existingStrategy == null) {

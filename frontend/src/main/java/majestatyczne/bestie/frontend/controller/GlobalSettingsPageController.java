@@ -121,7 +121,7 @@ public class GlobalSettingsPageController implements Initializable {
 
         rewardNameColumn.setOnEditCommit(this::onRewardNameEdit);
         rewardDescriptionColumn.setOnEditCommit(this::onRewardDescriptionEdit);
-        rewardCategoryChoiceColumn.setCellFactory(param -> new RewardCategoryChoiceCell(rewardCategories, this::onChosenRewardCategory));
+        rewardCategoryChoiceColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
         rewardDeleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteRewardClicked));
     }
 
@@ -133,7 +133,6 @@ public class GlobalSettingsPageController implements Initializable {
                     .orElse(null);
             selectedReward.setRewardCategory(category);
         }
-
     }
 
     private void onDeleteRewardClicked(RewardView rewardView) {

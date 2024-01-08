@@ -45,6 +45,10 @@ public class Constants {
 
     public static final String SCORE_REWARD_STRATEGY_DESCRIPTION = "X poprawnych odpowiedzi - kategoria1, X-1 poprawnych - kategoria2, ...";
 
+    public static final String PERCENTAGE_STRATEGY_PARAMETER_COLUMN_NAME = "Procent (0-100)";
+
+    public static final String SCORE_STRATEGY_PARAMETER_COLUMN_NAME = "Liczba poprawnych odpowiedzi";
+
 //    ALERTS
     public static final String UPDATE_REWARDS_INFO = "Zmiany w nagrodach zostały wprowadzone!";
     public static final String UPDATE_REWARDS_ERROR_TITLE = "Zmiany w nagrodach nie zostały wprowadzone!";

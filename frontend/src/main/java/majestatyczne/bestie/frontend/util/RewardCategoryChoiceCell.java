@@ -5,19 +5,19 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 
 import java.util.function.BiConsumer;
-import majestatyczne.bestie.frontend.model.RewardCategoryView;
-import majestatyczne.bestie.frontend.model.RewardView;
 
-public class RewardCategoryChoiceCell extends TableCell<RewardView, RewardCategoryView> {
+import majestatyczne.bestie.frontend.model.RewardCategoryView;
+
+public class RewardCategoryChoiceCell<T> extends TableCell<T, RewardCategoryView> {
 
     private final ComboBox<RewardCategoryView> comboBoxTableCell;
 
-    public RewardCategoryChoiceCell(ObservableList<RewardCategoryView> rewardCategories, BiConsumer<RewardView, RewardCategoryView> onChosenRewardCategory) {
+    public RewardCategoryChoiceCell(ObservableList<RewardCategoryView> rewardCategories, BiConsumer<T, RewardCategoryView> onChosenRewardCategory) {
         comboBoxTableCell = new ComboBox<>(rewardCategories);
         comboBoxTableCell.setOnAction(event -> {
-            RewardView selectedReward = getTableRow().getItem();
+            T item = getTableRow().getItem();
             RewardCategoryView selectedCategory = comboBoxTableCell.getValue();
-            onChosenRewardCategory.accept(selectedReward, selectedCategory);
+            onChosenRewardCategory.accept(item, selectedCategory);
         });
     }
 
