@@ -48,7 +48,7 @@ public class GlobalSettingsPageController implements Initializable {
     private TableColumn<RewardView, String> rewardNameColumn;
 
     @FXML
-    private TableColumn<RewardView, RewardCategory> rewardCategoryColumn;
+    private TableColumn<RewardView, RewardCategoryView> rewardCategoryColumn;
 
     @FXML
     private TableColumn<RewardView, String> rewardDescriptionColumn;
@@ -121,17 +121,14 @@ public class GlobalSettingsPageController implements Initializable {
 
         rewardNameColumn.setOnEditCommit(this::onRewardNameEdit);
         rewardDescriptionColumn.setOnEditCommit(this::onRewardDescriptionEdit);
+
         rewardCategoryChoiceColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
         rewardDeleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteRewardClicked));
     }
 
     private void onChosenRewardCategory(RewardView selectedReward, RewardCategoryView selectedCategory) {
         if (selectedReward != null && selectedCategory != null) {
-            RewardCategory category = rewardCategoryList.stream()
-                    .filter(x -> x.getId() == selectedCategory.getId())
-                    .findFirst()
-                    .orElse(null);
-            selectedReward.setRewardCategory(category);
+            selectedReward.setRewardCategory(selectedCategory);
         }
     }
 
@@ -170,7 +167,7 @@ public class GlobalSettingsPageController implements Initializable {
     private void initializeRewards() {
         rewards = FXCollections.observableArrayList();
         rewardList = rewardService.getRewards();
-        rewardList.forEach(reward -> rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription())));
+        rewardList.forEach(reward -> rewards.add(new RewardView(reward)));
         rewardTable.setItems(rewards);
     }
 
@@ -254,7 +251,12 @@ public class GlobalSettingsPageController implements Initializable {
         rewards.forEach(rewardView -> rewardList.forEach(reward -> {
             if (reward.getId() == rewardView.getId()) {
                 reward.setName(rewardView.getName());
-                reward.setRewardCategory(rewardView.getRewardCategory());
+                if (rewardView.getRewardCategory() == null) {
+                    reward.setRewardCategory(null);
+                } else {
+                    RewardCategory rewardCategory = rewardCategoryList.stream().filter(x -> x.getId() == rewardView.getRewardCategory().getId()).findFirst().orElse(null);
+                    reward.setRewardCategory(rewardCategory);
+                }
                 reward.setDescription(rewardView.getDescription());
             }
         }));

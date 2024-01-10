@@ -20,6 +20,10 @@ public class RewardCategoryView {
         this.name = new SimpleStringProperty(name);
     }
 
+    public RewardCategoryView(RewardCategory rewardCategory) {
+        this(rewardCategory.getId(), rewardCategory.getName());
+    }
+
     public String getName() {
         return name.get();
     }
