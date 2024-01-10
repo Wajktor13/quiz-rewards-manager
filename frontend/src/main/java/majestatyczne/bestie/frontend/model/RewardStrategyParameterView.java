@@ -1,9 +1,6 @@
 package majestatyczne.bestie.frontend.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 
 public class RewardStrategyParameterView {
     private int id;
@@ -14,11 +11,19 @@ public class RewardStrategyParameterView {
 
     private ObjectProperty<RewardCategory> rewardCategory;
 
+    private StringProperty rewardCategoryName;
+
     public RewardStrategyParameterView(int id, int priority, int parameterValue, RewardCategory rewardCategory) {
         this.id = id;
         this.priority = new SimpleObjectProperty<>(priority);
         this.parameterValue = new SimpleObjectProperty<>(parameterValue);
         this.rewardCategory = new SimpleObjectProperty<>(rewardCategory);
+        if (rewardCategory == null) {
+            this.rewardCategoryName = null;
+        } else {
+            this.rewardCategoryName = new SimpleStringProperty(rewardCategory.getName());
+        }
+
     }
 
     public int getPriority() {
@@ -59,5 +64,17 @@ public class RewardStrategyParameterView {
 
     public RewardStrategyParameter toRewardStrategyParameter() {
         return new RewardStrategyParameter(id, priority.get(), parameterValue.get(), rewardCategory.get());
+    }
+
+    public String getRewardCategoryName() {
+        return rewardCategoryName.get();
+    }
+
+    public StringProperty getRewardCategoryNameProperty() {
+        return rewardCategoryName;
+    }
+
+    public void setRewardCategoryName(String rewardCategoryName) {
+        this.rewardCategoryName.set(rewardCategoryName);
     }
 }

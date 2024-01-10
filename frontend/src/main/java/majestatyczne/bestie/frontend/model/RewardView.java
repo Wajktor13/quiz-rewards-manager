@@ -13,6 +13,8 @@ public class RewardView {
 
     private ObjectProperty<RewardCategoryView> rewardCategory;
 
+    private StringProperty rewardCategoryName;
+
     private StringProperty name;
 
     private StringProperty description;
@@ -20,9 +22,11 @@ public class RewardView {
     public RewardView(int id, RewardCategory rewardCategory, String name, String description) {
         this.id = id;
         if (rewardCategory == null) {
-            this.rewardCategory =  new SimpleObjectProperty<>(null);
+            this.rewardCategory = new SimpleObjectProperty<>(null);
+            this.rewardCategoryName = new SimpleStringProperty(null);
         } else {
             this.rewardCategory = new SimpleObjectProperty<>(new RewardCategoryView(rewardCategory));
+            this.rewardCategoryName = new SimpleStringProperty(rewardCategory.getName());
         }
         this.name = new SimpleStringProperty(name);
         this.description = new SimpleStringProperty(description);
@@ -71,5 +75,17 @@ public class RewardView {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public String getRewardCategoryName() {
+        return rewardCategoryName.get();
+    }
+
+    public StringProperty getRewardCategoryNameProperty() {
+        return rewardCategoryName;
+    }
+
+    public void setRewardCategoryName(String rewardCategoryName) {
+        this.rewardCategoryName.set(rewardCategoryName);
     }
 }

@@ -48,13 +48,10 @@ public class GlobalSettingsPageController implements Initializable {
     private TableColumn<RewardView, String> rewardNameColumn;
 
     @FXML
-    private TableColumn<RewardView, RewardCategoryView> rewardCategoryColumn;
+    private TableColumn<RewardView, String> rewardCategoryColumn;
 
     @FXML
     private TableColumn<RewardView, String> rewardDescriptionColumn;
-
-    @FXML
-    private TableColumn<RewardView, RewardCategoryView> rewardCategoryChoiceColumn;
 
     @FXML
     private TableColumn<RewardView, Void> rewardDeleteColumn;
@@ -113,7 +110,7 @@ public class GlobalSettingsPageController implements Initializable {
 
     private void initializeRewardsTable() {
         rewardNameColumn.setCellValueFactory(value -> value.getValue().getNameProperty());
-        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryProperty());
+        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryNameProperty());
         rewardDescriptionColumn.setCellValueFactory(value -> value.getValue().getDescriptionProperty());
 
         rewardNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -122,7 +119,7 @@ public class GlobalSettingsPageController implements Initializable {
         rewardNameColumn.setOnEditCommit(this::onRewardNameEdit);
         rewardDescriptionColumn.setOnEditCommit(this::onRewardDescriptionEdit);
 
-        rewardCategoryChoiceColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
+        rewardCategoryColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
         rewardDeleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteRewardClicked));
     }
 

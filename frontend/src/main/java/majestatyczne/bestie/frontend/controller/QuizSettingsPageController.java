@@ -76,10 +76,7 @@ public class QuizSettingsPageController implements Initializable {
     private TableColumn<RewardStrategyParameterView, Integer> parameterValueColumn;
 
     @FXML
-    private TableColumn<RewardStrategyParameterView, RewardCategory> rewardCategoryColumn;
-
-    @FXML
-    private TableColumn<RewardStrategyParameterView, RewardCategoryView> rewardCategoryChoiceColumn;
+    private TableColumn<RewardStrategyParameterView, String> rewardCategoryColumn;
 
     private final RewardStrategyService rewardStrategyService = new RewardStrategyService();
 
@@ -126,14 +123,14 @@ public class QuizSettingsPageController implements Initializable {
     private void initializeParametersTable() {
         priorityColumn.setCellValueFactory(value -> value.getValue().getPriorityProperty());
         parameterValueColumn.setCellValueFactory(value -> value.getValue().getParameterValueProperty());
-        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryProperty());
+        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryNameProperty());
 
         priorityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         parameterValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
 
         priorityColumn.setOnEditCommit(this::onPriorityEdit);
         parameterValueColumn.setOnEditCommit(this::onParameterValueEdit);
-        rewardCategoryChoiceColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
+        rewardCategoryColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
     }
 
     private void onChosenRewardCategory(RewardStrategyParameterView selectedStrategyParameter, RewardCategoryView selectedCategory) {
