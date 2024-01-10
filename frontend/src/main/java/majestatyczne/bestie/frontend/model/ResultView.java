@@ -1,10 +1,14 @@
 package majestatyczne.bestie.frontend.model;
 
 import javafx.beans.property.*;
+import lombok.Getter;
 
 import java.util.Date;
 
 public class ResultView {
+
+    @Getter
+    private int id;
 
     private StringProperty personName;
 
@@ -14,7 +18,8 @@ public class ResultView {
     
     private StringProperty reward;
 
-    public ResultView(String personName, Date endDate, int score, Reward reward) {
+    public ResultView(int id, String personName, Date endDate, int score, Reward reward) {
+        this.id = id;
         this.personName = new SimpleStringProperty(personName);
         this.endDate = new SimpleObjectProperty<>(endDate);
         this.score = new SimpleObjectProperty<>(score);
@@ -73,4 +78,6 @@ public class ResultView {
     public void setReward(String reward) {
         this.reward.set(reward);
     }
+
+
 }
