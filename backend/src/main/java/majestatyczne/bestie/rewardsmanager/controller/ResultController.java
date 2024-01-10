@@ -31,7 +31,7 @@ public class ResultController {
         try {
             resultService.update(resultDTO.id(), resultDTO.person(), resultDTO.startDate(),
                     resultDTO.endDate(), resultDTO.score(), resultDTO.rewardDTO().id());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
