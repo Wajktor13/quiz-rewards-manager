@@ -7,8 +7,7 @@ import java.util.List;
 
 public class ScoreStrategy implements RewardSelectionStrategy {
     @Override
-    public List<Result> insertRewards(Quiz quiz, RewardStrategy rewardStrategy, List<Preference> preferences) {
-        var results = quiz.getResults();
+    public List<Result> insertRewards(List<Result> results, RewardStrategy rewardStrategy, List<Preference> preferences) {
         var rewardParameters =  rewardStrategy.getParameters();
 
         for (Result result : results) {
