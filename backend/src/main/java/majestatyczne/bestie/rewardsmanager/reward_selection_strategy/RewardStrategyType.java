@@ -8,9 +8,9 @@ import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 @AllArgsConstructor
 public enum RewardStrategyType {
 
-    PERCENTAGE("X% of the best (fully correct and fastest) - rewardDTO of category 1, the rest - rewardDTO of" +
+    PERCENTAGE("X% of the best (fully correct and fastest) - reward of category 1, the rest - reward of" +
             " category 2"),
-    SCORE("X correct answers - rewardDTO of category 1, Y correct answers - rewardDTO of category 2 etc.");
+    SCORE("X correct answers - reward of category 1, Y correct answers - reward of category 2 etc.");
 
     private final String description;
 
