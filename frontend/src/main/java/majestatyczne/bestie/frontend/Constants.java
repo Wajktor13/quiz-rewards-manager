@@ -82,6 +82,22 @@ public class Constants {
 
     public static final String DELETE_REWARD_CATEGORY_ERROR = "Nie udało się usunąć wybranej kategorii nagrody!";
 
+    public static final String ADD_STRATEGY_INFO = "Nowa strategia została dodana i zastosowana!";
+
+    public static final String ADD_STRATEGY_ERROR = "Nie udało się dodać nowej strategii!";
+
+    public static final String UPDATE_STRATEGY_INFO = "Strategia została zaktualizowana i zastosowana!";
+
+    public static final String UPDATE_STRATEGY_ERROR = "Nie udało się zaktualizować strategii!";
+
+    public static final String STRATEGY_PARAMETER_EMPTY_CATEGORY_WARNING = "Każdy z parametrów musi mieć wybraną kategorię nagród!";
+
+    public static final String PERCENTAGE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING = "Parametr musi mieć wartość między 0 a 100!";
+
+    public static final String SCORE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING = "Każdy z parametrów musi być z zakresu od 0 do maksymalnej liczby punktów z quizu";
+
+    public static final String SCORE_STRATEGY_PARAMETER_DUPLICATE_WARNING = "Parametry oznaczające liczbę uzyskanych punktów nie mogą się powtarzać!";
+
     // general alert texts
     public static final String ALERT_WARNING_TITLE = "Uwaga";
 
@@ -91,4 +107,6 @@ public class Constants {
 
     public static final String ALERT_ERROR_CODE = "Kod błędu: ";
 
+//    STRATEGIES PARAMETERS
+    public static final int PERCENTAGE_STRATEGY_PARAMETERS_NUMBER = 2;
 }

@@ -22,16 +22,23 @@ import majestatyczne.bestie.frontend.service.RewardStrategyService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
+import majestatyczne.bestie.frontend.util.AlertManager;
 import majestatyczne.bestie.frontend.util.RewardCategoryChoiceCell;
+import org.apache.http.HttpStatus;
+
 
 public class QuizSettingsPageController implements Initializable {
 
     private QuizView quizView;
 
     private RewardStrategy strategy;
+
+    private RewardStrategy existingStrategy;
 
     private ObservableList<RewardStrategyParameterView> parameters;
 
@@ -49,7 +56,7 @@ public class QuizSettingsPageController implements Initializable {
     private Label quizScoreLabel;
 
     @FXML
-    private ComboBox<RewardStrategyType> rewardStrategyTypeBox;
+    private ChoiceBox<RewardStrategyType> rewardStrategyTypeBox;
 
     @FXML
     private Button saveButton;
@@ -82,6 +89,7 @@ public class QuizSettingsPageController implements Initializable {
 
     private final RewardCategoryService rewardCategoryService = new RewardCategoryService();
 
+    private final QuizService quizService = new QuizService();
 
     public void setQuizView(QuizView quizView) {
         this.quizView = quizView;
@@ -92,31 +100,43 @@ public class QuizSettingsPageController implements Initializable {
         quizNameLabel.setText(quizView.getName());
         quizScoreLabel.setText(Constants.QUIZ_MAX_SCORE_INFO + quizView.getMaxScore());
         initializeStrategy();
-        parametersTable.setItems(parameters);
+        initializeRewardCategories();
+    }
+
+    private void initializeStrategy() {
+        parameters = FXCollections.observableArrayList();
+        existingStrategy = rewardStrategyService.getRewardStrategyByQuizId(quizView.getId()).orElse(null);
+        strategy = new RewardStrategy();
+        if (existingStrategy != null) {
+            initializeStrategyFromExistingStrategy();
+            return;
+        }
+        initializeEmptyStrategy();
+    }
+
+    private void initializeStrategyFromExistingStrategy() {
+        strategy.setQuiz(existingStrategy.getQuiz());
+        strategy.setRewardStrategyType(existingStrategy.getRewardStrategyType());
+        existingStrategy.getParameters().forEach(parameter -> parameters.add(new RewardStrategyParameterView(parameter)));
+        rewardStrategyTypeBox.setValue(strategy.getRewardStrategyType());
+    }
+
+    private void initializeEmptyStrategy() {
         parametersTable.setVisible(false);
         parametersTable.setManaged(false);
-        initializeRewardCategories();
+        strategy.setQuiz(quizService.getQuizById(quizView.getId()).orElseThrow(() -> new IllegalArgumentException("Quiz not found")));
     }
 
     private void initializeRewardCategories() {
         rewardCategories = FXCollections.observableArrayList();
         rewardCategoryList = rewardCategoryService.getRewardCategories();
         rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory.getId(), rewardCategory.getName())));
-
-    }
-
-    private void initializeStrategy() {
-        parameters = FXCollections.observableArrayList();
-        strategy = new RewardStrategy();
-        QuizService quizService = new QuizService();
-        strategy.setQuiz(quizService.getQuizById(quizView.getId()).orElseThrow(() -> new IllegalArgumentException("Quiz not found")));
-
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
-        rewardStrategyTypeBox.getItems().addAll(RewardStrategyType.PERCENTAGE, RewardStrategyType.SCORE);
+        rewardStrategyTypeBox.getItems().addAll(RewardStrategyType.values());
         initializeParametersTable();
     }
 
@@ -125,30 +145,22 @@ public class QuizSettingsPageController implements Initializable {
         parameterValueColumn.setCellValueFactory(value -> value.getValue().getParameterValueProperty());
         rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryNameProperty());
 
-        priorityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         parameterValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
 
-        priorityColumn.setOnEditCommit(this::onPriorityEdit);
         parameterValueColumn.setOnEditCommit(this::onParameterValueEdit);
         rewardCategoryColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
     }
 
-    private void onChosenRewardCategory(RewardStrategyParameterView selectedStrategyParameter, RewardCategoryView selectedCategory) {
-        if (selectedStrategyParameter != null && selectedCategory != null) {
-            RewardCategory category = rewardCategoryList.stream()
-                    .filter(x -> x.getId() == selectedCategory.getId())
-                    .findFirst()
-                    .orElse(null);
-            selectedStrategyParameter.setRewardCategory(category);
-        }
-    }
-
-    private void onPriorityEdit(TableColumn.CellEditEvent<RewardStrategyParameterView, Integer> event) {
-        event.getRowValue().setPriority(event.getNewValue());
-    }
-
     private void onParameterValueEdit(TableColumn.CellEditEvent<RewardStrategyParameterView, Integer> event) {
         event.getRowValue().setParameterValue(event.getNewValue());
+    }
+
+    private void onChosenRewardCategory(RewardStrategyParameterView selectedStrategyParameter, RewardCategoryView selectedCategory) {
+        if (selectedStrategyParameter == null || selectedCategory == null) {
+            return;
+        }
+        RewardCategory category = rewardCategoryList.stream().filter(x -> x.getId() == selectedCategory.getId()).findFirst().orElse(null);
+        selectedStrategyParameter.setRewardCategory(category);
     }
 
     @FXML
@@ -171,11 +183,25 @@ public class QuizSettingsPageController implements Initializable {
         RewardStrategyType selectedType = rewardStrategyTypeBox.getValue();
         parametersTable.setVisible(true);
         parametersTable.setManaged(true);
+        prepareStrategyDetails(selectedType);
         switch (selectedType) {
             case PERCENTAGE -> showPercentageStrategyDetails();
             case SCORE -> showScoreStrategyDetails();
         }
+    }
 
+    private void prepareStrategyDetails(RewardStrategyType strategyType) {
+        parameters.clear();
+        if (existingStrategy == null || existingStrategy.getRewardStrategyType() != strategyType) {
+            switch (strategyType) {
+                case PERCENTAGE -> generateParameters(Constants.PERCENTAGE_STRATEGY_PARAMETERS_NUMBER);
+                case SCORE -> generateParameters(quizView.getMaxScore() + 1);
+            }
+        } else {
+            existingStrategy.getParameters().forEach(parameter -> parameters.add(new RewardStrategyParameterView(parameter)));
+        }
+        parametersTable.setItems(parameters);
+        strategy.setRewardStrategyType(strategyType);
     }
 
     private void generateParameters(int numberOfRows) {
@@ -185,39 +211,85 @@ public class QuizSettingsPageController implements Initializable {
     }
 
     private void showPercentageStrategyDetails() {
-        parameters.clear();
         percentageStrategyInfo.setText(Constants.PERCENTAGE_REWARD_STRATEGY_DESCRIPTION);
         percentageVBox.setVisible(true);
         percentageVBox.setManaged(true);
         scoreVBox.setVisible(false);
         scoreVBox.setManaged(false);
-        strategy.setRewardStrategyType(RewardStrategyType.PERCENTAGE);
         parameterValueColumn.setText(Constants.PERCENTAGE_STRATEGY_PARAMETER_COLUMN_NAME);
-        generateParameters(2);
     }
 
     private void showScoreStrategyDetails() {
-        parameters.clear();
         scoreStrategyInfo.setText(Constants.SCORE_REWARD_STRATEGY_DESCRIPTION);
         scoreVBox.setVisible(true);
         scoreVBox.setManaged(true);
         percentageVBox.setVisible(false);
         percentageVBox.setManaged(false);
-        strategy.setRewardStrategyType(RewardStrategyType.SCORE);
         parameterValueColumn.setText(Constants.SCORE_STRATEGY_PARAMETER_COLUMN_NAME);
-        generateParameters(quizView.getMaxScore() + 1);
     }
 
     @FXML
     public void onSaveButtonClicked() {
         strategy.setParameters(parameters.stream().map(RewardStrategyParameterView::toRewardStrategyParameter).toList());
-        RewardStrategy existingStrategy = rewardStrategyService.getRewardStrategyByQuizId(quizView.getId()).orElse(null);
+        try {
+            validateParameters();
+        } catch (IllegalArgumentException e) {
+            return;
+        }
         if (existingStrategy == null) {
-            rewardStrategyService.addRewardStrategy(strategy);
+            handleSaveRewardStrategy(rewardStrategyService.addRewardStrategy(strategy), Constants.ADD_STRATEGY_INFO, Constants.ADD_STRATEGY_ERROR);
         } else {
             strategy.setId(existingStrategy.getId());
-            rewardStrategyService.updateRewardStrategy(strategy);
+            handleSaveRewardStrategy(rewardStrategyService.updateRewardStrategy(strategy), Constants.UPDATE_STRATEGY_INFO, Constants.UPDATE_STRATEGY_ERROR);
         }
         onGoBackClicked();
+    }
+
+    private void handleSaveRewardStrategy(int responseCode, String successInfo, String errorInfo) {
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> AlertManager.showConfirmationAlert(successInfo);
+            default -> AlertManager.showErrorAlert(responseCode, errorInfo);
+        }
+    }
+
+    private void validateParameters() {
+        checkEmptyCategory();
+        switch (strategy.getRewardStrategyType()) {
+            case PERCENTAGE -> checkPercentageParameters();
+            case SCORE -> checkScoreParameters();
+        }
+    }
+
+    private void checkEmptyCategory() {
+        strategy.getParameters().forEach(parameter -> {
+            if (parameter.getRewardCategory() == null) {
+                AlertManager.showWarningAlert(Constants.STRATEGY_PARAMETER_EMPTY_CATEGORY_WARNING);
+                throw new IllegalArgumentException();
+            }
+        });
+    }
+
+    private void checkPercentageParameters() {
+        strategy.getParameters().forEach(parameter -> {
+            if (parameter.getParameterValue() > 100 || parameter.getParameterValue() < 0) {
+                AlertManager.showWarningAlert(Constants.PERCENTAGE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING);
+                throw new IllegalArgumentException();
+            }
+        });
+    }
+
+    private void checkScoreParameters() {
+        Set<Integer> uniqueValues = new HashSet<>();
+        strategy.getParameters().forEach(parameter -> {
+            int parameterValue = parameter.getParameterValue();
+            if (parameterValue < 0 || parameterValue > quizView.getMaxScore()) {
+                AlertManager.showWarningAlert(Constants.SCORE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING);
+                throw new IllegalArgumentException();
+            }
+            if (!uniqueValues.add(parameterValue)) {
+                AlertManager.showWarningAlert(Constants.SCORE_STRATEGY_PARAMETER_DUPLICATE_WARNING);
+                throw new IllegalArgumentException();
+            }
+        });
     }
 }
