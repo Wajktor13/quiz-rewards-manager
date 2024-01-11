@@ -3,83 +3,72 @@ package majestatyczne.bestie.rewardsmanager.service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.dto.QuizDTO;
-import majestatyczne.bestie.rewardsmanager.dto.RewardStrategyDTO;
-import majestatyczne.bestie.rewardsmanager.dto.RewardStrategyParameterDTO;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategyParameter;
 import majestatyczne.bestie.rewardsmanager.repository.RewardStrategyRepository;
 import majestatyczne.bestie.rewardsmanager.reward_selection_strategy.RewardSelectionStrategy;
 import majestatyczne.bestie.rewardsmanager.reward_selection_strategy.RewardStrategyType;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor_ ={@Lazy})
 public class RewardStrategyService {
 
     private final RewardStrategyRepository rewardStrategyRepository;
 
     private final RewardStrategyParameterService rewardStrategyParameterService;
 
+    @Lazy
+    private final QuizService quizService;
+
     @Transactional
-    public boolean addRewardStrategy(RewardStrategyDTO rewardStrategyDTO, Quiz quiz) {
-        if (findRewardStrategyByQuizId(rewardStrategyDTO.getQuiz().getId()).isPresent()) {
-            return false;
-        }
+    public RewardStrategy add(int quizId, RewardStrategyType rewardStrategyType) {
+        Quiz quiz = quizService.findById(quizId);
+
+        try {
+            findByQuizId(quizId);
+            throw new IllegalStateException("strategy for the given quiz already exists");
+        } catch (EntityNotFoundException ignored) { }
 
         RewardStrategy rewardStrategy = new RewardStrategy();
-        rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
-        rewardStrategy.setParameters(new ArrayList<>());
         rewardStrategy.setQuiz(quiz);
+        rewardStrategy.setRewardStrategyType(rewardStrategyType);
+        rewardStrategy.setParameters(new ArrayList<>());
 
         rewardStrategyRepository.save(rewardStrategy);
 
-        // update parameters
-        List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs = rewardStrategyDTO.getParameters();
-        List<RewardStrategyParameter> rewardStrategyParameters = rewardStrategyParameterService
-                .addAllRewardStrategyParameters(rewardStrategyParameterDTOs, rewardStrategy);
-
-        rewardStrategy.getParameters().addAll(rewardStrategyParameters);
-
-        rewardStrategyRepository.save(rewardStrategy);
-
-        insertRewards(rewardStrategy);
-
-        return true;
+        return rewardStrategy;
     }
 
     @Transactional
-    public boolean updateRewardStrategy(RewardStrategyDTO rewardStrategyDTO, Quiz quiz) {
-        Optional<RewardStrategy> rewardStrategyOptional = rewardStrategyRepository.findById(rewardStrategyDTO.getId());
+    public RewardStrategy update(int quizId, RewardStrategyType rewardStrategyType) {
+        RewardStrategy rewardStrategy = findByQuizId(quizId);
 
-        if (rewardStrategyOptional.isPresent()) {
-            RewardStrategy rewardStrategy = rewardStrategyOptional.get();
-            rewardStrategy.setRewardStrategyType(rewardStrategyDTO.getRewardStrategyType());
-            rewardStrategy.setQuiz(quiz);
+        Quiz quiz = quizService.findById(quizId);
 
-            rewardStrategyParameterService.updateAllRewardStrategyParameters(rewardStrategyDTO.getParameters(),
-                    rewardStrategy);
+        rewardStrategy.setRewardStrategyType(rewardStrategyType);
+        rewardStrategy.setQuiz(quiz);
 
-            rewardStrategyRepository.saveAndFlush(rewardStrategy);
+        rewardStrategyRepository.saveAndFlush(rewardStrategy);
 
-            insertRewards(rewardStrategy);
-
-            return true;
-        }
-        return false;
+        return rewardStrategy;
     }
 
-    public Optional<RewardStrategy> findRewardStrategyByQuizId(int quizId) {
-        return Optional.ofNullable(rewardStrategyRepository.findRewardStrategyByQuizId(quizId));
+    public RewardStrategy findByQuizId(int quizId) {
+        return rewardStrategyRepository
+                .findByQuizId(quizId)
+                .orElseThrow(() -> new EntityNotFoundException("reward selection strategy has not been found for the" +
+                        " given quiz"));
     }
 
-    public void deleteAllRewardStrategiesByIds(List<Integer> rewardStrategiesIds) {
-        rewardStrategyParameterService.deleteAllRewardStrategyParametersByRewardStrategyIds(rewardStrategiesIds);
+    @Transactional
+    public void deleteAllByIds(List<Integer> rewardStrategiesIds) {
+        rewardStrategyParameterService.deleteAllByRewardStrategyIds(rewardStrategiesIds);
         rewardStrategyRepository.deleteAllById(rewardStrategiesIds);
     }
 
@@ -87,5 +76,12 @@ public class RewardStrategyService {
     public void insertRewards(RewardStrategy rewardStrategy) {
         RewardSelectionStrategy rewardSelectionStrategy = RewardStrategyType.getRewardSelectionStrategy(rewardStrategy);
         rewardSelectionStrategy.insertRewards(rewardStrategy.getQuiz(), rewardStrategy, null);
+    }
+
+    @Transactional
+    public void addParametersToStrategy(RewardStrategy rewardStrategy,
+                                        List<RewardStrategyParameter> rewardStrategyParameters) {
+        rewardStrategy.getParameters().addAll(rewardStrategyParameters);
+        rewardStrategyRepository.saveAndFlush(rewardStrategy);
     }
 }

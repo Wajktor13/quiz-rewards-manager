@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Person;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -21,49 +21,45 @@ public class ResultService {
 
     private final PersonService personService;
 
-    public List<Result> findResultsByQuizId(int quizId) {
-        return resultRepository.findResultsByQuizId(quizId);
+    private final RewardService rewardService;
+
+    public List<Result> findAllByQuizId(int quizId) {
+        return resultRepository.findAllByQuizId(quizId);
     }
 
     @Transactional
-    public void addResults(List<Result> results) {
+    public void addAll(List<Result> results) {
         results.forEach(personService::updatePersonInResults);
         resultRepository.saveAll(results);
     }
 
-    public Optional<Result> findResultById(int resultId) {
-        return resultRepository.findById(resultId);
+    public Result findById(int resultId) {
+        return resultRepository
+                .findById(resultId)
+                .orElseThrow(() -> new EntityNotFoundException("result has not been found"));
     }
 
     @Transactional
-    public boolean updateResult(int resultId, Person person, Date startDate, Date endDate, int score, Reward reward) {
-        return findResultById(resultId)
-                .map(result -> updateResult(resultId, result.getQuiz(), person, startDate, endDate, score, reward))
-                .orElse(false);
+    public void update(int resultId, Person person, Date startDate, Date endDate, int score, int rewardId) {
+        Result result = findById(resultId);
+        Reward reward = rewardService.findById(rewardId);
+
+        update(result, result.getQuiz(), person, startDate, endDate, score, reward);
     }
 
     @Transactional
-    public boolean updateResult(int resultId, Quiz quiz, Person person, Date startDate, Date endDate, int score,
-                             Reward reward) {
-
-        return findResultById(resultId)
-                .map(result -> {
-                    result.setPerson(person);
-                    result.setQuiz(quiz);
-                    result.setStartDate(startDate);
-                    result.setEndDate(endDate);
-                    result.setScore(score);
-                    result.setReward(reward);
-
-                    resultRepository.save(result);
-
-                    return true;
-                })
-                .orElse(false);
+    public void update(Result result, Quiz quiz, Person person, Date startDate, Date endDate, int score,
+                          Reward reward) {
+        result.setPerson(person);
+        result.setQuiz(quiz);
+        result.setStartDate(startDate);
+        result.setEndDate(endDate);
+        result.setScore(score);
+        result.setReward(reward);
     }
 
     @Transactional
-    public void deleteAllResultsByIds(List<Integer> resultIds) {
+    public void deleteAllByIds(List<Integer> resultIds) {
         resultRepository.deleteAllById(resultIds);
     }
 }

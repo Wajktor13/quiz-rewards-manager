@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RewardCategoryRepository extends JpaRepository<RewardCategory, Integer> {
 
-    RewardCategory findRewardCategoryByName(String name);
+    RewardCategory findByName(String name);
 }

@@ -1,8 +1,9 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.RewardCategoryDTO;
-import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
 import majestatyczne.bestie.rewardsmanager.service.RewardCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,50 +19,58 @@ public class RewardCategoryController {
     private final RewardCategoryService rewardCategoryService;
 
     @GetMapping("/{rewardCategoryId}")
-    public ResponseEntity<?> getRewardCategoryById(@PathVariable int rewardCategoryId) {
-        return rewardCategoryService
-                .findRewardCategoryById(rewardCategoryId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<?> getById(@PathVariable int rewardCategoryId) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(RewardCategoryDTO.convertToDTO(rewardCategoryService.findById(rewardCategoryId)));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping
-    public List<RewardCategoryDTO> getAllRewardCategories() {
-        return rewardCategoryService.findAllRewardCategories().stream()
-                .map(category -> new RewardCategoryDTO(category.getId(), category.getName()))
+    public List<RewardCategoryDTO> getAll() {
+        return rewardCategoryService
+                .findAll()
+                .stream()
+                .map(RewardCategoryDTO::convertToDTO)
                 .toList();
     }
 
     @PostMapping
-    public ResponseEntity<String> addRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
-        RewardCategory rewardCategory = new RewardCategory();
-        rewardCategory.setName(rewardCategoryDTO.getName());
-
-        return rewardCategoryService.addRewardCategory(rewardCategory) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.CONFLICT).body(
-                String.format("Category with the given name already exists: '%s'", rewardCategoryDTO.getName())
-        );
+    public ResponseEntity<String> add(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
+        try {
+            rewardCategoryService.add(rewardCategoryDTO.name());
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @PutMapping
-    public ResponseEntity<?> updateRewardCategory(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
-        return rewardCategoryService.updateRewardCategory(rewardCategoryDTO.getId(), rewardCategoryDTO.getName()) ?
-                ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<?> update(@RequestBody RewardCategoryDTO rewardCategoryDTO) {
+        try {
+            rewardCategoryService.update(rewardCategoryDTO.id(), rewardCategoryDTO.name());
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PutMapping("/all")
-    public ResponseEntity<?> updateRewardCategories(@RequestBody List<RewardCategoryDTO> rewardCategoryDTOS) {
-        rewardCategoryService.updateRewardCategories(rewardCategoryDTOS);
+    public ResponseEntity<?> updateAll(@RequestBody List<RewardCategoryDTO> rewardCategoryDTOS) {
+        rewardCategoryService.updateAll(rewardCategoryDTOS);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{rewardCategoryId}")
-    public ResponseEntity<?> deleteRewardCategoryById(@PathVariable int rewardCategoryId) {
-        return rewardCategoryService.findRewardCategoryById(rewardCategoryId)
-                .map(category -> {
-                    rewardCategoryService.deleteRewardCategoryById(rewardCategoryId);
-                    return ResponseEntity.status(HttpStatus.OK).build();
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<?> deleteById(@PathVariable int rewardCategoryId) {
+        try {
+            rewardCategoryService.deleteById(rewardCategoryId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

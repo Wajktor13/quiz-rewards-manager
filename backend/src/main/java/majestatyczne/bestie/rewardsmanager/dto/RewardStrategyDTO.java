@@ -1,33 +1,30 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import majestatyczne.bestie.rewardsmanager.model.Quiz;
 import majestatyczne.bestie.rewardsmanager.model.RewardStrategy;
 import majestatyczne.bestie.rewardsmanager.reward_selection_strategy.RewardStrategyType;
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class RewardStrategyDTO {
+public record RewardStrategyDTO (
 
-    private int id;
+    int id,
 
-    private RewardStrategyType rewardStrategyType;
+    RewardStrategyType rewardStrategyType,
 
-    private QuizDTO quiz;
+    @JsonProperty("quiz")
+    QuizDTO quizDTO,
 
-    private List<RewardStrategyParameterDTO> parameters;
+    @JsonProperty("parameters")
+    List<RewardStrategyParameterDTO> rewardStrategyParameterDTOs
+) {
 
-    public static RewardStrategyDTO fromRewardStrategy(RewardStrategy rewardStrategy) {
+    public static RewardStrategyDTO convertToDTO(RewardStrategy rewardStrategy) {
         Quiz quiz1 = rewardStrategy.getQuiz();
         QuizDTO quizDTO = new QuizDTO(quiz1.getId(), quiz1.getName(), quiz1.getMaxScore(), quiz1.getDate());
 
         return new RewardStrategyDTO(rewardStrategy.getId(), rewardStrategy.getRewardStrategyType(),
-                quizDTO, RewardStrategyParameterDTO.fromRewardStrategyParameters(rewardStrategy.getParameters()));
+                quizDTO, RewardStrategyParameterDTO.convertAllToDTO(rewardStrategy.getParameters()));
     }
 }

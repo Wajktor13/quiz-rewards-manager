@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
-    Person findPersonByName(String name);
+    Person findByName(String name);
 
     @Query(nativeQuery = true, value = "SELECT * FROM Person WHERE Person.name IN :names")
-    List<Person> findAllPeopleByNames(List<String> names);
+    List<Person> findAllByNames(List<String> names);
 }

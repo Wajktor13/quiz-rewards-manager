@@ -1,20 +1,26 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import majestatyczne.bestie.rewardsmanager.model.RewardCategory;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import majestatyczne.bestie.rewardsmanager.model.Reward;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class RewardDTO {
+public record RewardDTO (
 
-    private int id;
+    int id,
 
-    private RewardCategoryDTO rewardCategory;
+    @JsonProperty("rewardCategory")
+    RewardCategoryDTO rewardCategoryDTO,
 
-    private String name;
+    String name,
 
-    private String description;
+    String description
+) {
+
+    public static RewardDTO convertToDTO(Reward reward) {
+        if (reward == null) {
+            return null;
+        }
+
+        return new RewardDTO(reward.getId(), RewardCategoryDTO.convertToDTO(reward.getRewardCategory()),
+                reward.getName(), reward.getDescription());
+    }
 }

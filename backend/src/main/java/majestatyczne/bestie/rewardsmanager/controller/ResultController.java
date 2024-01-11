@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.dto.ResultDTO;
 import majestatyczne.bestie.rewardsmanager.service.ResultService;
@@ -17,19 +18,22 @@ public class ResultController {
     private final ResultService resultService;
 
     @GetMapping
-    public List<ResultDTO> getResultsByQuizId(@RequestParam int quizId) {
+    public List<ResultDTO> getAllByQuizId(@RequestParam int quizId) {
         return resultService
-                .findResultsByQuizId(quizId)
+                .findAllByQuizId(quizId)
                 .stream()
-                .map(result -> new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(),
-                        result.getEndDate(), result.getScore(), result.getReward()))
+                .map(ResultDTO::convertToDTO)
                 .toList();
     }
 
     @PutMapping
-    public ResponseEntity<?> updateResult(@RequestBody ResultDTO resultDTO) {
-        return resultService.updateResult(resultDTO.getId(), resultDTO.getPerson(), resultDTO.getStartDate(),
-                resultDTO.getEndDate(), resultDTO.getScore(), resultDTO.getReward())
-                ? ResponseEntity.status(HttpStatus.OK).build() : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<?> update(@RequestBody ResultDTO resultDTO) {
+        try {
+            resultService.update(resultDTO.id(), resultDTO.person(), resultDTO.startDate(),
+                    resultDTO.endDate(), resultDTO.score(), resultDTO.rewardDTO().id());
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

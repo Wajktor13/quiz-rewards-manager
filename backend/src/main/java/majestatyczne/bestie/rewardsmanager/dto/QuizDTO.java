@@ -1,22 +1,25 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.model.Quiz;
 
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class QuizDTO {
+public record QuizDTO (
 
-    private int id;
+        int id,
 
-    private String name;
+        String name,
 
-    private int maxScore;
+        int maxScore,
 
-    private Date date;
+        Date date
+) {
+
+    public static QuizDTO convertToDTO(Quiz quiz) {
+        if (quiz == null) {
+            return null;
+        }
+
+        return new QuizDTO(quiz.getId(), quiz.getName(), quiz.getMaxScore(), quiz.getDate());
+    }
 }
-

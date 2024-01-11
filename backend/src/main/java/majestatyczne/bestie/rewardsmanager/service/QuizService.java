@@ -1,5 +1,6 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Result;
@@ -25,38 +26,41 @@ public class QuizService {
     private final PreferenceService preferenceService;
 
     @Transactional
-    public void addQuiz(Quiz quiz) {
+    public void add(Quiz quiz) {
         quizRepository.save(quiz);
     }
 
-    public List<Quiz> findAllQuizzes() {
+    public List<Quiz> findAll() {
         return quizRepository
                 .findAll();
     }
 
-    public Optional<Quiz> findQuizById(int id) {
-        return quizRepository.findById(id);
+    public Quiz findById(int quizId) {
+        return quizRepository
+                .findById(quizId)
+                .orElseThrow(() -> new EntityNotFoundException("quiz has not been found"));
     }
 
     @Transactional
-    public void deleteQuizById(int quizId) {
-        preferenceService.deleteAllPreferencesByIds(
+    public void deleteById(int quizId) {
+        findById(quizId); // throws error if quiz does not exist
+
+        preferenceService.deleteAllByIds(
                 preferenceService
-                .findAllPreferencesByQuizId(quizId)
+                .findAllByQuizId(quizId)
                 .stream()
                 .map(Preference::getId)
                 .toList());
 
-        resultService.deleteAllResultsByIds(
+        resultService.deleteAllByIds(
                 resultService
-                .findResultsByQuizId(quizId)
+                .findAllByQuizId(quizId)
                 .stream()
                 .map(Result::getId)
                 .toList());
 
-        rewardStrategyService.deleteAllRewardStrategiesByIds(
-                rewardStrategyService
-                .findRewardStrategyByQuizId(quizId)
+        rewardStrategyService.deleteAllByIds(
+                Optional.ofNullable(rewardStrategyService.findByQuizId(quizId))
                 .stream()
                 .map(RewardStrategy::getId)
                 .toList());
