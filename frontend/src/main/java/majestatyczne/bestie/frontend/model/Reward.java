@@ -11,4 +11,10 @@ public class Reward {
     private String name;
 
     private String description;
+
+    public Reward(String name, String description) {
+        this.rewardCategory = null;
+        this.name = name;
+        this.description = description;
+    }
 }

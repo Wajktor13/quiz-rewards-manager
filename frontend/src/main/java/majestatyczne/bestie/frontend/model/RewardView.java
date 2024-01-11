@@ -11,7 +11,9 @@ public class RewardView {
     @Getter
     private int id;
 
-    private ObjectProperty<RewardCategory> rewardCategory;
+    private ObjectProperty<RewardCategoryView> rewardCategory;
+
+    private StringProperty rewardCategoryName;
 
     private StringProperty name;
 
@@ -19,20 +21,30 @@ public class RewardView {
 
     public RewardView(int id, RewardCategory rewardCategory, String name, String description) {
         this.id = id;
-        this.rewardCategory = new SimpleObjectProperty<>(rewardCategory);
+        if (rewardCategory == null) {
+            this.rewardCategory = new SimpleObjectProperty<>(null);
+            this.rewardCategoryName = new SimpleStringProperty(null);
+        } else {
+            this.rewardCategory = new SimpleObjectProperty<>(new RewardCategoryView(rewardCategory));
+            this.rewardCategoryName = new SimpleStringProperty(rewardCategory.getName());
+        }
         this.name = new SimpleStringProperty(name);
         this.description = new SimpleStringProperty(description);
     }
 
-    public RewardCategory getRewardCategory() {
+    public RewardView(Reward reward) {
+        this(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription());
+    }
+
+    public RewardCategoryView getRewardCategory() {
         return rewardCategory.get();
     }
 
-    public ObjectProperty<RewardCategory> getRewardCategoryProperty() {
+    public ObjectProperty<RewardCategoryView> getRewardCategoryProperty() {
         return rewardCategory;
     }
 
-    public void setRewardCategory(RewardCategory rewardCategory) {
+    public void setRewardCategory(RewardCategoryView rewardCategory) {
         this.rewardCategory.set(rewardCategory);
     }
 
@@ -58,5 +70,22 @@ public class RewardView {
 
     public void setDescription(String description) {
         this.description.set(description);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
+    public String getRewardCategoryName() {
+        return rewardCategoryName.get();
+    }
+
+    public StringProperty getRewardCategoryNameProperty() {
+        return rewardCategoryName;
+    }
+
+    public void setRewardCategoryName(String rewardCategoryName) {
+        this.rewardCategoryName.set(rewardCategoryName);
     }
 }

@@ -2,7 +2,6 @@ package majestatyczne.bestie.frontend.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,8 +18,9 @@ import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.RewardCategoryService;
 import majestatyczne.bestie.frontend.service.RewardService;
-import javafx.util.Callback;
 import majestatyczne.bestie.frontend.util.AlertManager;
+import majestatyczne.bestie.frontend.util.DeleteButtonCell;
+import majestatyczne.bestie.frontend.util.RewardCategoryChoiceCell;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
@@ -42,19 +42,19 @@ public class GlobalSettingsPageController implements Initializable {
     private List<RewardCategory> rewardCategoryList;
 
     @FXML
-    private TableView<RewardView> rewardTable;
+    private TableView<RewardView> rewardsTable;
 
     @FXML
     private TableColumn<RewardView, String> rewardNameColumn;
 
     @FXML
-    private TableColumn<RewardView, RewardCategory> rewardCategoryColumn;
+    private TableColumn<RewardView, String> rewardCategoryColumn;
 
     @FXML
     private TableColumn<RewardView, String> rewardDescriptionColumn;
 
     @FXML
-    private TableColumn<RewardView, RewardCategoryView> rewardCategoryChoiceColumn;
+    private TableColumn<RewardView, Void> rewardDeleteColumn;
 
     @FXML
     private TableView<RewardCategoryView> categoryTable;
@@ -63,34 +63,54 @@ public class GlobalSettingsPageController implements Initializable {
     private TableColumn<RewardCategoryView, String> categoryNameColumn;
 
     @FXML
+    private TableColumn<RewardCategoryView, Void> categoryDeleteColumn;
+
+    @FXML
     private TextField newCategoryTextField;
 
     @FXML
-    private Button addCategoryButton;
+    private TextField newRewardNameTextField;
+
+    @FXML
+    private TextField newRewardDescriptionTextField;
+
+    private final RewardService rewardService = new RewardService();
+
+    private final RewardCategoryService rewardCategoryService = new RewardCategoryService();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initializeRewardTable();
-        initializeRewardCategoriesTable();
         setData();
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
         newCategoryTextField.setPromptText(Constants.NEW_REWARD_CATEGORY_PROMPT);
-        addCategoryButton.setOnAction(this::onAddCategoryClicked);
+        newRewardNameTextField.setPromptText(Constants.NEW_REWARD_NAME_PROMPT);
+        newRewardDescriptionTextField.setPromptText(Constants.NEW_REWARD_DESCRIPTION_PROMPT);
     }
 
     private void initializeRewardCategoriesTable() {
         categoryNameColumn.setCellValueFactory(value -> value.getValue().getNameProperty());
         categoryNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         categoryNameColumn.setOnEditCommit(this::onCategoryEdit);
+        categoryDeleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteCategoryClicked));
+    }
+
+    private void onDeleteCategoryClicked(RewardCategoryView rewardCategoryView) {
+        int responseCode = rewardCategoryService.deleteRewardCategoryById(rewardCategoryView.getId());
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.DELETE_REWARD_CATEGORY_INFO);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.DELETE_REWARD_CATEGORY_ERROR);
+        }
+        setData();
     }
 
     private void onCategoryEdit(TableColumn.CellEditEvent<RewardCategoryView, String> event) {
         event.getRowValue().setName(event.getNewValue());
     }
 
-    private void initializeRewardTable() {
+    private void initializeRewardsTable() {
         rewardNameColumn.setCellValueFactory(value -> value.getValue().getNameProperty());
-        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryProperty());
+        rewardCategoryColumn.setCellValueFactory(value -> value.getValue().getRewardCategoryNameProperty());
         rewardDescriptionColumn.setCellValueFactory(value -> value.getValue().getDescriptionProperty());
 
         rewardNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -98,44 +118,25 @@ public class GlobalSettingsPageController implements Initializable {
 
         rewardNameColumn.setOnEditCommit(this::onRewardNameEdit);
         rewardDescriptionColumn.setOnEditCommit(this::onRewardDescriptionEdit);
-        rewardCategoryChoiceColumn = new TableColumn<>("Zmien kategorie");
-        Callback<TableColumn<RewardView, RewardCategoryView>, TableCell<RewardView, RewardCategoryView>> cellFactory = new Callback<>() {
-            @Override
-            public TableCell<RewardView, RewardCategoryView> call(TableColumn<RewardView, RewardCategoryView> rewardViewRewardCategoryViewTableColumn) {
-                return new TableCell<>() {
-                    private final ComboBox<RewardCategoryView> comboBoxTableCell = new ComboBox<>(rewardCategories);
 
-                    {
-                        comboBoxTableCell.setOnAction(event -> {
-                            if (getTableRow() != null && getTableRow().getItem() != null) {
-                                RewardView selectedReward = getTableRow().getItem();
-                                RewardCategoryView selectedCategory = comboBoxTableCell.getValue();
-                                if (selectedReward != null && selectedCategory != null) {
-                                    RewardCategory category = rewardCategoryList.stream()
-                                            .filter(x -> x.getId() == selectedCategory.getId())
-                                            .findFirst()
-                                            .orElse(null);
-                                    selectedReward.setRewardCategory(category);
-                                }
-                            }
-                        });
-                    }
+        rewardCategoryColumn.setCellFactory(param -> new RewardCategoryChoiceCell<>(rewardCategories, this::onChosenRewardCategory));
+        rewardDeleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteRewardClicked));
+    }
 
-                    @Override
-                    public void updateItem(RewardCategoryView item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(comboBoxTableCell);
-                            comboBoxTableCell.setValue(item);
-                        }
-                    }
-                };
-            }
-        };
-        rewardCategoryChoiceColumn.setCellFactory(cellFactory);
-        rewardTable.getColumns().add(rewardCategoryChoiceColumn);
+    private void onChosenRewardCategory(RewardView selectedReward, RewardCategoryView selectedCategory) {
+        if (selectedReward != null && selectedCategory != null) {
+            selectedReward.setRewardCategory(selectedCategory);
+        }
+    }
+
+    private void onDeleteRewardClicked(RewardView rewardView) {
+        int responseCode = rewardService.deleteRewardById(rewardView.getId());
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.DELETE_REWARD_INFO);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.DELETE_REWARD_ERROR);
+        }
+        initializeRewards();
     }
 
     private void onRewardDescriptionEdit(TableColumn.CellEditEvent<RewardView, String> event) {
@@ -147,24 +148,24 @@ public class GlobalSettingsPageController implements Initializable {
     }
 
     private void setData() {
+        initializeRewardsTable();
+        initializeRewardCategoriesTable();
         initializeRewardCategories();
         initializeRewards();
-        rewardTable.setItems(rewards);
-        categoryTable.setItems(rewardCategories);
     }
 
     private void initializeRewardCategories() {
-        RewardCategoryService rewardCategoryService = new RewardCategoryService();
         rewardCategories = FXCollections.observableArrayList();
         rewardCategoryList = rewardCategoryService.getRewardCategories();
-        rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory.getId(), rewardCategory.getName())));
+        rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory)));
+        categoryTable.setItems(rewardCategories);
     }
 
     private void initializeRewards() {
-        RewardService rewardService = new RewardService();
         rewards = FXCollections.observableArrayList();
         rewardList = rewardService.getRewards();
-        rewardList.forEach(reward -> rewards.add(new RewardView(reward.getId(), reward.getRewardCategory(), reward.getName(), reward.getDescription())));
+        rewardList.forEach(reward -> rewards.add(new RewardView(reward)));
+        rewardsTable.setItems(rewards);
     }
 
     @FXML
@@ -181,15 +182,34 @@ public class GlobalSettingsPageController implements Initializable {
     }
 
     @FXML
-    public void onAddCategoryClicked(ActionEvent actionEvent) {
+    public void onAddRewardClicked() {
+        String rewardName = newRewardNameTextField.getText();
+        String rewardDescription = newRewardDescriptionTextField.getText();
+        if (rewardName.isEmpty()) {
+            AlertManager.showWarningAlert(Constants.ADD_REWARD_EMPTY_WARNING);
+            return;
+        }
+        Reward reward = new Reward(rewardName, rewardDescription);
+        int responseCode = rewardService.addReward(reward);
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> {
+                newRewardNameTextField.clear();
+                newRewardDescriptionTextField.clear();
+                AlertManager.showConfirmationAlert(Constants.ADD_REWARD_INFO);
+            }
+            default -> AlertManager.showErrorAlert(responseCode, Constants.ADD_REWARD_ERROR_TITLE);
+        }
+        initializeRewards();
+    }
+
+    @FXML
+    public void onAddCategoryClicked() {
         String categoryName = newCategoryTextField.getText();
         if (categoryName.isEmpty()) {
             AlertManager.showWarningAlert(Constants.ADD_REWARD_CATEGORY_EMPTY_WARNING);
             return;
         }
-        RewardCategory rewardCategory = new RewardCategory(categoryName);
-        RewardCategoryService rewardCategoryService = new RewardCategoryService();
-        int responseCode = rewardCategoryService.addRewardCategory(rewardCategory);
+        int responseCode = rewardCategoryService.addRewardCategory(new RewardCategory(categoryName));
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_CREATED -> {
                 newCategoryTextField.clear();
@@ -197,48 +217,51 @@ public class GlobalSettingsPageController implements Initializable {
             }
             default -> AlertManager.showErrorAlert(responseCode, Constants.ADD_REWARD_CATEGORY_ERROR_TITLE);
         }
+        setData();
     }
 
-    public void onSaveChangesClicked() {
-        saveRewards();
-        saveRewardCategories();
-    }
-
-    private void saveRewardCategories() {
-        RewardCategoryService rewardCategoryService = new RewardCategoryService();
-        for (RewardCategoryView rewardCategoryView : rewardCategories) {
-            if (rewardCategoryView.getName().isEmpty()) {
-                AlertManager.showWarningAlert(Constants.UPDATE_REWARD_CATEGORY_EMPTY_ERROR);
-                return;
-            }
+    @FXML
+    private void onSaveRewardCategoriesClicked() {
+        if (rewardCategories.stream().anyMatch(category -> category.getName().isEmpty())) {
+            AlertManager.showWarningAlert(Constants.UPDATE_REWARD_CATEGORY_EMPTY_ERROR);
+            return;
         }
-        rewardCategories.forEach(rewardCategoryView -> rewardCategoryList.forEach(rewardCategory -> {
-            if (rewardCategory.getId() == rewardCategoryView.getId()) {
-                rewardCategory.setName(rewardCategoryView.getName());
-            }
-        }));
+        rewardCategories.forEach(rewardCategoryView ->
+                rewardCategoryList.stream()
+                        .filter(rewardCategory -> rewardCategory.getId() == rewardCategoryView.getId())
+                        .findFirst()
+                        .ifPresent(rewardCategory -> rewardCategory.setName(rewardCategoryView.getName())));
         int responseCode = rewardCategoryService.updateRewardCategories(rewardCategoryList);
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
                     AlertManager.showConfirmationAlert(Constants.UPDATE_REWARD_CATEGORIES_INFO);
             default -> AlertManager.showErrorAlert(responseCode, Constants.UPDATE_REWARD_CATEGORIES_ERROR_TITLE);
         }
+        setData();
     }
 
-    private void saveRewards() {
-        RewardService rewardService = new RewardService();
-        rewards.forEach(rewardView -> rewardList.forEach(reward -> {
-            if (reward.getId() == rewardView.getId()) {
-                reward.setName(rewardView.getName());
-                reward.setRewardCategory(rewardView.getRewardCategory());
-                reward.setDescription(rewardView.getDescription());
-            }
-        }));
+    @FXML
+    private void onSaveRewardsClicked() {
+        rewards.forEach(rewardView -> rewardList.stream()
+                .filter(reward -> reward.getId() == rewardView.getId())
+                .findFirst()
+                .ifPresent(reward -> {
+                    reward.setName(rewardView.getName());
+                    reward.setRewardCategory(rewardView.getRewardCategory() != null
+                            ? rewardCategoryList.stream()
+                            .filter(category -> category.getId() == rewardView.getRewardCategory().getId())
+                            .findFirst()
+                            .orElse(null)
+                            : null);
+                    reward.setDescription(rewardView.getDescription());
+                })
+        );
         int responseCode = rewardService.updateRewards(rewardList);
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
                     AlertManager.showConfirmationAlert(Constants.UPDATE_REWARDS_INFO);
             default -> AlertManager.showErrorAlert(responseCode, Constants.UPDATE_REWARDS_ERROR_TITLE);
         }
+        initializeRewards();
     }
 }

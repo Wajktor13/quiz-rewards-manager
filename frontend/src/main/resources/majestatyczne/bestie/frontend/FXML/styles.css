@@ -27,6 +27,15 @@
     -fx-background-color: -fx-accent-color;
 }
 
+.secondary-button {
+    -fx-font-size: 10pt;
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-pref-height: 20px;
+    -fx-label-padding: 0 5px 0 5px;
+}
+
 .image-view:hover {
     -fx-effect: innershadow(gaussian, -fx-secondary-color, 100, 0, 0, 0);
 }
@@ -123,9 +132,30 @@
 
 .settings-header-label {
     -fx-font-size: 12pt;
-    -fx-padding: 10 10 10 10px;
 }
 
 .text-field {
     -fx-label-padding: 10 5 10 5px;
+}
+
+.global-settings-page-section-title {
+    -fx-spacing: 10px;
+    -fx-padding: 5 0 5 0 px;
+}
+
+.global-settings-page-new-element-hbox {
+    -fx-spacing: 10px;
+    -fx-padding: 5 0 5 0px;
+    -fx-alignment: center-left;
+}
+
+.quiz-settings-strategy-choice {
+    -fx-alignment: center-left;
+    -fx-spacing: 10px;
+    -fx-padding: 5 10 5 10px;
+}
+
+.quiz-settings-strategy-desc-label {
+    -fx-padding: 5 10 5 10px;
+    -fx-font-size: 12pt;
 }

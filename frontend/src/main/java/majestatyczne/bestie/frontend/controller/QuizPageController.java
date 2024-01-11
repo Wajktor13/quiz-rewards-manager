@@ -6,23 +6,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
-import majestatyczne.bestie.frontend.model.QuizView;
-import majestatyczne.bestie.frontend.model.ResultView;
+import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.QuizResultsService;
+import majestatyczne.bestie.frontend.service.RewardService;
+import majestatyczne.bestie.frontend.util.RewardChoiceCell;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class QuizPageController implements Initializable {
 
@@ -57,6 +54,16 @@ public class QuizPageController implements Initializable {
     @FXML
     private ImageView backIcon;
 
+    private List<Result> resultList;
+
+    private List<Reward> rewardList;
+
+    private ObservableList<RewardView> rewards;
+
+    private final RewardService rewardService = new RewardService();
+
+    private final QuizResultsService resultService = new QuizResultsService();
+
     public void setQuizView(QuizView quizView) {
         this.quizView = quizView;
         setData();
@@ -65,19 +72,20 @@ public class QuizPageController implements Initializable {
     private void initializeResults() {
         results = FXCollections.observableArrayList();
         var quizResultsService = new QuizResultsService();
-        var resultList = quizResultsService.getResults(quizView.getId());
-        resultList.forEach(result -> results.add(new ResultView(
-                result.getPerson().getName(), result.getEndDate(), result.getScore(), result.getReward()
-        )));
-        results.sort(
-                Comparator.comparing(ResultView::getScore, Comparator.reverseOrder())
-                        .thenComparing(ResultView::getEndDate)
-        );
+        resultList = quizResultsService.getResults(quizView.getId());
+        resultList.forEach(result -> results.add(new ResultView(result)));
+    }
+
+    private void initializeRewards() {
+        rewardList = rewardService.getRewards();
+        rewards = FXCollections.observableArrayList();
+        rewardList.forEach(reward -> rewards.add(new RewardView(reward)));
 
     }
 
     private void setData() {
         initializeResults();
+        initializeRewards();
         quizNameLabel.setText(quizView.getName());
         quizDateLabel.setText(quizView.getDate().toString());
         resultTable.setItems(results);
@@ -89,8 +97,27 @@ public class QuizPageController implements Initializable {
         scoreColumn.setCellValueFactory(scoreValue -> scoreValue.getValue().getScoreProperty());
         endDateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getEndDateProperty());
         rewardColumn.setCellValueFactory(rewardValue -> rewardValue.getValue().getRewardProperty());
+        rewardColumn.setCellFactory(param -> new RewardChoiceCell(rewards, this::onChosenReward));
         settingsIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.SETTINGS_ICON_RESOURCE))));
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
+    }
+
+    private void onChosenReward(ResultView resultView, RewardView selectedReward) {
+        if (selectedReward == null) {
+            return;
+        }
+        Reward reward = rewardList.stream()
+                .filter(x -> x.getId() == selectedReward.getId())
+                .findFirst()
+                .orElse(null);
+        resultView.setReward(reward.getName());
+
+        Result resultToUpdate = resultList.stream()
+                .filter(x -> x.getId() == resultView.getId())
+                .findFirst()
+                .orElse(null);
+        resultToUpdate.setReward(reward);
+        resultService.updateResult(resultToUpdate);
     }
 
     public void onGoBackClicked() {
