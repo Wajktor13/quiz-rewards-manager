@@ -31,6 +31,10 @@ public class ResultView {
         }
     }
 
+    public ResultView(Result result) {
+        this(result.getId(), result.getPerson().getName(), result.getEndDate(), result.getScore(), result.getReward());
+    }
+
     public String getPersonName() {
         return personName.get();
     }

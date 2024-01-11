@@ -42,7 +42,7 @@ public class GlobalSettingsPageController implements Initializable {
     private List<RewardCategory> rewardCategoryList;
 
     @FXML
-    private TableView<RewardView> rewardTable;
+    private TableView<RewardView> rewardsTable;
 
     @FXML
     private TableColumn<RewardView, String> rewardNameColumn;
@@ -157,7 +157,7 @@ public class GlobalSettingsPageController implements Initializable {
     private void initializeRewardCategories() {
         rewardCategories = FXCollections.observableArrayList();
         rewardCategoryList = rewardCategoryService.getRewardCategories();
-        rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory.getId(), rewardCategory.getName())));
+        rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory)));
         categoryTable.setItems(rewardCategories);
     }
 
@@ -165,7 +165,7 @@ public class GlobalSettingsPageController implements Initializable {
         rewards = FXCollections.observableArrayList();
         rewardList = rewardService.getRewards();
         rewardList.forEach(reward -> rewards.add(new RewardView(reward)));
-        rewardTable.setItems(rewards);
+        rewardsTable.setItems(rewards);
     }
 
     @FXML
@@ -209,8 +209,7 @@ public class GlobalSettingsPageController implements Initializable {
             AlertManager.showWarningAlert(Constants.ADD_REWARD_CATEGORY_EMPTY_WARNING);
             return;
         }
-        RewardCategory rewardCategory = new RewardCategory(categoryName);
-        int responseCode = rewardCategoryService.addRewardCategory(rewardCategory);
+        int responseCode = rewardCategoryService.addRewardCategory(new RewardCategory(categoryName));
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_CREATED -> {
                 newCategoryTextField.clear();
@@ -223,17 +222,15 @@ public class GlobalSettingsPageController implements Initializable {
 
     @FXML
     private void onSaveRewardCategoriesClicked() {
-        for (RewardCategoryView rewardCategoryView : rewardCategories) {
-            if (rewardCategoryView.getName().isEmpty()) {
-                AlertManager.showWarningAlert(Constants.UPDATE_REWARD_CATEGORY_EMPTY_ERROR);
-                return;
-            }
+        if (rewardCategories.stream().anyMatch(category -> category.getName().isEmpty())) {
+            AlertManager.showWarningAlert(Constants.UPDATE_REWARD_CATEGORY_EMPTY_ERROR);
+            return;
         }
-        rewardCategories.forEach(rewardCategoryView -> rewardCategoryList.forEach(rewardCategory -> {
-            if (rewardCategory.getId() == rewardCategoryView.getId()) {
-                rewardCategory.setName(rewardCategoryView.getName());
-            }
-        }));
+        rewardCategories.forEach(rewardCategoryView ->
+                rewardCategoryList.stream()
+                        .filter(rewardCategory -> rewardCategory.getId() == rewardCategoryView.getId())
+                        .findFirst()
+                        .ifPresent(rewardCategory -> rewardCategory.setName(rewardCategoryView.getName())));
         int responseCode = rewardCategoryService.updateRewardCategories(rewardCategoryList);
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
@@ -245,18 +242,20 @@ public class GlobalSettingsPageController implements Initializable {
 
     @FXML
     private void onSaveRewardsClicked() {
-        rewards.forEach(rewardView -> rewardList.forEach(reward -> {
-            if (reward.getId() == rewardView.getId()) {
-                reward.setName(rewardView.getName());
-                if (rewardView.getRewardCategory() == null) {
-                    reward.setRewardCategory(null);
-                } else {
-                    RewardCategory rewardCategory = rewardCategoryList.stream().filter(x -> x.getId() == rewardView.getRewardCategory().getId()).findFirst().orElse(null);
-                    reward.setRewardCategory(rewardCategory);
-                }
-                reward.setDescription(rewardView.getDescription());
-            }
-        }));
+        rewards.forEach(rewardView -> rewardList.stream()
+                .filter(reward -> reward.getId() == rewardView.getId())
+                .findFirst()
+                .ifPresent(reward -> {
+                    reward.setName(rewardView.getName());
+                    reward.setRewardCategory(rewardView.getRewardCategory() != null
+                            ? rewardCategoryList.stream()
+                            .filter(category -> category.getId() == rewardView.getRewardCategory().getId())
+                            .findFirst()
+                            .orElse(null)
+                            : null);
+                    reward.setDescription(rewardView.getDescription());
+                })
+        );
         int responseCode = rewardService.updateRewards(rewardList);
         switch (responseCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->

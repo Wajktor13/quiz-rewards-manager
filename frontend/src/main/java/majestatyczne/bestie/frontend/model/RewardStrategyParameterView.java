@@ -23,7 +23,10 @@ public class RewardStrategyParameterView {
         } else {
             this.rewardCategoryName = new SimpleStringProperty(rewardCategory.getName());
         }
+    }
 
+    public RewardStrategyParameterView(RewardStrategyParameter parameter) {
+        this(parameter.getId(), parameter.getPriority(), parameter.getParameterValue(), parameter.getRewardCategory());
     }
 
     public int getPriority() {

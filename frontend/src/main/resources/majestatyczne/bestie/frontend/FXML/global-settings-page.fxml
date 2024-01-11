@@ -42,7 +42,7 @@
                     <TextField fx:id="newRewardDescriptionTextField" styleClass="text-field"/>
                     <Button fx:id="addRewardButton" onAction="#onAddRewardClicked" text="Dodaj" styleClass="secondary-button"/>
                 </HBox>
-                <TableView fx:id="rewardTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
+                <TableView fx:id="rewardsTable" prefWidth="600.0" HBox.hgrow="ALWAYS" styleClass="quiz-page-table-view" editable="true">
                     <columns>
                         <TableColumn fx:id="rewardNameColumn" text="Nazwa" editable="true"/>
                         <TableColumn fx:id="rewardDescriptionColumn" text="Opis" editable="true"/>

@@ -73,14 +73,7 @@ public class QuizPageController implements Initializable {
         results = FXCollections.observableArrayList();
         var quizResultsService = new QuizResultsService();
         resultList = quizResultsService.getResults(quizView.getId());
-        resultList.forEach(result -> results.add(new ResultView(result.getId(),
-                result.getPerson().getName(), result.getEndDate(), result.getScore(), result.getReward()
-        )));
-        results.sort(
-                Comparator.comparing(ResultView::getScore, Comparator.reverseOrder())
-                        .thenComparing(ResultView::getEndDate)
-        );
-
+        resultList.forEach(result -> results.add(new ResultView(result)));
     }
 
     private void initializeRewards() {
@@ -110,6 +103,9 @@ public class QuizPageController implements Initializable {
     }
 
     private void onChosenReward(ResultView resultView, RewardView selectedReward) {
+        if (selectedReward == null) {
+            return;
+        }
         Reward reward = rewardList.stream()
                 .filter(x -> x.getId() == selectedReward.getId())
                 .findFirst()
