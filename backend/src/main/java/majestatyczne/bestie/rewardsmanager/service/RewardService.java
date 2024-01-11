@@ -40,6 +40,17 @@ public class RewardService {
 
         rewardCategoryService.addRewardToCategory(reward, rewardCategory);
     }
+    @Transactional
+    public void add(String name, String description) {
+        if (findByName(name).isPresent()) {
+            throw new EntityExistsException(String.format("Reward with the the given name already exists: '%s'",
+                    name));
+        }
+        Reward reward = new Reward();
+        reward.setName(name);
+        reward.setDescription(description);
+        rewardRepository.save(reward);
+    }
 
     public Optional<Reward> findByName(String name) {
         return Optional.ofNullable(rewardRepository.findByName(name));

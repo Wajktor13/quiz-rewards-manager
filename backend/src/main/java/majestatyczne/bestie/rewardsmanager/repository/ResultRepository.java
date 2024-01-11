@@ -10,4 +10,5 @@ import java.util.List;
 public interface ResultRepository extends JpaRepository<Result, Integer> {
 
     List<Result> findAllByQuizId(int quizId);
+    List<Result> findAllByQuizIdOrderByScoreDescEndDateAsc(int quizId);
 }

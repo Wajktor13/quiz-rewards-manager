@@ -24,7 +24,7 @@ public class ResultService {
     private final RewardService rewardService;
 
     public List<Result> findAllByQuizId(int quizId) {
-        return resultRepository.findAllByQuizId(quizId);
+        return resultRepository.findAllByQuizIdOrderByScoreDescEndDateAsc(quizId);
     }
 
     @Transactional

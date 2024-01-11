@@ -48,10 +48,12 @@ public class RewardController {
 
     @PostMapping
     public ResponseEntity<String> add(@RequestBody RewardDTO rewardDTO) {
-        int rewardCategoryId = rewardDTO.rewardCategoryDTO() == null ? -1 : rewardDTO.rewardCategoryDTO().id();
-
         try {
-            rewardService.add(rewardDTO.name(), rewardDTO.description(), rewardCategoryId);
+            if (rewardDTO.rewardCategoryDTO() == null) {
+                rewardService.add(rewardDTO.name(), rewardDTO.description());
+            } else {
+                rewardService.add(rewardDTO.name(), rewardDTO.description(), rewardDTO.rewardCategoryDTO().id());
+            }
             return ResponseEntity.status(HttpStatus.OK).build();
 
         } catch (EntityExistsException e) {
