@@ -123,22 +123,24 @@ public class RewardService {
                 .findFirst()
                 .orElse(null);
 
-        if (matchingReward != null) {
-            matchingReward.setName(rewardDTO.name());
-
-            if (rewardDTO.rewardCategoryDTO() == null) {
-                matchingReward.setRewardCategory(null);
-            } else {
-                RewardCategory rewardCategory = rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id());
-
-                rewardCategoryService.removeRewardFromCategory(matchingReward, matchingReward.getRewardCategory());
-
-                matchingReward.setRewardCategory(rewardCategory);
-
-                rewardCategoryService.addRewardToCategory(matchingReward, rewardCategory);
-            }
-            matchingReward.setDescription(rewardDTO.description());
+        if (matchingReward == null) {
+            return null;
         }
+
+        matchingReward.setName(rewardDTO.name());
+
+        if (rewardDTO.rewardCategoryDTO() == null) {
+            matchingReward.setRewardCategory(null);
+        } else {
+            RewardCategory rewardCategory = rewardCategoryService.findById(rewardDTO.rewardCategoryDTO().id());
+
+            rewardCategoryService.removeRewardFromCategory(matchingReward, matchingReward.getRewardCategory());
+
+            matchingReward.setRewardCategory(rewardCategory);
+
+            rewardCategoryService.addRewardToCategory(matchingReward, rewardCategory);
+        }
+        matchingReward.setDescription(rewardDTO.description());
 
         return matchingReward;
     }
