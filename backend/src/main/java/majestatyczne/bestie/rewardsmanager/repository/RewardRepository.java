@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface RewardRepository extends JpaRepository<Reward, Integer> {
 
-    Reward findRewardByName(String name);
+    Reward findByName(String name);
 
     @Query(nativeQuery = true, value = "SELECT * FROM Reward WHERE Reward.name IN :names")
-    List<Reward> findAllRewardsByNames(List<String> names);
+    List<Reward> findAllByNames(List<String> names);
 }

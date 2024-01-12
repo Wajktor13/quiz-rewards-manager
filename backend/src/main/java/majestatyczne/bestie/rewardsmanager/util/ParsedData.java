@@ -2,7 +2,6 @@ package majestatyczne.bestie.rewardsmanager.util;
 
 import lombok.Getter;
 import majestatyczne.bestie.rewardsmanager.model.*;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -17,29 +17,22 @@ public class PersonService {
 
     private final PersonRepository personRepository;
 
-    @Transactional
-    public void addPerson(Person person) {
-        if (findPersonByName(person.getName()).isEmpty()) {
-            personRepository.save(person);
-        }
+    public Optional<Person> findByName(String name) {
+        return Optional.ofNullable(personRepository.findByName(name));
     }
 
-    public Optional<Person> findPersonByName(String name) {
-        return Optional.ofNullable(personRepository.findPersonByName(name));
-    }
-
-    public List<Person> findAllPeopleByName(List<String> names) {
-        return personRepository.findAllPeopleByNames(names);
+    public List<Person> findAllByNames(List<String> names) {
+        return personRepository.findAllByNames(names);
     }
 
     @Transactional
-    public void addPeople(List<Person> people) {
+    public void addAllWithoutDuplicates(List<Person> people) {
         List<String> names = people
                 .stream()
                 .map(Person::getName)
                 .toList();
 
-        List<Person> alreadyAddedPeople = findAllPeopleByName(names);
+        List<Person> alreadyAddedPeople = findAllByNames(names);
 
         List<Person> newPeople = people
                 .stream()
@@ -52,7 +45,7 @@ public class PersonService {
     }
 
     public void updatePersonInResults(Result result) {
-        Optional<Person> person = findPersonByName(result.getPerson().getName());
+        Optional<Person> person = findByName(result.getPerson().getName());
         person.ifPresent(result::setPerson);
     }
 }

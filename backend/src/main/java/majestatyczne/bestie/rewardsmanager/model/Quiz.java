@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table (name = "quiz")
+@Table(name = "quiz")
 @Data
 @NoArgsConstructor
 public class Quiz {
@@ -28,5 +28,9 @@ public class Quiz {
     private Date date;
 
     @OneToMany(mappedBy = "quiz")
+    @OrderBy("score DESC, endDate ASC")
     private List<Result> results;
+
+    @OneToOne(mappedBy = "quiz")
+    private RewardStrategy rewardStrategy;
 }

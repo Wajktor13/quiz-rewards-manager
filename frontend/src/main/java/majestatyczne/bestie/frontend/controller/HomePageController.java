@@ -6,9 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -19,6 +17,8 @@ import majestatyczne.bestie.frontend.service.FileUploadService;
 import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
 import majestatyczne.bestie.frontend.model.QuizView;
+import majestatyczne.bestie.frontend.util.AlertManager;
+import majestatyczne.bestie.frontend.util.DeleteButtonCell;
 import org.apache.http.HttpStatus;
 
 import java.io.File;
@@ -38,6 +38,9 @@ public class HomePageController implements Initializable {
     private TableColumn<QuizView, Date> dateColumn;
 
     @FXML
+    private TableColumn<QuizView, Void> deleteColumn;
+
+    @FXML
     private ImageView settingsIcon;
 
     private ObservableList<QuizView> quizzes;
@@ -54,25 +57,11 @@ public class HomePageController implements Initializable {
         }
         int statusCode = fileUploadService.makeRequest(file);
         switch (statusCode) {
-            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED -> onRequestAccepted();
-            default -> onRequestFailed(statusCode);
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
+            default -> AlertManager.showErrorAlert(statusCode, Constants.FILE_UPLOAD_ERROR_TITLE);
         }
         setData();
-    }
-
-    @FXML
-    private void onRequestFailed(int statusCode){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(Constants.FILE_UPLOAD_ERROR_TITLE);
-        alert.setContentText(Constants.FILE_UPLOAD_ERROR_INFO + statusCode);
-        alert.showAndWait();
-    }
-    @FXML
-    private void onRequestAccepted() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
-        alert.setHeaderText(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
-        alert.showAndWait();
     }
 
     @FXML
@@ -81,7 +70,6 @@ public class HomePageController implements Initializable {
             QuizView selectedQuiz = quizTable.getSelectionModel().getSelectedItem();
             moveToQuizPage(selectedQuiz);
         } catch (NullPointerException e) {
-            System.out.println("Couldn't get selected quiz");
             System.out.println(e.getMessage());
         }
     }
@@ -99,13 +87,37 @@ public class HomePageController implements Initializable {
         }
     }
 
+    @FXML
+    public void onSettingsClicked() {
+        Stage stage = (Stage) quizTable.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_GLOBAL_SETTINGS_RESOURCE));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initializeDefaultUploadDirectory();
         nameColumn.setCellValueFactory(nameValue -> nameValue.getValue().getNameProperty());
         dateColumn.setCellValueFactory(dateValue -> dateValue.getValue().getDateProperty());
+        deleteColumn.setCellFactory(param -> new DeleteButtonCell<>(this::onDeleteButtonClicked));
         setData();
         settingsIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.SETTINGS_ICON_RESOURCE))));
+    }
+
+    private void onDeleteButtonClicked(QuizView quizView) {
+        QuizService quizService = new QuizService();
+        int responseCode = quizService.deleteQuizById(quizView.getId());
+        switch (responseCode) {
+            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                    AlertManager.showConfirmationAlert(Constants.DELETE_QUIZ_INFO);
+            default -> AlertManager.showErrorAlert(responseCode, Constants.DELETE_QUIZ_ERROR);
+        }
+        setData();
     }
 
     private void initializeQuizzes() {
