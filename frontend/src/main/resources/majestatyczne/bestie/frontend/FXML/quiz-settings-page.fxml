@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import java.net.URL?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="majestatyczne.bestie.frontend.controller.QuizSettingsPageController">
+    <children>
+        <HBox prefHeight="50.0" prefWidth="200.0" alignment="BASELINE_CENTER" styleClass="quiz-page-header">
+            <HBox styleClass="quiz-page-header-left">
+                <ImageView fx:id="backIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true"
+                           onMouseClicked="#onGoBackClicked">
+                    <Image url="@left-arrow.png"/>
+                </ImageView>
+            </HBox>
+            <VBox styleClass="quiz-page-header-middle" HBox.hgrow="ALWAYS">
+                <Label fx:id="quizNameLabel" styleClass="quiz-name"/>
+                <Label fx:id="quizScoreLabel"/>
+            </VBox>
+            <HBox styleClass="quiz-page-header-right">
+                <Button fx:id="saveButton" text="Zapisz" onAction="#onSaveButtonClicked" disable="true"/>
+            </HBox>
+        </HBox>
+        <HBox styleClass="quiz-settings-strategy-choice">
+            <Label styleClass="settings-header-label" text="Wybierz typ strategii:"/>
+            <ChoiceBox fx:id="rewardStrategyTypeBox" onAction="#onRewardStrategyTypeBoxClicked"/>
+        </HBox>
+        <VBox>
+            <children>
+                <VBox fx:id="percentageVBox" styleClass="quiz-settings-strategy-desc-label">
+                    <Label fx:id="percentageStrategyInfo"/>
+                </VBox>
+                <VBox fx:id="scoreVBox" styleClass="quiz-settings-strategy-desc-label">
+                    <Label fx:id="scoreStrategyInfo"/>
+                </VBox>
+                <TableView fx:id="parametersTable" prefWidth="600.0" styleClass="quiz-page-table-view" editable="true">
+                    <columns>
+                        <TableColumn fx:id="priorityColumn" text="Priorytet"/>
+                        <TableColumn fx:id="parameterValueColumn" text="Wartość parametru" editable="true" />
+                        <TableColumn fx:id="rewardCategoryColumn" text="Kategoria nagrody" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
+
+</VBox>

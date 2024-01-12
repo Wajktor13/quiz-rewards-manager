@@ -72,22 +72,22 @@ public class XlsxDataLoader implements FileDataLoader {
     }
 
     private void loadQuiz() {
-        quizService.addQuiz(parsedData.getQuiz());
+        quizService.add(parsedData.getQuiz());
     }
 
     private void loadPeople() {
-        personService.addPeople(parsedData.getPeople());
+        personService.addAllWithoutDuplicates(parsedData.getPeople());
     }
 
     private void loadRewards() {
-        rewardService.addRewards(parsedData.getRewards());
+        rewardService.addAllWithoutDuplicates(parsedData.getRewards());
     }
 
     private void loadPreferences() {
-        preferenceService.addPreferences(parsedData.getPreferences());
+        preferenceService.addAll(parsedData.getPreferences());
     }
 
     private void loadResults() {
-        resultService.addResults(parsedData.getResults());
+        resultService.addAll(parsedData.getResults());
     }
 }

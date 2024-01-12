@@ -1,26 +1,28 @@
 package majestatyczne.bestie.rewardsmanager.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Person;
+import majestatyczne.bestie.rewardsmanager.model.Result;
 
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class ResultDTO {
+public record ResultDTO (
+        int id,
 
-    private int id;
+        Person person,
 
-    private Person person;
+        Date startDate,
 
-    private Date startDate;
+        Date endDate,
 
-    private Date endDate;
+        int score,
 
-    private int score;
+        @JsonProperty("reward")
+        RewardDTO rewardDTO
+) {
+
+    public static ResultDTO convertToDTO(Result result) {
+        return new ResultDTO(result.getId(), result.getPerson(), result.getStartDate(), result.getEndDate(),
+                result.getScore(), RewardDTO.convertToDTO(result.getReward()));
+    }
 }
-

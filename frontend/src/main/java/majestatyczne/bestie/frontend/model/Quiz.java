@@ -14,5 +14,6 @@ public class Quiz {
     private int maxScore;
 
     private Date date;
+
 }
 
