@@ -1,15 +1,18 @@
 package majestatyczne.bestie.rewardsmanager.controller;
 
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.service.FileService;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("files")
@@ -19,21 +22,30 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping
-    public void uploadFile(@RequestParam("file") MultipartFile multipartFile) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         try {
             fileService.loadFile(multipartFile);
+            return ResponseEntity.ok().build();
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @GetMapping
-    public ResponseEntity<Resource> createAndExportResultsFile(@RequestParam int quizId,
-                                                               @RequestParam(defaultValue = "xlsx")
-                                                               String format) {
+    public ResponseEntity<?> createAndExportResultsFile(@RequestParam int quizId,
+                                                               @RequestParam(defaultValue = "xlsx") String format) {
+        try {
+            byte[] byteArray = fileService.createResultsFile(quizId, format);
+            Resource resource = new ByteArrayResource(byteArray);
 
-        fileService.createResultsFile(quizId, format);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            String formattedDateTime = currentDateTime.format(formatter);
 
-        return ResponseEntity.ok().build();
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"rewards_" + formattedDateTime + "\"").body(resource);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }
