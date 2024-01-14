@@ -1,4 +1,4 @@
-package majestatyczne.bestie.rewardsmanager.util;
+package majestatyczne.bestie.rewardsmanager.util.parser;
 
 import lombok.Getter;
 import majestatyczne.bestie.rewardsmanager.model.*;
