@@ -69,9 +69,9 @@ public class FileService {
         rows.add(header);
         rows.addAll(
                 results
-                        .stream()
-                        .map(this::convertResult)
-                        .toList()
+                .stream()
+                .map(this::convertResult)
+                .toList()
         );
 
         return rows;
