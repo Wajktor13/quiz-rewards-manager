@@ -27,11 +27,11 @@ public class FileService {
         fileDataLoader.loadData(multipartFile);
     }
 
-    public byte[] createResultsFile(int quizId, String fileFormatString) throws IOException {
+    public byte[] createResultsFile(int quizId, FileFormat fileFormat) throws IOException {
         List<Result> results = quizService.findById(quizId).getResults(); // throws when not found
 
         FileCreator fileCreator =
-                switch (FileFormat.fromString(fileFormatString)) {
+                switch (fileFormat) {
                     case XLSX -> new XlsxFileCreator();
                     case PDF -> new PdfFileCreator();
                 };
