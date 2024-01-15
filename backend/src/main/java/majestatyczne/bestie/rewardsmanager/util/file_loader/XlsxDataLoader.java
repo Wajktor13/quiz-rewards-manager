@@ -1,7 +1,9 @@
-package majestatyczne.bestie.rewardsmanager.util;
+package majestatyczne.bestie.rewardsmanager.util.file_loader;
 
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.service.*;
+import majestatyczne.bestie.rewardsmanager.util.parser.ParsedData;
+import majestatyczne.bestie.rewardsmanager.util.parser.XlsxParser;
 import org.apache.poi.EmptyFileException;
 import org.apache.poi.openxml4j.exceptions.NotOfficeXmlFileException;
 import org.apache.poi.ss.usermodel.*;

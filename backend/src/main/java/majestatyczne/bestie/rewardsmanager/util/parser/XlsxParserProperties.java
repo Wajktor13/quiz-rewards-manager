@@ -1,4 +1,4 @@
-package majestatyczne.bestie.rewardsmanager.util;
+package majestatyczne.bestie.rewardsmanager.util.parser;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
