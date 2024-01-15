@@ -75,7 +75,8 @@ public class RewardStrategyService {
     @Transactional
     public void insertRewards(RewardStrategy rewardStrategy) {
         RewardSelectionStrategy rewardSelectionStrategy = RewardStrategyType.getRewardSelectionStrategy(rewardStrategy);
-        rewardSelectionStrategy.insertRewards(rewardStrategy.getQuiz().getResults(), rewardStrategy, null);
+        rewardSelectionStrategy.insertRewards(rewardStrategy.getQuiz().getResults(), rewardStrategy, null,
+                rewardStrategy.getQuiz().getMaxScore());
     }
 
     @Transactional
