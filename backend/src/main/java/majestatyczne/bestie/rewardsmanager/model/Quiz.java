@@ -34,6 +34,6 @@ public class Quiz {
     @OneToOne(mappedBy = "quiz")
     private RewardStrategy rewardStrategy;
 
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Question> questions;
 }
