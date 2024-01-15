@@ -8,7 +8,8 @@ import java.util.List;
 public class ScoreStrategy implements RewardSelectionStrategy {
 
     @Override
-    public List<Result> insertRewards(List<Result> results, RewardStrategy rewardStrategy, List<Preference> preferences) {
+    public List<Result> insertRewards(List<Result> results, RewardStrategy rewardStrategy, List<Preference> preferences,
+                                      int maxScore) {
         List<RewardStrategyParameter> rewardStrategyParameters =  rewardStrategy.getParameters();
 
         validateParameters(rewardStrategyParameters);
@@ -16,7 +17,9 @@ public class ScoreStrategy implements RewardSelectionStrategy {
         for (Result result : results) {
             int score = result.getScore();
 
-            RewardCategory rewardCategory = rewardStrategyParameters.stream()
+            RewardCategory rewardCategory =
+                    rewardStrategyParameters
+                    .stream()
                     .filter(parameter -> parameter.getParameterValue() <= score)
                     .max(Comparator.comparingInt(RewardStrategyParameter::getParameterValue))
                     .orElseThrow()

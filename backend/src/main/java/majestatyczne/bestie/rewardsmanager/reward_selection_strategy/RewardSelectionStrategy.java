@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface RewardSelectionStrategy {
 
-    List<Result> insertRewards(List<Result> results, RewardStrategy rewardStrategy, List<Preference> preferences);
+    List<Result> insertRewards(List<Result> results, RewardStrategy rewardStrategy, List<Preference> preferences,
+                               int maxScore);
 }
