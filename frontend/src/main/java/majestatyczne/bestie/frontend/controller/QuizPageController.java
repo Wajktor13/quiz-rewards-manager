@@ -81,6 +81,8 @@ public class QuizPageController implements Initializable {
         rewards = FXCollections.observableArrayList();
         rewardList.forEach(reward -> rewards.add(new RewardView(reward)));
 
+        RewardView noReward = new RewardView(-1, null, Constants.REWARD_CHOICE_BOX_NO_REWARD, null);
+        rewards.add(noReward);
     }
 
     private void setData() {
@@ -110,7 +112,11 @@ public class QuizPageController implements Initializable {
                 .filter(x -> x.getId() == selectedReward.getId())
                 .findFirst()
                 .orElse(null);
-        resultView.setReward(reward.getName());
+        if (reward == null) {
+            resultView.setReward(Constants.REWARD_CHOICE_BOX_NO_REWARD);
+        } else {
+            resultView.setReward(reward.getName());
+        }
 
         Result resultToUpdate = resultList.stream()
                 .filter(x -> x.getId() == resultView.getId())
