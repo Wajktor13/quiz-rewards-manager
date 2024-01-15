@@ -3,6 +3,7 @@ package majestatyczne.bestie.rewardsmanager.controller;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.service.FileService;
+import majestatyczne.bestie.rewardsmanager.util.file_creator.FileFormat;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +37,8 @@ public class FileController {
     public ResponseEntity<?> createAndExportResultsFile(@RequestParam int quizId,
                                                                @RequestParam(defaultValue = "xlsx") String format) {
         try {
-            byte[] byteArray = fileService.createResultsFile(quizId, format);
+            var fileFormat = FileFormat.fromString(format);
+            byte[] byteArray = fileService.createResultsFile(quizId, fileFormat);
             Resource resource = new ByteArrayResource(byteArray);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm-ss");
