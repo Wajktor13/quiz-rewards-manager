@@ -253,20 +253,10 @@ public class QuizSettingsPageController implements Initializable {
     }
 
     private void validateParameters() {
-        checkEmptyCategory();
         switch (strategy.getRewardStrategyType()) {
             case PERCENTAGE -> checkPercentageParameters();
             case SCORE -> checkScoreParameters();
         }
-    }
-
-    private void checkEmptyCategory() {
-        strategy.getParameters().forEach(parameter -> {
-            if (parameter.getRewardCategory() == null) {
-                AlertManager.showWarningAlert(Constants.STRATEGY_PARAMETER_EMPTY_CATEGORY_WARNING);
-                throw new IllegalArgumentException();
-            }
-        });
     }
 
     private void checkPercentageParameters() {
