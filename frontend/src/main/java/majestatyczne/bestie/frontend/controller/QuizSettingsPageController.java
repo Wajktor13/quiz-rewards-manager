@@ -131,6 +131,9 @@ public class QuizSettingsPageController implements Initializable {
         rewardCategories = FXCollections.observableArrayList();
         rewardCategoryList = rewardCategoryService.getRewardCategories();
         rewardCategoryList.forEach(rewardCategory -> rewardCategories.add(new RewardCategoryView(rewardCategory.getId(), rewardCategory.getName())));
+
+        RewardCategoryView noCategory = new RewardCategoryView(-1, Constants.REWARD_CATEGORY_CHOICE_BOX_NO_CATEGORY);
+        rewardCategories.add(0, noCategory);
     }
 
     @Override
