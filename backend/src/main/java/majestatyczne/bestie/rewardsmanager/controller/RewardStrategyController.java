@@ -29,7 +29,6 @@ public class RewardStrategyController {
 
     @PostMapping
     public ResponseEntity<String> addWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
-        System.out.println(rewardStrategyDTO);
         try {
             RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.quizDTO().id(),
                     rewardStrategyDTO.rewardStrategyType());
