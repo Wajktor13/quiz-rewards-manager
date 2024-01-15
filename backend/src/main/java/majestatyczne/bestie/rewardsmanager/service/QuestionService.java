@@ -1,13 +1,19 @@
 package majestatyczne.bestie.rewardsmanager.service;
 
-import majestatyczne.bestie.rewardsmanager.repository.AnswerRepository;
+import lombok.AllArgsConstructor;
+import majestatyczne.bestie.rewardsmanager.model.Question;
 import majestatyczne.bestie.rewardsmanager.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
-import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class RqService {
-    private final AnswerRepository answerRepository;
+public class QuestionService {
+
     private final QuestionRepository questionRepository;
+
+    public List<Question> findAllByQuizId(int quizId) {
+        return questionRepository.findAllByQuizId(quizId);
+    }
 }
