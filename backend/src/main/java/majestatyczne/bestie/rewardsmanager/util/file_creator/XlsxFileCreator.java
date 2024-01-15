@@ -12,27 +12,27 @@ public class XlsxFileCreator implements FileCreator {
     @Override
     public byte[] createFileWithTable(List<List<String>> inputRows, List<Integer> rowsToHighlight)
             throws IOException {
-        if (inputRows.isEmpty() || inputRows.get(0).isEmpty()){
+        if (inputRows.isEmpty() || inputRows.get(0).isEmpty()) {
             throw new IllegalArgumentException("cannot create file with empty table");
         }
 
-        int no_rows = inputRows.size();
-        int no_cols = inputRows.get(0).size();
+        int rowSize = inputRows.size();
+        int columnSize = inputRows.get(0).size();
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
 
-            for (int row_ind = 0; row_ind < no_rows; row_ind++) {
-                Row row = sheet.createRow(row_ind);
+            for (int rowIndex = 0; rowIndex < rowSize; rowIndex++) {
+                Row row = sheet.createRow(rowIndex);
 
-                for (int col_ind = 0; col_ind < no_cols; col_ind++) {
-                    Cell cell = row.createCell(col_ind);
-                    cell.setCellValue(inputRows.get(row_ind).get(col_ind));
+                for (int columnIndex = 0; columnIndex < columnSize; columnIndex++) {
+                    Cell cell = row.createCell(columnIndex);
+                    cell.setCellValue(inputRows.get(rowIndex).get(columnIndex));
                 }
             }
 
-            for (int row_ind : rowsToHighlight) {
-                setRowColor(sheet.getRow(row_ind), workbook);
+            for (int rowIndex : rowsToHighlight) {
+                setRowColor(sheet.getRow(rowIndex), workbook);
             }
 
             try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
