@@ -2,7 +2,6 @@ package majestatyczne.bestie.frontend.util;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import majestatyczne.bestie.frontend.model.RewardCategoryView;
 

@@ -49,6 +49,10 @@ public class Constants {
 
     public static final String SCORE_STRATEGY_PARAMETER_COLUMN_NAME = "Liczba poprawnych odpowiedzi";
 
+    public static final String REWARD_CATEGORY_CHOICE_BOX_NO_CATEGORY = "brak kategorii";
+
+    public static final String REWARD_CHOICE_BOX_NO_REWARD = "brak nagrody";
+
 //    ALERTS
     public static final String UPDATE_REWARDS_INFO = "Zmiany w nagrodach zostały wprowadzone!";
     public static final String UPDATE_REWARDS_ERROR_TITLE = "Zmiany w nagrodach nie zostały wprowadzone!";
@@ -89,8 +93,6 @@ public class Constants {
     public static final String UPDATE_STRATEGY_INFO = "Strategia została zaktualizowana i zastosowana!";
 
     public static final String UPDATE_STRATEGY_ERROR = "Nie udało się zaktualizować strategii!";
-
-    public static final String STRATEGY_PARAMETER_EMPTY_CATEGORY_WARNING = "Każdy z parametrów musi mieć wybraną kategorię nagród!";
 
     public static final String PERCENTAGE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING = "Parametr musi mieć wartość między 0 a 100!";
 
