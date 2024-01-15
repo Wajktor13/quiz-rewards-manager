@@ -20,15 +20,6 @@ public class Question {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private int score;
-
-    @Column(nullable = false)
-    private int correctAnswers;
-
-    @Column(nullable = false)
-    private int allAnswers;
-
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;

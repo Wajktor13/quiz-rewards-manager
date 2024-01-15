@@ -22,6 +22,9 @@ public class Answer {
     private Question question;
 
     @Column(nullable = false)
+    private int selectionCount;
+
+    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
