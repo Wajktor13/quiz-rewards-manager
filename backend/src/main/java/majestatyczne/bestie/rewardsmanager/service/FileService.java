@@ -30,17 +30,20 @@ public class FileService {
     public byte[] createResultsFile(int quizId, FileFormat fileFormat) throws IOException {
         List<Result> results = quizService.findById(quizId).getResults(); // throws when not found
 
-        FileCreator fileCreator =
-                switch (fileFormat) {
-                    case XLSX -> new XlsxFileCreator();
-                    case PDF -> new PdfFileCreator();
-                };
+        FileCreator fileCreator = getFileCreator(fileFormat);
 
         List<List<String>> rows = getRowsWithHeader(results);
 
         List<Integer> rowsToHighlight = getRowsToHighlight(results);
 
         return fileCreator.createFileWithTable(rows, rowsToHighlight);
+    }
+
+    private FileCreator getFileCreator(FileFormat fileFormat) {
+        return switch (fileFormat) {
+            case XLSX -> new XlsxFileCreator();
+            case PDF -> new PdfFileCreator();
+        };
     }
 
     private List<String> convertResult(Result result) {
