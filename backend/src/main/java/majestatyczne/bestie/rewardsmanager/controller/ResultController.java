@@ -29,9 +29,9 @@ public class ResultController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody ResultDTO resultDTO) {
         try {
-            int categoryId = resultDTO.rewardDTO() == null ? -1 : resultDTO.rewardDTO().id();
+            int rewardId = resultDTO.rewardDTO() == null ? -1 : resultDTO.rewardDTO().id();
             resultService.update(resultDTO.id(), resultDTO.person(), resultDTO.startDate(),
-                    resultDTO.endDate(), resultDTO.score(), categoryId);
+                    resultDTO.endDate(), resultDTO.score(), rewardId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
