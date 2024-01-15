@@ -3,6 +3,7 @@ package majestatyczne.bestie.rewardsmanager.service;
 import lombok.AllArgsConstructor;
 import majestatyczne.bestie.rewardsmanager.model.Result;
 import majestatyczne.bestie.rewardsmanager.util.file_creator.FileCreator;
+import majestatyczne.bestie.rewardsmanager.util.file_creator.FileFormat;
 import majestatyczne.bestie.rewardsmanager.util.file_creator.PdfFileCreator;
 import majestatyczne.bestie.rewardsmanager.util.file_creator.XlsxFileCreator;
 import majestatyczne.bestie.rewardsmanager.util.file_loader.FileDataLoader;
@@ -20,21 +21,19 @@ public class FileService {
 
     private final FileDataLoader fileDataLoader;
 
-    private final ResultService resultService;
+    private final QuizService quizService;
 
     public void loadFile(MultipartFile multipartFile) throws IOException {
         fileDataLoader.loadData(multipartFile);
     }
 
-    public byte[] createResultsFile(int quizId, String format) throws IOException {
-        List<Result> results = resultService.findAllByQuizId(quizId);
+    public byte[] createResultsFile(int quizId, String fileFormatString) throws IOException {
+        List<Result> results = quizService.findById(quizId).getResults(); // throws when not found
 
         FileCreator fileCreator =
-                switch (format) {
-                    case "xlsx" -> new XlsxFileCreator();
-                    case "pdf" -> new PdfFileCreator();
-                    default -> throw new IllegalArgumentException(String.format("invalid file format: %s. Possible" +
-                            " formats: 'xlsx', 'pdf'", format));
+                switch (FileFormat.fromString(fileFormatString)) {
+                    case XLSX -> new XlsxFileCreator();
+                    case PDF -> new PdfFileCreator();
                 };
 
         List<List<String>> rows = getRowsWithHeader(results);
