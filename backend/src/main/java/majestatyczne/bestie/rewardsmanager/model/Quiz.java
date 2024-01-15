@@ -33,4 +33,7 @@ public class Quiz {
 
     @OneToOne(mappedBy = "quiz")
     private RewardStrategy rewardStrategy;
+
+    @OneToMany(mappedBy = "quiz")
+    private List<Question> questions;
 }
