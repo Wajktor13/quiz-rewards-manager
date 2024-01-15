@@ -29,6 +29,7 @@ public class RewardStrategyController {
 
     @PostMapping
     public ResponseEntity<String> addWithParameters(@RequestBody RewardStrategyDTO rewardStrategyDTO) {
+        System.out.println(rewardStrategyDTO);
         try {
             RewardStrategy rewardStrategy = rewardStrategyService.add(rewardStrategyDTO.quizDTO().id(),
                     rewardStrategyDTO.rewardStrategyType());
@@ -50,7 +51,7 @@ public class RewardStrategyController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -78,7 +79,8 @@ public class RewardStrategyController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
