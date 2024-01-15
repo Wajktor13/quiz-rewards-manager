@@ -1,15 +1,14 @@
 package majestatyczne.bestie.rewardsmanager.util.file_creator;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +35,8 @@ public class PdfFileCreator implements FileCreator {
             PdfWriter.getInstance(document, pdfOutputStream);
             document.open();
 
+            Font font = FontFactory.getFont(FontFactory.HELVETICA, BaseFont.CP1250);
+
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
                 Sheet sheet = workbook.getSheetAt(i);
 
@@ -43,7 +44,7 @@ public class PdfFileCreator implements FileCreator {
                     PdfPTable pdfPTable = new PdfPTable(row.getLastCellNum());
 
                     for (Cell cell : row) {
-                        PdfPCell pdfCell = new PdfPCell(new Phrase(cell.toString()));
+                        PdfPCell pdfCell = new PdfPCell(new Phrase(cell.toString(), font));
                         copyCellStyle(cell, pdfCell);
                         pdfPTable.addCell(pdfCell);
                     }
