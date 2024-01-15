@@ -35,10 +35,8 @@ public class XlsxParserTests {
             FileInputStream fileInputStream = new FileInputStream(filePath);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
             Workbook workbook = new XSSFWorkbook(bufferedInputStream);
-            Sheet sheet = workbook.getSheetAt(0);
-            sheet.shiftRows(1, sheet.getLastRowNum(), -1);
 
-            return sheet;
+            return workbook.getSheetAt(0);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

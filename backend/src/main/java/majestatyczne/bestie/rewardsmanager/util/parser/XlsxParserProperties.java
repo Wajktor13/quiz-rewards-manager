@@ -16,12 +16,15 @@ public class XlsxParserProperties {
 
     private int scoreIndex;
 
+    private int firstEvaluatedQuestionIndex;
+
     private int personNameIndex;
 
     private int rewardsIndex;
 
     private int notEvaluatedQuestions;
 
+    @Getter
     private int columnsPerEvaluatedQuestion;
 
     @Getter
@@ -43,6 +46,10 @@ public class XlsxParserProperties {
         return applyIndexCorrection(scoreIndex);
     }
 
+    public int getFirstEvaluatedQuestionIndex() {
+        return applyIndexCorrection(firstEvaluatedQuestionIndex);
+    }
+
     public int getPersonNameIndex() {
         return applyIndexCorrection(personNameIndex);
     }
@@ -53,9 +60,5 @@ public class XlsxParserProperties {
 
     public int getNotEvaluatedQuestions() {
         return notEvaluatedQuestions - columnsPerEvaluatedQuestion;
-    }
-
-    public int getColumnsPerEvaluatedQuestion() {
-        return applyIndexCorrection(columnsPerEvaluatedQuestion);
     }
 }

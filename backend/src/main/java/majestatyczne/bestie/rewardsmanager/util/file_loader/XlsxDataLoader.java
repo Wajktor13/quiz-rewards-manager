@@ -31,6 +31,10 @@ public class XlsxDataLoader implements FileDataLoader {
 
     private final RewardService rewardService;
 
+    private final QuestionService questionService;
+
+    private final AnswerService answerService;
+
     private ParsedData parsedData;
 
     private final Logger logger = LoggerFactory.getLogger(XlsxDataLoader.class);
@@ -56,8 +60,6 @@ public class XlsxDataLoader implements FileDataLoader {
                 throw new EmptyFileException();
             }
 
-            sheet.shiftRows(1, sheet.getLastRowNum(), -1); // remove the header row
-
             parsedData = xlsxParser.parseSheet(sheet);
 
             loadQuiz();
@@ -65,6 +67,8 @@ public class XlsxDataLoader implements FileDataLoader {
             loadRewards();
             loadPreferences();
             loadResults();
+            loadQuestions();
+            loadAnswers();
 
             logger.info("data loading complete");
 
@@ -91,5 +95,13 @@ public class XlsxDataLoader implements FileDataLoader {
 
     private void loadResults() {
         resultService.addAll(parsedData.getResults());
+    }
+
+    private void loadQuestions() {
+        questionService.addAll(parsedData.getQuestions());
+    }
+
+    private void loadAnswers() {
+        answerService.addAll(parsedData.getAnswers());
     }
 }
