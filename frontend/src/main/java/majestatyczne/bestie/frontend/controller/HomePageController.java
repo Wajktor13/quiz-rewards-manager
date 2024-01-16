@@ -1,5 +1,6 @@
 package majestatyczne.bestie.frontend.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -50,18 +51,20 @@ public class HomePageController implements Initializable {
     private final FileChooser fileChooser = new FileChooser();
 
     @FXML
-    public void onGetFile() {
+    public void onImportFile() {
         File file = fileChooser.showOpenDialog(new Stage());
         if (file == null) {
             return;
         }
-        int statusCode = fileUploadService.makeRequest(file);
-        switch (statusCode) {
-            case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
-                    AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
-            default -> AlertManager.showErrorAlert(statusCode, Constants.FILE_UPLOAD_ERROR_TITLE);
-        }
-        setData();
+        Platform.runLater(() -> {
+            int statusCode = fileUploadService.makeRequest(file);
+            switch (statusCode) {
+                case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                        AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
+                default -> AlertManager.showErrorAlert(statusCode, Constants.FILE_UPLOAD_ERROR_TITLE);
+            }
+            setData();
+        });
     }
 
     @FXML
