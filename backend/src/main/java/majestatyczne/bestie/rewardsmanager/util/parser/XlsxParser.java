@@ -18,7 +18,7 @@ public class XlsxParser {
 
     private final XlsxParserProperties properties;
 
-    private final Logger logger = LoggerFactory.getLogger(XlsxParserProperties.class);
+    private final Logger logger = LoggerFactory.getLogger(XlsxParser.class);
 
     public ParsedData parseSheet(Sheet sheet) {
         logger.info("parsing data...");
