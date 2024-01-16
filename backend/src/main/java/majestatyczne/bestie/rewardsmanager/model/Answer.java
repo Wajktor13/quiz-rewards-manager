@@ -17,7 +17,7 @@ public class Answer {
     @Column(name = "answer_id")
     private int id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "question_id")
     private Question question;
 
