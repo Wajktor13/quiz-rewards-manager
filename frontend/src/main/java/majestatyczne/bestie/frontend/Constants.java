@@ -11,6 +11,8 @@ public class Constants {
 
     public static final String FXML_QUIZ_SETTINGS_RESOURCE = "FXML/quiz-settings-page.fxml";
 
+    public static final String FXML_EXPORT_POPUP_RESOURCE = "FXML/export-popup.fxml";
+
 //    ICONS
     public static final String APPLICATION_ICON_RESOURCE = "icons/owl-bear.png";
 
@@ -52,6 +54,8 @@ public class Constants {
     public static final String REWARD_CATEGORY_CHOICE_BOX_NO_CATEGORY = "brak kategorii";
 
     public static final String REWARD_CHOICE_BOX_NO_REWARD = "brak nagrody";
+
+    public static final String EXPORT_POPUP_WINDOW_TITLE = "Eksport pliku";
 
 //    ALERTS
     public static final String UPDATE_REWARDS_INFO = "Zmiany w nagrodach zostały wprowadzone!";

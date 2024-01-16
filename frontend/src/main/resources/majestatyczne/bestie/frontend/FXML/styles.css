@@ -159,3 +159,9 @@
     -fx-padding: 5 10 5 10px;
     -fx-font-size: 12pt;
 }
+
+.export-popup-vbox {
+    -fx-spacing: 10px;
+    -fx-padding: 10 10 10 10px;
+    -fx-alignment: center;
+}

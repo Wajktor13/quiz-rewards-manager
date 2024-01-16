@@ -5,10 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
@@ -149,6 +151,23 @@ public class QuizPageController implements Initializable {
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void onExportClicked() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_EXPORT_POPUP_RESOURCE));
+        try {
+            Parent root = fxmlLoader.load();
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setTitle(Constants.EXPORT_POPUP_WINDOW_TITLE);
+            popupStage.setScene(new Scene(root));
+            ExportPopupController popupController = fxmlLoader.getController();
+            popupController.setStage(popupStage);
+            popupStage.showAndWait();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
