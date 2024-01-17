@@ -67,4 +67,7 @@ public interface APIService {
     @Streaming
     Call<ResponseBody> exportResultsFile(@Query("quizId") int quizId, @Query("format") String format);
 
+    @GET("questions")
+    Call<List<Question>> getQuestionsByQuizId(@Query("quizId") int quizId);
+
 }
