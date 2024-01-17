@@ -19,8 +19,8 @@ import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.RewardCategoryService;
 import majestatyczne.bestie.frontend.service.RewardService;
 import majestatyczne.bestie.frontend.util.AlertManager;
-import majestatyczne.bestie.frontend.util.DeleteButtonCell;
-import majestatyczne.bestie.frontend.util.RewardCategoryChoiceCell;
+import majestatyczne.bestie.frontend.util.cell.DeleteButtonCell;
+import majestatyczne.bestie.frontend.util.cell.RewardCategoryChoiceCell;
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;

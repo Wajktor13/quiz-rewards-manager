@@ -5,17 +5,19 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.QuizResultsService;
 import majestatyczne.bestie.frontend.service.RewardService;
-import majestatyczne.bestie.frontend.util.RewardChoiceCell;
+import majestatyczne.bestie.frontend.util.cell.RewardChoiceCell;
 
 import java.io.IOException;
 import java.net.URL;
@@ -149,6 +151,23 @@ public class QuizPageController implements Initializable {
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void onExportClicked() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_EXPORT_POPUP_RESOURCE));
+        try {
+            Parent root = fxmlLoader.load();
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setTitle(Constants.EXPORT_POPUP_WINDOW_TITLE);
+            popupStage.setScene(new Scene(root));
+            ExportPopupController popupController = fxmlLoader.getController();
+            popupController.setData(popupStage, quizView.getId());
+            popupStage.showAndWait();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

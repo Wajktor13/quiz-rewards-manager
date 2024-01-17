@@ -1,4 +1,4 @@
-package majestatyczne.bestie.frontend.util;
+package majestatyczne.bestie.frontend.util.cell;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.ChoiceBox;

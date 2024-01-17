@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import majestatyczne.bestie.frontend.util.AlertManager;
-import majestatyczne.bestie.frontend.util.RewardCategoryChoiceCell;
+import majestatyczne.bestie.frontend.util.cell.RewardCategoryChoiceCell;
 import org.apache.http.HttpStatus;
 
 
