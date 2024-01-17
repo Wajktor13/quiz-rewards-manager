@@ -1,4 +1,4 @@
-package majestatyczne.bestie.frontend.util;
+package majestatyczne.bestie.frontend.util.cell;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;

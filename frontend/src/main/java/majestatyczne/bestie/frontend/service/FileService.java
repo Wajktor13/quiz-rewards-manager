@@ -13,7 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.File;
 import java.io.IOException;
 
-public class FileUploadService {
+public class FileService {
 
     public int makeRequest(File file) {
         HttpClient httpClient = HttpClients.createDefault();
