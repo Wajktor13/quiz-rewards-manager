@@ -33,18 +33,21 @@ public class ExportPopupController {
     @FXML
     private void onConfirmClicked() {
         FileFormat selectedFormat = formatChoiceBox.getValue();
+        String format = selectedFormat == null ? "" : selectedFormat.name().toLowerCase();
         FileService service = new FileService();
-        Platform.runLater(() -> {
+        new Thread(() -> {
             try {
-                int responseCode = service.exportResultsFile(quizId, selectedFormat.name());
-                switch (responseCode) {
-                    case HttpStatus.SC_OK -> AlertManager.showConfirmationAlert(Constants.EXPORT_FILE_INFO);
-                    default -> AlertManager.showErrorAlert(responseCode, Constants.EXPORT_FILE_ERROR);
-                }
+                int responseCode = service.exportResultsFile(quizId, format);
+                Platform.runLater(() -> {
+                    switch (responseCode) {
+                        case HttpStatus.SC_OK -> AlertManager.showConfirmationAlert(Constants.EXPORT_FILE_INFO);
+                        default -> AlertManager.showErrorAlert(responseCode, Constants.EXPORT_FILE_ERROR);
+                    }
+                });
             } catch (SaveFileException e) {
-                AlertManager.showWarningAlert(e.getMessage());
+                Platform.runLater(() -> AlertManager.showWarningAlert(e.getMessage()));
             }
-        });
+        }).start();
 
         stage.close();
     }
