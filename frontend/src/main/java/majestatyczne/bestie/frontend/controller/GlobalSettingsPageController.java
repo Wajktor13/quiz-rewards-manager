@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.*;
+import majestatyczne.bestie.frontend.model.view.RewardCategoryView;
+import majestatyczne.bestie.frontend.model.view.RewardView;
 import majestatyczne.bestie.frontend.service.RewardCategoryService;
 import majestatyczne.bestie.frontend.service.RewardService;
 import majestatyczne.bestie.frontend.util.AlertManager;

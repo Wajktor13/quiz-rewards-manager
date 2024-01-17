@@ -17,7 +17,7 @@ import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.service.FileService;
 import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
-import majestatyczne.bestie.frontend.model.QuizView;
+import majestatyczne.bestie.frontend.model.view.QuizView;
 import majestatyczne.bestie.frontend.util.AlertManager;
 import majestatyczne.bestie.frontend.util.cell.DeleteButtonCell;
 import org.apache.http.HttpStatus;
