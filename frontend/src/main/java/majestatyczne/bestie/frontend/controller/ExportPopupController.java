@@ -45,7 +45,7 @@ public class ExportPopupController {
                 AlertManager.showWarningAlert(e.getMessage());
             }
         });
-        
+
         stage.close();
     }
 }

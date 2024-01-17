@@ -17,7 +17,7 @@ import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.*;
 import majestatyczne.bestie.frontend.service.QuizResultsService;
 import majestatyczne.bestie.frontend.service.RewardService;
-import majestatyczne.bestie.frontend.util.RewardChoiceCell;
+import majestatyczne.bestie.frontend.util.cell.RewardChoiceCell;
 
 import java.io.IOException;
 import java.net.URL;
@@ -164,7 +164,7 @@ public class QuizPageController implements Initializable {
             popupStage.setTitle(Constants.EXPORT_POPUP_WINDOW_TITLE);
             popupStage.setScene(new Scene(root));
             ExportPopupController popupController = fxmlLoader.getController();
-            popupController.setStage(popupStage);
+            popupController.setData(popupStage, quizView.getId());
             popupStage.showAndWait();
         } catch (IOException e) {
             System.out.println(e.getMessage());

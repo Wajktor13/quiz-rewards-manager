@@ -13,12 +13,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
-import majestatyczne.bestie.frontend.service.FileUploadService;
+import majestatyczne.bestie.frontend.service.FileService;
 import majestatyczne.bestie.frontend.service.QuizService;
 import majestatyczne.bestie.frontend.model.Quiz;
 import majestatyczne.bestie.frontend.model.QuizView;
 import majestatyczne.bestie.frontend.util.AlertManager;
-import majestatyczne.bestie.frontend.util.DeleteButtonCell;
+import majestatyczne.bestie.frontend.util.cell.DeleteButtonCell;
 import org.apache.http.HttpStatus;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class HomePageController implements Initializable {
 
     private ObservableList<QuizView> quizzes;
 
-    private final FileUploadService fileUploadService = new FileUploadService();
+    private final FileService fileService = new FileService();
 
     private final FileChooser fileChooser = new FileChooser();
 
@@ -55,7 +55,7 @@ public class HomePageController implements Initializable {
         if (file == null) {
             return;
         }
-        int statusCode = fileUploadService.makeRequest(file);
+        int statusCode = fileService.uploadFile(file);
         switch (statusCode) {
             case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
                     AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
