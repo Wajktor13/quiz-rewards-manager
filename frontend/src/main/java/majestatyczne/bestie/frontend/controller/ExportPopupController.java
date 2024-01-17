@@ -1,11 +1,17 @@
 package majestatyczne.bestie.frontend.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
+import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.model.FileFormat;
+import majestatyczne.bestie.frontend.service.FileService;
+import majestatyczne.bestie.frontend.util.AlertManager;
+import majestatyczne.bestie.frontend.util.SaveFileException;
+import org.apache.http.HttpStatus;
 
 public class ExportPopupController {
 
@@ -14,12 +20,11 @@ public class ExportPopupController {
 
     private Stage stage;
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-        setData();
-    }
+    private int quizId;
 
-    private void setData() {
+    public void setData(Stage stage, int quizId) {
+        this.stage = stage;
+        this.quizId = quizId;
         ObservableList<FileFormat> fileFormats = FXCollections.observableArrayList();
         fileFormats.addAll(FileFormat.values());
         formatChoiceBox.setItems(fileFormats);
@@ -28,7 +33,19 @@ public class ExportPopupController {
     @FXML
     private void onConfirmClicked() {
         FileFormat selectedFormat = formatChoiceBox.getValue();
-        // TODO send request to server
+        FileService service = new FileService();
+        Platform.runLater(() -> {
+            try {
+                int responseCode = service.exportResultsFile(quizId, selectedFormat.name());
+                switch (responseCode) {
+                    case HttpStatus.SC_OK -> AlertManager.showConfirmationAlert(Constants.EXPORT_FILE_INFO);
+                    default -> AlertManager.showErrorAlert(responseCode, Constants.EXPORT_FILE_ERROR);
+                }
+            } catch (SaveFileException e) {
+                AlertManager.showWarningAlert(e.getMessage());
+            }
+        });
+        
         stage.close();
     }
 }
