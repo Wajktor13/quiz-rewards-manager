@@ -104,6 +104,12 @@ public class Constants {
 
     public static final String SCORE_STRATEGY_PARAMETER_DUPLICATE_WARNING = "Parametry oznaczające liczbę uzyskanych punktów nie mogą się powtarzać!";
 
+    public static final String EXPORT_FILE_ERROR = "Nie udało się wyeksportować wyników do pliku!";
+
+    public static final String EXPORT_FILE_INFO = "Plik został wyeksportowany poprawnie i zapisany na dysku w folderze Pobrane!";
+
+    public static final String SAVE_EXPORT_FILE_EXCEPTION = "Nie udało się zapisać otrzymanego pliku na dysku!";
+
     // general alert texts
     public static final String ALERT_WARNING_TITLE = "Uwaga";
 
@@ -115,4 +121,9 @@ public class Constants {
 
 //    STRATEGIES PARAMETERS
     public static final int PERCENTAGE_STRATEGY_PARAMETERS_NUMBER = 2;
+
+//    RETROFIT CONSTANTS
+    public static final String BASE_SERVER_URL = "http://localhost:8080/";
+
+    public static final String JSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 }
