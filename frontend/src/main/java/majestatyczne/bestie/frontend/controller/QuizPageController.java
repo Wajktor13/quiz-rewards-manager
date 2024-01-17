@@ -139,7 +139,7 @@ public class QuizPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -153,7 +153,7 @@ public class QuizPageController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -169,6 +169,21 @@ public class QuizPageController implements Initializable {
             ExportPopupController popupController = fxmlLoader.getController();
             popupController.setData(popupStage, quizView.getId());
             popupStage.showAndWait();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onStatsClicked() {
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_STATS_PAGE_RESOURCE));
+        Stage stage = (Stage) resultTable.getScene().getWindow();
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            StatsPageController statsPageController = fxmlLoader.getController();
+            statsPageController.setQuizView(quizView);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

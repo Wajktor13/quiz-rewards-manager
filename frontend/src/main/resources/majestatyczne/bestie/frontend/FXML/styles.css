@@ -6,6 +6,9 @@
     -fx-grey-color: #b6b6b6;
     -fx-light-grey-color: #d1d1d1;
     -fx-lightest-grey-color: #ececec;
+    -fx-danger-color: #dc3545;
+    -fx-danger-secondary-color: #a61824;
+    -fx-danger-accent-color: #6e0a13;
 }
 
 /* styles applying to all pages */
@@ -36,8 +39,26 @@
     -fx-label-padding: 0 5px 0 5px;
 }
 
+.delete-button {
+    -fx-font-size: 10pt;
+    -fx-background-color: -fx-danger-color;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-pref-height: 20px;
+    -fx-label-padding: 0 5px 0 5px;
+}
+
+.delete-button:hover {
+    -fx-background-color: -fx-danger-secondary-color;
+}
+
+.delete-button:pressed {
+    -fx-background-color: -fx-danger-accent-color;
+}
+
 .image-view:hover {
     -fx-effect: innershadow(gaussian, -fx-secondary-color, 100, 0, 0, 0);
+    -fx-cursor: hand;
 }
 
 .image-view:pressed {
@@ -75,6 +96,7 @@
 .home-page-table-view .table-row-cell:filled:hover {
     -fx-border-color: transparent;
     -fx-background-color: -fx-light-grey-color;
+    -fx-cursor: hand;
 }
 
 .home-page-table-view .table-row-cell:filled:selected {

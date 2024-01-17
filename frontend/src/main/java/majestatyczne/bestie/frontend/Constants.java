@@ -13,6 +13,8 @@ public class Constants {
 
     public static final String FXML_EXPORT_POPUP_RESOURCE = "FXML/export-popup.fxml";
 
+    public static final String FXML_STATS_PAGE_RESOURCE = "FXML/stats-page.fxml";
+
 //    ICONS
     public static final String APPLICATION_ICON_RESOURCE = "icons/owl-bear.png";
 

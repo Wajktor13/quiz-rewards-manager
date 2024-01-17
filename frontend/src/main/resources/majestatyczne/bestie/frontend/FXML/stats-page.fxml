@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.*?>
+
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Label?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="majestatyczne.bestie.frontend.controller.StatsPageController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <HBox prefHeight="50.0" prefWidth="200.0" alignment="BASELINE_CENTER" styleClass="quiz-page-header">
+        <HBox styleClass="quiz-page-header-left">
+            <ImageView fx:id="backIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" onMouseClicked="#onGoBackClicked">
+                <Image url="@left-arrow.png"/>
+            </ImageView>
+        </HBox>
+        <VBox styleClass="quiz-page-header-middle" HBox.hgrow="ALWAYS">
+            <Label fx:id="quizNameLabel" styleClass="quiz-name"/>
+            <Label fx:id="quizDateLabel" styleClass="quiz-date"/>
+        </VBox>
+        <HBox styleClass="quiz-page-header-right"> </HBox>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@styles.css"/>
+    </stylesheets>
+</VBox>

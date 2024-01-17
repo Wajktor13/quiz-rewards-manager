@@ -10,7 +10,7 @@ public class DeleteButtonCell<T> extends TableCell<T, Void> {
 
     public DeleteButtonCell(Consumer<T> onDeleteButtonClicked) {
         this.button = new Button("Delete");
-        this.button.getStyleClass().add("secondary-button");
+        this.button.getStyleClass().add("delete-button");
         button.setOnAction(event -> {
             T item = getTableView().getItems().get(getIndex());
             onDeleteButtonClicked.accept(item);
