@@ -56,15 +56,18 @@ public class HomePageController implements Initializable {
         if (file == null) {
             return;
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             int statusCode = fileUploadService.makeRequest(file);
-            switch (statusCode) {
-                case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
-                        AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
-                default -> AlertManager.showErrorAlert(statusCode, Constants.FILE_UPLOAD_ERROR_TITLE);
-            }
-            setData();
-        });
+            Platform.runLater(() -> {
+                switch (statusCode) {
+                    case HttpStatus.SC_OK, HttpStatus.SC_ACCEPTED ->
+                            AlertManager.showConfirmationAlert(Constants.FILE_UPLOAD_ACCEPTED_TITLE);
+                    default -> AlertManager.showErrorAlert(statusCode, Constants.FILE_UPLOAD_ERROR_TITLE);
+                }
+                setData();
+            });
+        }).start();
+
     }
 
     @FXML
