@@ -199,10 +199,7 @@ public class QuizSettingsPageController implements Initializable {
     private void prepareStrategyDetails(RewardStrategyType strategyType) {
         parameters.clear();
         if (existingStrategy == null || existingStrategy.getRewardStrategyType() != strategyType) {
-            switch (strategyType) {
-                case PERCENTAGE -> generateParameters(Constants.PERCENTAGE_STRATEGY_PARAMETERS_NUMBER);
-                case SCORE -> generateParameters(quizView.getMaxScore() + 1);
-            }
+            generateParameters(strategyType);
         } else {
             existingStrategy.getParameters().forEach(parameter -> parameters.add(new RewardStrategyParameterView(parameter)));
         }
@@ -210,10 +207,20 @@ public class QuizSettingsPageController implements Initializable {
         strategy.setRewardStrategyType(strategyType);
     }
 
-    private void generateParameters(int numberOfRows) {
-        for (int i = 0; i < numberOfRows; i++) {
-            parameters.add(new RewardStrategyParameterView(i + 1, i + 1, 0, null));
+    private void generateParameters(RewardStrategyType strategyType) {
+        switch (strategyType) {
+            case PERCENTAGE -> {
+                for (int i = 0; i < Constants.PERCENTAGE_STRATEGY_PARAMETERS_NUMBER; i++) {
+                    parameters.add(new RewardStrategyParameterView(i + 1, i + 1, 0, null));
+                }
+            }
+            case SCORE -> {
+                for (int i = 0; i < quizView.getMaxScore() + 1; i++) {
+                    parameters.add(new RewardStrategyParameterView(i + 1, i + 1, quizView.getMaxScore() - i, null));
+                }
+            }
         }
+
     }
 
     private void showPercentageStrategyDetails() {
