@@ -94,7 +94,6 @@
 }
 
 .home-page-table-view .table-row-cell:filled:hover {
-    -fx-border-color: transparent;
     -fx-background-color: -fx-light-grey-color;
     -fx-cursor: hand;
 }
@@ -111,6 +110,10 @@
 }
 
 .quiz-page-header-left {
+    -fx-pref-width: 300px;
+}
+
+.stats-page-header-left {
     -fx-pref-width: 100px;
 }
 
@@ -125,7 +128,12 @@
 
 .quiz-page-header-right {
     -fx-spacing: 20px;
-    -fx-pref-width: 150px;
+    -fx-pref-width: 300px;
+}
+
+.stats-page-header-right {
+    -fx-spacing: 20px;
+    -fx-pref-width: 100px;
 }
 
 .quiz-page-table-view {
