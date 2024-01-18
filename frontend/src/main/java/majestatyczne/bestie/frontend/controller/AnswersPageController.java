@@ -9,8 +9,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
@@ -40,7 +38,6 @@ public class AnswersPageController implements Initializable {
 
     private List<Answer> answerList;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
@@ -57,13 +54,22 @@ public class AnswersPageController implements Initializable {
                         .add(new XYChart.Data<>(answer.getSelectionCount(), answer.getContent()))
         );
         barChart.getData().add(series);
+        setChartDataStyles();
+    }
+
+    private void setChartDataStyles() {
         setCorrectAnswersToGreenColor();
+        barChart.getYAxis().setTickLabelFont(new javafx.scene.text.Font(13));
+        barChart.getXAxis().setTickLabelFont(new javafx.scene.text.Font(13));
     }
 
     private void setCorrectAnswersToGreenColor() {
+        // this works, because the order of answers in the bar chart is the same as in the answer list
         for (int i = 0; i < answerList.size(); i++) {
             if (answerList.get(i).isCorrect()) {
-                barChart.getData().get(0).getData().get(i).getNode().setStyle("-fx-bar-fill: green");
+                barChart.getData().get(0).getData().get(i).getNode().setStyle("-fx-bar-fill: green;");
+            } else {
+                barChart.getData().get(0).getData().get(i).getNode().setStyle("-fx-bar-fill: #dc3545;");
             }
         }
     }

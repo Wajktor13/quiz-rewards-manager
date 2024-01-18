@@ -211,3 +211,23 @@
 .choice-box-cell {
     -fx-alignment: center-right;
 }
+
+ /*Answer bar chart styles*/
+
+.answer-chart {
+    -fx-padding: 10px;
+    -fx-legend-visible: false;
+}
+
+.answer-chart .chart-content {
+    -fx-padding: 10px;
+    -fx-bar-fill: -fx-danger-color;
+}
+
+.answer-chart .chart-title {
+    -fx-font-size: 15pt;
+}
+
+.axis-label {
+    -fx-font-size: 12pt;
+}
