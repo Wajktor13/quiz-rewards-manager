@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,15 +29,32 @@ public class AnswersPageController implements Initializable {
     @FXML
     private Label questionContentLabel;
 
+    @FXML
+    private BarChart<Integer, String> barChart;
+
     private QuizView quizView;
 
     private QuestionView questionView;
 
     private List<Answer> answerList;
+    
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
+    }
+
+    private void initializeBarChart() {
+        barChart.setTitle("ROZKŁAD ODPOWIEDZI");
+        barChart.getXAxis().setLabel("Liczba osób");
+        barChart.getYAxis().setLabel("Odpowiedź");
+        XYChart.Series<Integer, String> series = new XYChart.Series<>();
+
+        answerList.forEach(answer ->
+                series.getData()
+                        .add(new XYChart.Data<>(answer.getSelectionCount(), answer.getContent()))
+        );
+        barChart.getData().add(series);
     }
 
     public void setData(QuestionView selectedQuestion, List<Answer> answerList, QuizView quizView) {
@@ -43,6 +62,7 @@ public class AnswersPageController implements Initializable {
         this.questionView = selectedQuestion;
         this.answerList = answerList;
         questionContentLabel.setText(questionView.getContent());
+        initializeBarChart();
     }
 
     @FXML

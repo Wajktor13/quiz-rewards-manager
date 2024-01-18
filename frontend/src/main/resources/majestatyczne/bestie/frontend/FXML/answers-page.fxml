@@ -9,6 +9,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import java.net.URL?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="majestatyczne.bestie.frontend.controller.AnswersPageController"
@@ -24,6 +27,14 @@
         </VBox>
         <HBox styleClass="stats-page-header-right"> </HBox>
     </HBox>
+    <BarChart fx:id="barChart" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="400.0" styleClass="answer-chart">
+        <xAxis>
+            <NumberAxis side="BOTTOM"/>
+        </xAxis>
+        <yAxis>
+            <CategoryAxis side="LEFT"/>
+        </yAxis>
+    </BarChart>
 
     <stylesheets>
         <URL value="@styles.css"/>
