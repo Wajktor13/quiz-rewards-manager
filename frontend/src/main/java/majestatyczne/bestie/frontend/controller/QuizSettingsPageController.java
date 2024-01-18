@@ -279,6 +279,13 @@ public class QuizSettingsPageController implements Initializable {
                 throw new IllegalArgumentException();
             }
         });
+        int sum = strategy.getParameters().stream()
+                .mapToInt(RewardStrategyParameter::getParameterValue)
+                .sum();
+        if (sum > 100) {
+            AlertManager.showWarningAlert(Constants.PERCENTAGE_STRATEGY_PARAMETER_SUM_OVER_100_WARNING);
+            throw new IllegalArgumentException();
+        }
     }
 
     private void checkScoreParameters() {

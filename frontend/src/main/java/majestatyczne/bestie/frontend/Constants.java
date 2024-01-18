@@ -106,6 +106,8 @@ public class Constants {
 
     public static final String PERCENTAGE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING = "Parametr musi mieć wartość między 0 a 100!";
 
+    public static final String PERCENTAGE_STRATEGY_PARAMETER_SUM_OVER_100_WARNING = "Suma procentów nie może przekraczać 100!";
+
     public static final String SCORE_STRATEGY_PARAMETER_OUT_OF_BOUND_WARNING = "Każdy z parametrów musi być z zakresu od 0 do maksymalnej liczby punktów z quizu";
 
     public static final String SCORE_STRATEGY_PARAMETER_DUPLICATE_WARNING = "Parametry oznaczające liczbę uzyskanych punktów nie mogą się powtarzać!";
