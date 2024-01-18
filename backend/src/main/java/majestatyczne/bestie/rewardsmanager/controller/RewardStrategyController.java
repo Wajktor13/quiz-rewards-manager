@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("reward-strategies")
@@ -41,7 +42,6 @@ public class RewardStrategyController {
 
             rewardStrategyService.addParametersToStrategy(rewardStrategy, rewardStrategyParameters);
 
-            // should it be called here or by a different endpoint?
             rewardStrategyService.insertRewards(rewardStrategy);
 
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -52,6 +52,8 @@ public class RewardStrategyController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
     }
 
@@ -69,7 +71,6 @@ public class RewardStrategyController {
 
             rewardStrategyService.addParametersToStrategy(rewardStrategy, rewardStrategyParameters);
 
-            // should it be called here or by a different endpoint?
             rewardStrategyService.insertRewards(rewardStrategy);
 
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -80,6 +81,8 @@ public class RewardStrategyController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalStateException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
     }
 
