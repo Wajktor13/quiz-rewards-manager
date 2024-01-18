@@ -30,8 +30,8 @@
     <VBox HBox.hgrow="ALWAYS">
         <TableView fx:id="questionTable" onMouseClicked="#onQuestionSelected" prefHeight="720.0" styleClass="home-page-table-view">
             <columns>
-                <TableColumn fx:id="contentColumn" style="-fx-pref-width: 970px"/>
-                <TableColumn fx:id="scoreColumn" style="-fx-pref-width: 100px; -fx-alignment: center-right"/>
+                <TableColumn fx:id="contentColumn" style="-fx-pref-width: 970px" text="Treść pytania"/>
+                <TableColumn fx:id="scoreColumn" style="-fx-pref-width: 100px; -fx-alignment: center-right" text="'%' poprawnych"/>
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

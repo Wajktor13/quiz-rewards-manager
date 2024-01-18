@@ -23,6 +23,7 @@
                     </ImageView>
                 </HBox>
                 <VBox styleClass="quiz-page-header-middle" HBox.hgrow="ALWAYS">
+                    <Label text="Konfiguracja nagród i kategorii" styleClass="quiz-name"/>
                 </VBox>
                 <HBox styleClass="quiz-page-header-right">
                 </HBox>
