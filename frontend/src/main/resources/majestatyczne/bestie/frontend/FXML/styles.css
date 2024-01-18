@@ -71,7 +71,7 @@
     -fx-spacing: 20px;
 }
 
-.home-page-table-view {
+.home-page-table-view, .stats-page-table-view {
     -fx-font-size: 12pt;
     -fx-border-color: -fx-lightest-grey-color;
 }
@@ -82,23 +82,32 @@
     -fx-min-height: 0;
 }
 
-.home-page-table-view .table-column {
+.stats-page-table-view .column-header-background {
+    -fx-border-color: -fx-light-grey-color;
+}
+
+.stats-page-table-view .column-header .label{
+    -fx-alignment: center;
+    -fx-font-size: 15pt;
+}
+
+.home-page-table-view .table-column, .stats-page-table-view .table-column {
     -fx-alignment: CENTER-LEFT;
     -fx-border-color: transparent;
     -fx-background-color: transparent;
 }
 
-.home-page-table-view .table-row-cell{
+.home-page-table-view .table-row-cell, .stats-page-table-view .table-row-cell{
     -fx-padding: 0 10px 0 10px;
     -fx-cell-size: 50px;
 }
 
-.home-page-table-view .table-row-cell:filled:hover {
+.home-page-table-view .table-row-cell:filled:hover, .stats-page-table-view .table-row-cell:filled:hover {
     -fx-background-color: -fx-light-grey-color;
     -fx-cursor: hand;
 }
 
-.home-page-table-view .table-row-cell:filled:selected {
+.home-page-table-view .table-row-cell:filled:selected, .stats-page-table-view .table-row-cell:filled:selected {
     -fx-background-color: -fx-grey-color;
 }
 
@@ -140,7 +149,7 @@
     -fx-font-size: 10pt;
 }
 
-.quiz-page-table-view .column-header {
+.table-view .column-header {
     -fx-background-color: -fx-light-grey-color;
 }
 
@@ -148,7 +157,6 @@
     -fx-alignment: center;
     -fx-font-size: 12pt;
 }
-
 
 .quiz-page-table-view .table-row-cell:filled:hover {
     -fx-background-color: -fx-light-grey-color;
