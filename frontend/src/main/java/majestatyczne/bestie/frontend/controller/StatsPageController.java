@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
+import majestatyczne.bestie.frontend.model.Answer;
 import majestatyczne.bestie.frontend.model.Question;
 import majestatyczne.bestie.frontend.model.view.QuestionView;
 import majestatyczne.bestie.frontend.model.view.QuizView;
@@ -98,5 +99,31 @@ public class StatsPageController implements Initializable {
 
     @FXML
     private void onQuestionSelected() {
+        try {
+            QuestionView selectedQuestion = questionTable.getSelectionModel().getSelectedItem();
+            moveToAnswersPage(selectedQuestion);
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void moveToAnswersPage(QuestionView selectedQuestion) {
+        Stage stage = (Stage) questionTable.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HomePageApplication.class.getResource(Constants.FXML_ANSWERS_PAGE_RESOURCE));
+        try {
+            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            AnswersPageController answersPageController = fxmlLoader.getController();
+            answersPageController.setData(selectedQuestion, getAnswerList(selectedQuestion), quizView);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private List<Answer> getAnswerList(QuestionView selectedQuestion) {
+        return questionList.stream()
+                .filter(x -> x.getId() == selectedQuestion.getId())
+                .findFirst()
+                .map(Question::getAnswers).orElse(null);
     }
 }

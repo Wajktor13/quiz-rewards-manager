@@ -194,3 +194,8 @@
     -fx-padding: 10 10 10 10px;
     -fx-alignment: center;
 }
+
+.question-name {
+    -fx-font-size: 12pt;
+    -fx-text-alignment: center;
+}

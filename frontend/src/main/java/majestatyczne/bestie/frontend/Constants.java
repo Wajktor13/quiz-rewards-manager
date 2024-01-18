@@ -15,6 +15,8 @@ public class Constants {
 
     public static final String FXML_STATS_PAGE_RESOURCE = "FXML/stats-page.fxml";
 
+    public static final String FXML_ANSWERS_PAGE_RESOURCE = "FXML/answers-page.fxml";
+
 //    ICONS
     public static final String APPLICATION_ICON_RESOURCE = "icons/owl-bear.png";
 
