@@ -200,3 +200,6 @@
     -fx-text-alignment: center;
 }
 
+.choice-box-cell {
+    -fx-alignment: center-right;
+}

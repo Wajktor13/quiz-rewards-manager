@@ -46,7 +46,7 @@
                     <columns>
                         <TableColumn fx:id="rewardNameColumn" text="Nazwa" editable="true"/>
                         <TableColumn fx:id="rewardDescriptionColumn" text="Opis" editable="true"/>
-                        <TableColumn fx:id="rewardCategoryColumn" text="Kategoria"/>
+                        <TableColumn fx:id="rewardCategoryColumn" text="Kategoria" styleClass="choice-box-cell"/>
                         <TableColumn fx:id="rewardDeleteColumn" text="Usuń" style="-fx-alignment: center"/>
                     </columns>
                     <columnResizePolicy>

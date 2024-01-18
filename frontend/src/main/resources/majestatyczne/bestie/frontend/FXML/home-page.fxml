@@ -13,7 +13,7 @@
             <ImageView fx:id="settingsIcon" fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" onMouseClicked="#onSettingsClicked">
                <Image url="@settings.png"/>
             </ImageView>
-            <Button fx:id="importButton" mnemonicParsing="false" onAction="#onImportFile" text="Import" textAlignment="CENTER" />
+            <Button fx:id="importButton" mnemonicParsing="false" onAction="#onImportFile" text="Importuj" textAlignment="CENTER" />
          </children>
       </VBox>
       <VBox HBox.hgrow="ALWAYS">

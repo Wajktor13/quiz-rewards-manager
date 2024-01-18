@@ -61,6 +61,8 @@ public class Constants {
 
     public static final String EXPORT_POPUP_WINDOW_TITLE = "Eksport pliku";
 
+    public static final String DELETE_BUTTON_TEXT = "Usuń";
+
 //    ALERTS
     public static final String UPDATE_REWARDS_INFO = "Zmiany w nagrodach zostały wprowadzone!";
     public static final String UPDATE_REWARDS_ERROR_TITLE = "Zmiany w nagrodach nie zostały wprowadzone!";
