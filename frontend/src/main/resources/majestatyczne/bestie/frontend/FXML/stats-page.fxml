@@ -7,6 +7,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="majestatyczne.bestie.frontend.controller.StatsPageController"
@@ -24,6 +26,18 @@
         </VBox>
         <HBox styleClass="stats-page-header-right"> </HBox>
     </HBox>
+
+    <VBox HBox.hgrow="ALWAYS">
+        <TableView fx:id="questionTable" onMouseClicked="#onQuestionSelected" prefHeight="720.0" styleClass="home-page-table-view">
+            <columns>
+                <TableColumn fx:id="contentColumn" style="-fx-pref-width: 970px"/>
+                <TableColumn fx:id="scoreColumn" style="-fx-pref-width: 100px; -fx-alignment: center-right"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
 
     <stylesheets>
         <URL value="@styles.css"/>

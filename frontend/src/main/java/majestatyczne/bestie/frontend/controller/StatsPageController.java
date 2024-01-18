@@ -1,16 +1,21 @@
 package majestatyczne.bestie.frontend.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import majestatyczne.bestie.frontend.Constants;
 import majestatyczne.bestie.frontend.HomePageApplication;
 import majestatyczne.bestie.frontend.model.Question;
+import majestatyczne.bestie.frontend.model.view.QuestionView;
 import majestatyczne.bestie.frontend.model.view.QuizView;
 import majestatyczne.bestie.frontend.service.QuestionService;
 
@@ -30,24 +35,50 @@ public class StatsPageController implements Initializable {
     @FXML
     private ImageView backIcon;
 
+    @FXML
+    private TableView<QuestionView> questionTable;
+
+    @FXML
+    private TableColumn<QuestionView, String> contentColumn;
+
+    @FXML
+    private TableColumn<QuestionView, String> scoreColumn;
+
     private QuizView quizView;
 
     private List<Question> questionList;
 
+    private ObservableList<QuestionView> questions;
+
+    private final QuestionService questionService = new QuestionService();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         backIcon.setImage(new Image(String.valueOf(HomePageApplication.class.getResource(Constants.BACK_ICON_RESOURCE))));
+        initializeQuestionsTable();
     }
+
     public void setQuizView(QuizView quizView) {
         this.quizView = quizView;
         setData();
     }
 
     private void setData() {
-        QuestionService service = new QuestionService();
-        questionList = service.getQuestionsByQuizId(quizView.getId());
         quizNameLabel.setText(quizView.getName());
         quizDateLabel.setText(quizView.getDate().toString());
+        initializeQuestions();
+        questionTable.setItems(questions);
+    }
+
+    private void initializeQuestions() {
+        questionList = questionService.getQuestionsByQuizId(quizView.getId());
+        questions = FXCollections.observableArrayList();
+        questionList.forEach(question -> questions.add(new QuestionView(question)));
+    }
+
+    private void initializeQuestionsTable() {
+        contentColumn.setCellValueFactory(value -> value.getValue().getContentProperty());
+        scoreColumn.setCellValueFactory(value -> value.getValue().getScoreProperty());
     }
 
     @FXML
@@ -63,5 +94,9 @@ public class StatsPageController implements Initializable {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @FXML
+    private void onQuestionSelected() {
     }
 }
