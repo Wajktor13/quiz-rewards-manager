@@ -21,6 +21,7 @@ Made in collaboration with [Alxndra13](https://github.com/Alxndra13) and [adrian
 ![Java](https://img.shields.io/badge/JavaFX-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![H2](https://img.shields.io/badge/H2%20Database-20B2AA?style=for-the-badge)
 ![Hibernate](https://img.shields.io/static/v1?style=for-the-badge&message=Hibernate&color=59666C&logo=Hibernate&logoColor=FFFFFF&label=)
+![Gradle](https://img.shields.io/static/v1?style=for-the-badge&message=Gradle&color=02303A&logo=Gradle&logoColor=FFFFFF&label=)
 
 ## Preview
 ![image](https://github.com/Wajktor13/quiz-rewards-manager/assets/76243064/bdd0d9b7-be3c-478b-921b-2afebade3a01)
